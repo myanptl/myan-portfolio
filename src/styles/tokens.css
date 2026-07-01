@@ -1,0 +1,40 @@
+:root {
+  /* Electric Cyan palette on deep navy-black */
+  --color-bg: #0a0e14;
+  --color-bg-elevated: #0f1620;
+  --color-surface: #111927;
+  --color-surface-hover: #16202f;
+
+  --color-text: #e6edf3;
+  --color-text-muted: rgba(230, 237, 243, 0.72);
+  --color-text-dim: rgba(230, 237, 243, 0.55);
+
+  --color-prompt: #3fb950; /* terminal green */
+  --color-accent: #22d3ee; /* electric cyan */
+  --color-accent-dim: #0e7490;
+  --color-accent-glow: rgba(34, 211, 238, 0.18);
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(34, 211, 238, 0.35);
+
+  /* Typography */
+  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, monospace;
+
+  --text-hero: clamp(3.5rem, 1.5rem + 9vw, 9rem);
+  --text-section: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
+  --text-card-title: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+  --text-base: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  --text-mono: clamp(0.9rem, 0.85rem + 0.3vw, 1rem);
+
+  /* Spacing */
+  --space-section: clamp(5rem, 4rem + 8vw, 11rem);
+  --container: 1080px;
+
+  /* Motion */
+  --duration-reveal: 700ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --radius: 14px;
+  --radius-lg: 20px;
+}

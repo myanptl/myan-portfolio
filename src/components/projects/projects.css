@@ -1,0 +1,122 @@
+.proj-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.proj-card {
+  display: block;
+  position: relative;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--color-surface), var(--color-bg-elevated));
+  overflow: hidden;
+  transition:
+    border-color 320ms var(--ease-out-expo),
+    transform 320ms var(--ease-out-expo),
+    box-shadow 320ms var(--ease-out-expo);
+}
+
+/* cyan accent edge that lights up on hover */
+.proj-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, transparent 40%, var(--color-accent) 120%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.proj-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.85), 0 0 50px -24px var(--color-accent-glow);
+}
+
+.proj-card:hover::before { opacity: 1; }
+
+.proj-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.proj-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.proj-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-card-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.proj-arrow {
+  font-size: 0.85em;
+  color: var(--color-text-dim);
+  transition: transform 320ms var(--ease-out-expo), color 320ms var(--ease-out-expo);
+}
+
+.proj-card:hover .proj-arrow {
+  color: var(--color-accent);
+  transform: translate(3px, -3px);
+}
+
+.proj-badge {
+  font-size: 0.72rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  color: var(--color-accent);
+  background: var(--color-accent-glow);
+  border: 1px solid var(--color-border-strong);
+  white-space: nowrap;
+}
+
+.proj-tagline {
+  color: var(--color-accent);
+  font-weight: 500;
+  margin-top: 0.5rem;
+  font-size: 1.02rem;
+}
+
+.proj-desc {
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+.proj-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.proj-tag {
+  font-size: 0.74rem;
+  padding: 0.32rem 0.62rem;
+  border-radius: 7px;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0e14; --text:#e6edf3; --muted:rgba(230,237,243,0.66);
+    --green:#3fb950; --cyan:#22d3ee; --glow:rgba(34,211,238,0.20); --border:rgba(255,255,255,0.09);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1584px;height:396px;overflow:hidden;}
+  body{
+    background:
+      radial-gradient(48rem 40rem at 88% 30%, var(--glow), transparent 62%),
+      radial-gradient(30rem 24rem at 8% 120%, rgba(34,211,238,0.10), transparent 55%),
+      var(--bg);
+    font-family:'Inter',system-ui,sans-serif; color:var(--text);
+    position:relative;
+  }
+  body::before{
+    content:''; position:absolute; inset:0;
+    background-image:radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size:26px 26px; opacity:0.5;
+  }
+  .wrap{position:absolute; inset:0; padding:54px 70px; display:flex; flex-direction:column; justify-content:center;}
+  .content{margin-left:360px;}
+  .prompt{font-family:'JetBrains Mono',monospace; font-size:22px; color:var(--green); margin-bottom:14px;}
+  .prompt .path{color:var(--muted);}
+  .headline{font-weight:900; font-size:64px; line-height:1.02; letter-spacing:-0.03em;}
+  .headline .cy{color:var(--cyan); text-shadow:0 0 34px var(--glow);}
+  .sub{margin-top:16px; font-size:24px; color:var(--muted); font-weight:500;}
+  .chips{margin-top:26px; display:flex; gap:12px; flex-wrap:wrap;}
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--cyan);
+    border:1px solid rgba(34,211,238,0.34); background:var(--glow);
+    padding:7px 15px; border-radius:9px;
+  }
+  .cursor{color:var(--cyan);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="content">
+      <div class="prompt">myan@web:<span class="path">~</span>$ cat headline.txt <span class="cursor">▋</span></div>
+      <div class="headline">I build &amp; secure <span class="cy">AI products</span>.</div>
+      <div class="sub">Aspiring GenAI Product Manager &amp; AI Security Engineer · Westford Academy '28</div>
+      <div class="chips">
+        <span class="chip">FocusOS</span>
+        <span class="chip">VulnScan</span>
+        <span class="chip">keyhound</span>
+        <span class="chip">etf-research-mcp</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

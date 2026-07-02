@@ -1,9 +1,58 @@
-.proj-list {
-  display: flex;
-  flex-direction: column;
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  max-width: 880px;
+  max-width: 1040px;
   margin-inline: auto;
+}
+
+.proj-cell-featured {
+  grid-column: 1 / -1;
+}
+
+.proj-cell > .proj-card {
+  height: 100%;
+}
+
+.proj-card-featured {
+  background:
+    radial-gradient(60% 90% at 85% 0%, rgba(56, 189, 248, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-surface), var(--color-bg-elevated));
+}
+
+.proj-card-featured .proj-name {
+  font-size: calc(var(--text-card-title) * 1.25);
+}
+
+@media (max-width: 720px) {
+  .proj-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Live GitHub stat chips */
+.proj-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-dim);
+  letter-spacing: 0.02em;
+}
+
+.proj-stats li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.proj-stats li:not(:last-child)::after {
+  content: '·';
+  margin-left: 1rem;
+  opacity: 0.5;
 }
 
 .proj-card {

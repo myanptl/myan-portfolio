@@ -56,6 +56,7 @@ export const experience = [
 export const projects = [
   {
     name: 'FocusOS',
+    repo: 'focusos',
     tagline: 'AI study app + OWASP security case study',
     badge: 'Live · focusos.live',
     href: 'https://focusos.live',
@@ -65,6 +66,7 @@ export const projects = [
   },
   {
     name: 'RepoRoast',
+    repo: 'reporoast',
     tagline: 'AI that roasts (then hypes) your GitHub',
     badge: 'Live · reporoast-alpha.vercel.app',
     href: 'https://reporoast-alpha.vercel.app',
@@ -74,6 +76,7 @@ export const projects = [
   },
   {
     name: 'VulnScan',
+    repo: 'vulnscan',
     tagline: 'OWASP Top 10 static analysis scanner',
     badge: 'Live · v1',
     href: 'https://vulnscan-xi.vercel.app/',
@@ -83,6 +86,7 @@ export const projects = [
   },
   {
     name: 'etf-research-mcp',
+    repo: 'etf-research-mcp',
     tagline: 'Published MCP server for live ETF research',
     badge: 'npm · published',
     href: 'https://www.npmjs.com/package/etf-research-mcp',
@@ -92,6 +96,7 @@ export const projects = [
   },
   {
     name: 'keyhound',
+    repo: 'keyhound',
     tagline: 'Dependency-free Python secret scanner',
     badge: 'GitHub · CLI',
     href: 'https://github.com/myanptl/keyhound',

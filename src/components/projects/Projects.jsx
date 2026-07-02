@@ -1,9 +1,25 @@
 import { Reveal } from '../layout/Reveal';
 import { ArrowUpRight } from '../layout/Icons';
 import { projects } from '../../data/profile';
+import { useGithubStats, formatPushed } from '../../hooks/useGithubStats';
 import './projects.css';
 
+function RepoStats({ stat }) {
+  if (!stat) return null;
+  const pushed = formatPushed(stat.pushedAt);
+  return (
+    <ul className="proj-stats mono" aria-label="Live GitHub stats">
+      {stat.language && <li>{stat.language}</li>}
+      {stat.stars > 0 && <li>★ {stat.stars}</li>}
+      {stat.forks > 0 && <li>⑂ {stat.forks}</li>}
+      {pushed && <li>updated {pushed}</li>}
+    </ul>
+  );
+}
+
 export function Projects() {
+  const stats = useGithubStats();
+
   return (
     <section className="section" id="projects" aria-labelledby="projects-title">
       <div className="container">
@@ -11,11 +27,15 @@ export function Projects() {
           Projects
         </Reveal>
 
-        <div className="proj-list">
+        <div className="proj-grid">
           {projects.map((project, i) => (
-            <Reveal key={project.name} delay={i * 70}>
+            <Reveal
+              key={project.name}
+              delay={i * 70}
+              className={i === 0 ? 'proj-cell proj-cell-featured' : 'proj-cell'}
+            >
               <a
-                className="proj-card"
+                className={i === 0 ? 'proj-card proj-card-featured' : 'proj-card'}
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -30,6 +50,7 @@ export function Projects() {
                   </div>
                   <p className="proj-tagline">{project.tagline}</p>
                   <p className="proj-desc">{project.description}</p>
+                  <RepoStats stat={project.repo ? stats[project.repo] : null} />
                   <ul className="proj-tags" aria-label="Tech stack">
                     {project.tags.map((tag) => (
                       <li className="proj-tag mono" key={tag}>

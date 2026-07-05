@@ -75,6 +75,16 @@ export const projects = [
     tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
   },
   {
+    name: 'PromptProbe',
+    repo: 'promptprobe',
+    tagline: 'BYOK LLM security scanner — red-teams your chatbot',
+    badge: 'Live · promptprobe.vercel.app',
+    href: 'https://promptprobe.vercel.app',
+    description:
+      'A security scanner for LLMs, not code: paste your chatbot\'s API key and PromptProbe fires ~20 adversarial prompts across the OWASP LLM Top 10 — prompt injection, jailbreaks, system-prompt leaks, PII extraction — then an AI judge grades every response and returns a severity-weighted A–F score with a shareable scorecard. Your key is used server-side for one scan and never stored.',
+    tags: ['React', 'Vite', 'TypeScript', 'AI Security', 'OWASP LLM'],
+  },
+  {
     name: 'VulnScan',
     repo: 'vulnscan',
     tagline: 'OWASP Top 10 static analysis scanner',

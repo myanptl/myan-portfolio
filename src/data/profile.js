@@ -75,6 +75,16 @@ export const projects = [
     tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
   },
   {
+    name: 'SlideStack',
+    repo: 'slidestack',
+    tagline: 'AI Instagram carousel maker — topic in, PNGs out',
+    badge: 'Live · slidestack-beta.vercel.app',
+    href: 'https://slidestack-beta.vercel.app',
+    description:
+      'Carousels beat Reels in 2026 (saved ~9× more), so I built the fastest way to make one: type a topic, Claude Fable 5 writes a hook → points → CTA deck as structured JSON, and a canvas renderer paints 1080×1350 slides in three hand-built themes — downloadable as PNGs or a ZIP. 100% client-side BYOK: your API key never leaves the browser, enforced by a strict CSP.',
+    tags: ['React', 'Vite', 'TypeScript', 'Claude API', 'Canvas'],
+  },
+  {
     name: 'PromptProbe',
     repo: 'promptprobe',
     tagline: 'BYOK LLM security scanner — red-teams your chatbot',

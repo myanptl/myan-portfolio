@@ -1,6 +1,7 @@
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { iconMap } from '../layout/Icons';
 import { profile } from '../../data/profile';
+import { InteractiveTerm } from './InteractiveTerm';
 import './terminal.css';
 
 const PROMPT = 'myan@web:~$';
@@ -89,13 +90,8 @@ export function TerminalHero() {
               </div>
             )}
 
-            {/* idle prompt */}
-            {activeKey === null && (
-              <span className="term-command-line">
-                <span className="term-prompt mono">{PROMPT}</span>{' '}
-                <span className="blink-cursor" aria-hidden="true">▋</span>
-              </span>
-            )}
+            {/* the prompt goes live once the intro finishes */}
+            {activeKey === null && doneSteps.has('links') && <InteractiveTerm />}
           </div>
         </div>
 

@@ -219,3 +219,65 @@
   .scroll-cue-arrow,
   .term-output { animation: none; }
 }
+
+/* ---------- interactive terminal (ui-v2) ---------- */
+.terminal-body {
+  max-height: min(62vh, 560px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* CRT scanlines — pure texture, sits above content, never intercepts input */
+.terminal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    rgba(0, 0, 0, 0.055) 2px 4px
+  );
+  border-radius: inherit;
+}
+.terminal { position: relative; }
+
+.iterm { cursor: text; }
+
+.iterm-hint {
+  margin: 1.1rem 0 0.4rem;
+  color: var(--color-accent);
+  opacity: 0.75;
+  font-size: 0.8rem;
+}
+.iterm-hint b { font-weight: 700; }
+
+.iterm-entry { margin-top: 0.5rem; }
+
+.iterm-out {
+  margin: 0.15rem 0 0;
+  padding-left: 0.25rem;
+  color: var(--color-text-dim, var(--color-text));
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.iterm-input-row { display: flex; align-items: baseline; margin-top: 0.5rem; }
+
+.iterm-input {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0.5ch;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  caret-color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal::after { background: none; }
+}

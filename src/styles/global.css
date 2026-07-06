@@ -120,3 +120,82 @@ a {
 .section-title .accent {
   color: var(--color-accent);
 }
+
+/* ═══════════ terminal-zine pass (v2.1) — less template, more machine ═══════════ */
+
+/* Section titles read as commands, not marketing headers */
+.section-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.9rem);
+  letter-spacing: -0.01em;
+  text-align: left;
+  text-transform: lowercase;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6ch;
+}
+.section-title::before {
+  content: 'myan@web:~$ ls ./';
+  color: var(--color-accent);
+  font-size: 0.42em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transform: translateY(-0.15em);
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  align-self: center;
+  background: linear-gradient(90deg, var(--color-border-strong), transparent);
+  margin-left: 1rem;
+}
+
+/* Cards: hard offset shadows + target-bracket corners on hover — the
+   SlideStack "designed object" feel, translated into terminal language */
+.proj-card, .proj-card-featured, .cred-card, .skill-group, .xp-card {
+  position: relative;
+  border-radius: 6px !important;
+  transition: transform 160ms var(--ease, ease), box-shadow 160ms var(--ease, ease), border-color 160ms;
+}
+.proj-card:hover, .proj-card-featured:hover, .cred-card:hover, .skill-group:hover, .xp-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 5px 5px 0 var(--color-accent-dim);
+  border-color: var(--color-accent) !important;
+}
+
+/* target corners ⌜ ⌟ appear on card hover */
+.proj-card::before, .proj-card-featured::before, .cred-card::before {
+  content: '⌜';
+  position: absolute; top: 2px; left: 6px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  opacity: 0;
+  transition: opacity 160ms;
+}
+.proj-card::after, .proj-card-featured::after, .cred-card::after {
+  content: '⌟';
+  position: absolute; bottom: 2px; right: 6px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  opacity: 0;
+  transition: opacity 160ms;
+}
+.proj-card:hover::before, .proj-card:hover::after,
+.proj-card-featured:hover::before, .proj-card-featured:hover::after,
+.cred-card:hover::before, .cred-card:hover::after { opacity: 1; }
+
+/* Project names + pills go mono — labels on equipment, not website copy */
+.proj-name, .cred-title { font-family: var(--font-mono); letter-spacing: -0.02em; }
+.proj-badge, .skill-pill {
+  font-family: var(--font-mono);
+  border-radius: 3px !important;
+}
+.skill-pill { transition: transform 140ms var(--ease, ease), border-color 140ms, color 140ms; }
+.skill-pill:hover { transform: translateY(-2px); border-color: var(--color-accent); color: var(--color-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .proj-card:hover, .proj-card-featured:hover, .cred-card:hover, .skill-group:hover, .xp-card:hover { transform: none; }
+  .skill-pill:hover { transform: none; }
+}

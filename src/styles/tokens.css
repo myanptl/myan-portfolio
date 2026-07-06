@@ -10,9 +10,9 @@
   --color-text-dim: rgba(230, 237, 243, 0.55);
 
   --color-prompt: #3fb950; /* terminal green */
-  --color-accent: #22d3ee; /* electric cyan */
-  --color-accent-dim: #0e7490;
-  --color-accent-glow: rgba(34, 211, 238, 0.18);
+  --color-accent: #3dfc8e; /* phosphor green — the terminal's native glow */
+  --color-accent-dim: #14894c;
+  --color-accent-glow: rgba(61, 252, 142, 0.16);
 
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-strong: rgba(34, 211, 238, 0.35);

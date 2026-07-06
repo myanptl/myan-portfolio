@@ -69,7 +69,7 @@
     box-shadow 320ms var(--ease-out-expo);
 }
 
-/* cyan accent edge that lights up on hover */
+/* accent edge that lights up on hover */
 .proj-card::before {
   content: '';
   position: absolute;

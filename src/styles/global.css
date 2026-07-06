@@ -15,17 +15,12 @@ html {
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-ui);
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: 1.65;
   min-height: 100vh;
-  /* subtle phosphor radial glow + faint grid texture */
-  background-image:
-    radial-gradient(60rem 40rem at 78% -8%, var(--color-accent-glow), transparent 60%),
-    radial-gradient(40rem 30rem at -10% 110%, rgba(61, 252, 142, 0.08), transparent 55%);
-  background-attachment: fixed;
 }
 
 a {
@@ -34,8 +29,14 @@ a {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--keyword);
+  color: var(--surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--keyword);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 .container {
@@ -49,11 +50,33 @@ a {
   font-family: var(--font-mono);
 }
 
+/* ── The page-long editor gutter: a rule down the left edge of every
+   section; line-number chips anchor to it. The one loud structural idea. */
+.page-rail {
+  position: relative;
+}
+
+.page-rail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - min(50vw, calc(var(--container) / 2)) + 1.1rem);
+  width: 1px;
+  background: var(--line-strong);
+}
+
+@media (max-width: 720px) {
+  .page-rail::before {
+    left: 0.9rem;
+  }
+}
+
 /* Scroll-reveal base — JS toggles .is-visible */
 .reveal {
   opacity: 0;
   visibility: hidden;
-  transform: translateY(34px);
+  transform: translateY(28px);
   transition:
     opacity var(--duration-reveal) var(--ease-out-expo),
     transform var(--duration-reveal) var(--ease-out-expo),
@@ -81,7 +104,7 @@ a {
     transform: none;
     transition: none;
   }
-  .blink-cursor {
+  .code-caret {
     animation: none !important;
   }
 }
@@ -92,8 +115,8 @@ a {
   left: -999px;
   top: 0;
   z-index: 100;
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--ink);
+  color: var(--paper);
   padding: 0.6rem 1rem;
   border-radius: 0 0 8px 0;
   font-weight: 600;
@@ -103,99 +126,93 @@ a {
   left: 0;
 }
 
-/* Section scaffolding */
+/* ── Section scaffolding: every section opens as a declaration ── */
 .section {
   padding-block: var(--space-section);
 }
 
-.section-title {
-  font-family: var(--font-ui);
+.decl {
+  margin-bottom: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+}
+
+.decl-line {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  margin-bottom: 0.9rem;
+}
+
+.decl-lineno {
+  color: var(--comment);
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.14rem 0.5rem;
+  font-size: 0.78em;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.decl-code .tok-kw {
+  color: var(--keyword);
+}
+.decl-code .tok-en {
+  color: var(--entity);
+  font-weight: 600;
+}
+.decl-code .tok-pn {
+  color: var(--ink-dim);
+}
+
+.decl-title {
+  font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--text-section);
-  letter-spacing: -0.03em;
-  text-align: center;
-  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
 }
 
-.section-title .accent {
-  color: var(--color-accent);
-}
-
-/* ═══════════ terminal-zine pass (v2.1) — less template, more machine ═══════════ */
-
-/* Section titles read as commands, not marketing headers */
-.section-title {
+/* Sections close like the arrays they are */
+.decl-close {
+  display: block;
   font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.9rem);
-  letter-spacing: -0.01em;
-  text-align: left;
-  text-transform: lowercase;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6ch;
-}
-.section-title::before {
-  content: 'myan@web:~$ ls ./';
-  color: var(--color-accent);
-  font-size: 0.42em;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  transform: translateY(-0.15em);
-}
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  align-self: center;
-  background: linear-gradient(90deg, var(--color-border-strong), transparent);
-  margin-left: 1rem;
+  font-size: var(--text-mono);
+  color: var(--comment);
+  margin-top: clamp(1.75rem, 1rem + 2vw, 3rem);
 }
 
-/* Cards: hard offset shadows + target-bracket corners on hover — the
-   SlideStack "designed object" feel, translated into terminal language */
-.proj-card, .proj-card-featured, .cred-card, .skill-group, .xp-card {
-  position: relative;
-  border-radius: 6px !important;
-  transition: transform 160ms var(--ease, ease), box-shadow 160ms var(--ease, ease), border-color 160ms;
+/* Shared syntax-token chips */
+.tok-string {
+  color: var(--string);
+  font-family: var(--font-mono);
 }
-.proj-card:hover, .proj-card-featured:hover, .cred-card:hover, .skill-group:hover, .xp-card:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 5px 5px 0 var(--color-accent-dim);
-  border-color: var(--color-accent) !important;
+.tok-comment {
+  color: var(--comment);
+  font-family: var(--font-mono);
+  font-style: italic;
 }
 
-/* target corners ⌜ ⌟ appear on card hover */
-.proj-card::before, .proj-card-featured::before, .cred-card::before {
-  content: '⌜';
-  position: absolute; top: 2px; left: 6px;
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  opacity: 0;
-  transition: opacity 160ms;
+/* Shared card surface */
+.sheet {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition:
+    transform 200ms var(--ease-out-expo),
+    box-shadow 200ms var(--ease-out-expo),
+    border-color 200ms;
 }
-.proj-card::after, .proj-card-featured::after, .cred-card::after {
-  content: '⌟';
-  position: absolute; bottom: 2px; right: 6px;
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  opacity: 0;
-  transition: opacity 160ms;
-}
-.proj-card:hover::before, .proj-card:hover::after,
-.proj-card-featured:hover::before, .proj-card-featured:hover::after,
-.cred-card:hover::before, .cred-card:hover::after { opacity: 1; }
 
-/* Project names + pills go mono — labels on equipment, not website copy */
-.proj-name, .cred-title { font-family: var(--font-mono); letter-spacing: -0.02em; }
-.proj-badge, .skill-pill {
-  font-family: var(--font-mono);
-  border-radius: 3px !important;
+.sheet:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
 }
-.skill-pill { transition: transform 140ms var(--ease, ease), border-color 140ms, color 140ms; }
-.skill-pill:hover { transform: translateY(-2px); border-color: var(--color-accent); color: var(--color-accent); }
 
 @media (prefers-reduced-motion: reduce) {
-  .proj-card:hover, .proj-card-featured:hover, .cred-card:hover, .skill-group:hover, .xp-card:hover { transform: none; }
-  .skill-pill:hover { transform: none; }
+  .sheet:hover {
+    transform: none;
+  }
 }

@@ -1,57 +1,80 @@
-.skills-grid {
+.skills-sheet {
+  padding: clamp(1.2rem, 1rem + 1.5vw, 2.2rem);
+}
+
+.skills-sheet:hover {
+  transform: none;
+}
+
+.skills-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.25rem;
-  max-width: 880px;
-  margin-inline: auto;
+  gap: 1rem;
 }
 
-.skill-group {
-  padding: 1.4rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-bg-elevated);
-  transition: border-color 280ms var(--ease-out-expo), transform 280ms var(--ease-out-expo);
+.skill-row {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 11rem) 1fr;
+  gap: 0.6rem 1.2rem;
+  align-items: baseline;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--line);
 }
 
-.skill-group:hover {
-  border-color: var(--color-border-strong);
-  transform: translateY(-3px);
+.skill-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-.skill-group-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 1rem;
+@media (max-width: 600px) {
+  .skill-row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
 }
 
-.skill-prompt {
-  color: var(--color-prompt);
+.skill-key {
+  color: var(--entity);
+  font-weight: 600;
+  font-size: var(--text-mono);
+}
+
+.skill-values {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.skill-bracket {
+  color: var(--ink-dim);
 }
 
 .skill-items {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: contents;
 }
 
 .skill-pill {
+  font-family: var(--font-mono);
   font-size: 0.78rem;
-  padding: 0.36rem 0.66rem;
-  border-radius: 7px;
-  color: var(--color-text-muted);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--color-border);
-  transition: color 200ms var(--ease-out-expo), border-color 200ms var(--ease-out-expo);
-}
-
-.skill-group:hover .skill-pill {
-  border-color: rgba(61, 252, 142, 0.22);
+  color: var(--string);
+  background: var(--string-soft);
+  border-radius: 5px;
+  padding: 0.22rem 0.55rem;
+  transition:
+    transform 140ms var(--ease-out-expo),
+    background 140ms,
+    color 140ms;
 }
 
 .skill-pill:hover {
-  color: var(--color-accent);
-  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+  background: var(--keyword-soft);
+  color: var(--keyword);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-pill:hover {
+    transform: none;
+  }
 }

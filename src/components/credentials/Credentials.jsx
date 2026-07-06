@@ -1,4 +1,5 @@
 import { Reveal } from '../layout/Reveal';
+import { SectionDecl, SectionClose } from '../layout/SectionDecl';
 import { credentials } from '../../data/profile';
 import './credentials.css';
 
@@ -8,23 +9,27 @@ export function Credentials() {
   return (
     <section className="section" id="more" aria-labelledby="more-title">
       <div className="container">
-        <Reveal as="h2" className="section-title" id="more-title">
-          Certifications <span className="accent">&amp;</span> Impact
-        </Reveal>
+        <SectionDecl
+          name="credentials"
+          lineno={146}
+          title="Proof of work"
+          titleId="more-title"
+        />
 
         <div className="cred-grid">
-          <Reveal className="cred-card cred-certs">
-            <span className="cred-kicker mono">// certifications</span>
-            <h3 className="cred-title">{certifications.headline}</h3>
-            <p className="cred-detail">{certifications.detail}</p>
+          <Reveal className="cred-card cred-certs sheet">
+            <span className="cred-kicker tok-comment">// certifications</span>
             <div className="cred-stat">
               <span className="cred-stat-num">18</span>
-              <span className="cred-stat-label mono">Anthropic Academy certs</span>
+              <span className="cred-stat-label mono">
+                Anthropic Academy certifications
+              </span>
             </div>
+            <p className="cred-detail">{certifications.detail}</p>
           </Reveal>
 
-          <Reveal className="cred-card cred-volunteer" delay={90}>
-            <span className="cred-kicker mono">// volunteering</span>
+          <Reveal className="cred-card cred-volunteer sheet" delay={90}>
+            <span className="cred-kicker tok-comment">// volunteering</span>
             <h3 className="cred-title">{volunteering.org}</h3>
             <p className="cred-role mono">
               {volunteering.role} · {volunteering.meta}
@@ -32,6 +37,8 @@ export function Credentials() {
             <p className="cred-detail">{volunteering.detail}</p>
           </Reveal>
         </div>
+
+        <SectionClose />
       </div>
     </section>
   );

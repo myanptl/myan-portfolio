@@ -6,21 +6,20 @@ export function Footer() {
   return (
     <footer className="footer" aria-label="Footer">
       <div className="container footer-inner">
-        <span className="footer-prompt mono" aria-hidden="true">
-          <span className="term-prompt">myan@web:~$</span> exit
+        <span className="footer-eof tok-comment" aria-hidden="true">
+          {'// EOF — thanks for reading the source'}
         </span>
 
         <nav className="footer-links" aria-label="Social links">
           {profile.links.map((link) => {
             const Icon = iconMap[link.icon];
-            const external = link.href.startsWith('http');
             return (
               <a
                 key={link.label}
                 href={link.href}
                 aria-label={link.ariaLabel}
-                target={external ? '_blank' : undefined}
-                rel={external ? 'noopener noreferrer' : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="footer-link mono"
               >
                 {Icon && <Icon />}

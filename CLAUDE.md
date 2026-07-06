@@ -1,6 +1,7 @@
 # myan-portfolio — Claude Code Config
 
-Terminal-aesthetic personal portfolio with a bento grid + live GitHub stats.
+"Syntax on paper" personal portfolio — a light editor theme as a design system,
+with a typed code hero + live GitHub stats.
 Live: myan-portfolio.vercel.app
 
 ## Stack
@@ -8,7 +9,7 @@ Live: myan-portfolio.vercel.app
 - No linter/test framework installed (keep it lean unless there's a real need).
 
 ## Layout
-- `src/` — components (terminal UI, bento grid, GitHub stats)
+- `src/` — components (code hero, section declarations, GitHub stats)
 - `design/` — design references / assets
 - `public/`, `dist/`
 
@@ -20,7 +21,7 @@ npm run preview
 ```
 
 ## Conventions
-- Hold the terminal aesthetic: monospace type, consistent palette, scanline/prompt motifs — intentional, not templated.
+- Hold the "syntax on paper" aesthetic: warm stone paper + warm near-black ink; the syntax palette IS the design system (brick red `--keyword` = actions/links, forest green `--entity` = names, dark amber `--string` = data/tags, warm gray `--comment` = meta). Section headers are real declarations with real `profile.js` line numbers — keep them in sync if profile.js is restructured.
 - Animate only compositor-friendly props (`transform`, `opacity`); respect `prefers-reduced-motion`.
 - Accessibility: sufficient contrast on the dark terminal theme, keyboard-navigable, semantic HTML.
 - Live GitHub stats: handle rate-limit/error states gracefully; never hardcode fabricated numbers.

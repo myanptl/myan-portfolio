@@ -6,7 +6,7 @@ export const profile = {
   fullName: 'Myan Patel',
   about: [
     'Aspiring GenAI Product Manager & AI Security Engineer',
-    'Sophomore @ Westford Academy, MA · Class of 2028',
+    'Rising junior @ Westford Academy, MA · Class of 2028',
     'I build and secure AI products end to end.',
   ],
   links: [

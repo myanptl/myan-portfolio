@@ -1,4 +1,5 @@
 import { Reveal } from '../layout/Reveal';
+import { SectionDecl, SectionClose } from '../layout/SectionDecl';
 import { ArrowUpRight } from '../layout/Icons';
 import { projects } from '../../data/profile';
 import { useGithubStats, formatPushed } from '../../hooks/useGithubStats';
@@ -23,9 +24,12 @@ export function Projects() {
   return (
     <section className="section" id="projects" aria-labelledby="projects-title">
       <div className="container">
-        <Reveal as="h2" className="section-title" id="projects-title">
-          Projects
-        </Reveal>
+        <SectionDecl
+          name="projects"
+          lineno={56}
+          title="Things I've shipped"
+          titleId="projects-title"
+        />
 
         <div className="proj-grid">
           {projects.map((project, i) => (
@@ -35,7 +39,9 @@ export function Projects() {
               className={i === 0 ? 'proj-cell proj-cell-featured' : 'proj-cell'}
             >
               <a
-                className={i === 0 ? 'proj-card proj-card-featured' : 'proj-card'}
+                className={
+                  i === 0 ? 'proj-card proj-card-featured sheet' : 'proj-card sheet'
+                }
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -53,8 +59,10 @@ export function Projects() {
                   <RepoStats stat={project.repo ? stats[project.repo] : null} />
                   <ul className="proj-tags" aria-label="Tech stack">
                     {project.tags.map((tag) => (
-                      <li className="proj-tag mono" key={tag}>
+                      <li className="proj-tag" key={tag}>
+                        <span aria-hidden="true">&quot;</span>
                         {tag}
+                        <span aria-hidden="true">&quot;</span>
                       </li>
                     ))}
                   </ul>
@@ -63,6 +71,8 @@ export function Projects() {
             </Reveal>
           ))}
         </div>
+
+        <SectionClose />
       </div>
     </section>
   );

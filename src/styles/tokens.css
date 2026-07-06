@@ -1,40 +1,48 @@
 :root {
-  /* Electric Cyan palette on deep navy-black */
-  --color-bg: #0a0e14;
-  --color-bg-elevated: #0f1620;
-  --color-surface: #111927;
-  --color-surface-hover: #16202f;
+  /* "Syntax on paper" — a light editor theme as a design system.
+     Every accent maps to a token role and is used consistently:
+     keyword = actions/links · entity = names/titles · string = data/tags
+     comment = metadata. */
+  --paper: #f7f5f0;
+  --paper-deep: #eeeae1;
+  --surface: #ffffff;
+  --ink: #24211c;
+  --ink-soft: rgba(36, 33, 28, 0.74);
+  --ink-dim: rgba(36, 33, 28, 0.52);
 
-  --color-text: #e6edf3;
-  --color-text-muted: rgba(230, 237, 243, 0.72);
-  --color-text-dim: rgba(230, 237, 243, 0.55);
+  --keyword: #b42318; /* brick red — actions, links, emphasis */
+  --keyword-soft: rgba(180, 35, 24, 0.09);
+  --entity: #3f6b21; /* forest green — names, functions, headings */
+  --entity-soft: rgba(63, 107, 33, 0.1);
+  --string: #a16207; /* dark amber — string data, tags */
+  --string-soft: rgba(161, 98, 7, 0.1);
+  --comment: #8e8779; /* warm gray — comments, meta */
 
-  --color-prompt: #3fb950; /* terminal green */
-  --color-accent: #3dfc8e; /* phosphor green — the terminal's native glow */
-  --color-accent-dim: #14894c;
-  --color-accent-glow: rgba(61, 252, 142, 0.16);
-
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(61, 252, 142, 0.35);
+  --line: #e6e1d5;
+  --line-strong: #d3ccba;
 
   /* Typography */
-  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, monospace;
+  --font-display: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
 
-  --text-hero: clamp(3.5rem, 1.5rem + 9vw, 9rem);
-  --text-section: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
-  --text-card-title: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+  --text-hero: clamp(3.25rem, 1.25rem + 8.5vw, 8.25rem);
+  --text-section: clamp(2rem, 1.4rem + 3vw, 3.9rem);
   --text-base: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-  --text-mono: clamp(0.9rem, 0.85rem + 0.3vw, 1rem);
+  --text-mono: clamp(0.85rem, 0.8rem + 0.25vw, 0.95rem);
 
-  /* Spacing */
-  --space-section: clamp(5rem, 4rem + 8vw, 11rem);
-  --container: 1080px;
+  /* Layout */
+  --gutter: clamp(2.6rem, 2rem + 2.5vw, 4.5rem);
+  --container: 1060px;
+  --space-section: clamp(4.5rem, 3.5rem + 6vw, 9rem);
 
   /* Motion */
-  --duration-reveal: 700ms;
+  --duration-reveal: 650ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --radius: 14px;
-  --radius-lg: 20px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --shadow-lift:
+    0 2px 6px rgba(36, 33, 28, 0.05),
+    0 18px 40px -18px rgba(36, 33, 28, 0.28);
 }

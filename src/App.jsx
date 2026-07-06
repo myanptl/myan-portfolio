@@ -1,4 +1,4 @@
-import { TerminalHero } from './components/terminal/TerminalHero';
+import { CodeHero } from './components/hero/CodeHero';
 import { Experience } from './components/experience/Experience';
 import { Projects } from './components/projects/Projects';
 import { Skills } from './components/skills/Skills';
@@ -11,13 +11,15 @@ export default function App() {
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <TerminalHero />
-      <main id="main-content" tabIndex={-1}>
-        <Experience />
-        <Projects />
-        <Skills />
-        <Credentials />
-      </main>
+      <div className="page-rail">
+        <CodeHero />
+        <main id="main-content" tabIndex={-1}>
+          <Projects />
+          <Experience />
+          <Skills />
+          <Credentials />
+        </main>
+      </div>
       <Footer />
     </>
   );

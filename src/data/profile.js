@@ -65,6 +65,16 @@ export const projects = [
     tags: ['React', 'Vite', 'Supabase', 'Claude API', 'Security'],
   },
   {
+    name: 'SlideAir',
+    repo: 'slideair',
+    tagline: 'Present with your hands, webcam gesture control',
+    badge: 'Live · slideair.vercel.app',
+    href: 'https://slideair.vercel.app',
+    description:
+      'Swipe through slides, point a fingertip laser, hold a fist to black out the screen: a presentation remote made of hand gestures. MediaPipe hand tracking runs as WebAssembly in the browser at 30fps, a held open palm arms the controls so it never misfires while you talk with your hands, and video never leaves the device. Bring your own deck as markdown. First step of Conductor, a motion-to-OS-control project.',
+    tags: ['React', 'Vite', 'TypeScript', 'MediaPipe', 'On-device AI'],
+  },
+  {
     name: 'RepoRoast',
     repo: 'reporoast',
     tagline: 'AI that roasts (then hypes) your GitHub',

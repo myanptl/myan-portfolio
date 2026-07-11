@@ -65,6 +65,16 @@ export const projects = [
     tags: ['React', 'Vite', 'Supabase', 'Claude API', 'Security'],
   },
   {
+    name: 'fable-jarvis',
+    repo: 'fable-jarvis',
+    tagline: 'Your own JARVIS in the terminal',
+    badge: 'npm · published',
+    href: 'https://www.npmjs.com/package/fable-jarvis',
+    description:
+      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
+    tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
+  },
+  {
     name: 'NYE Media',
     tagline: 'Landing page for a youth entrepreneurship network',
     badge: 'Live · nye-media.vercel.app',

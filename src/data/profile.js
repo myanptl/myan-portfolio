@@ -65,23 +65,14 @@ export const projects = [
     tags: ['React', 'Vite', 'Supabase', 'Claude API', 'Security'],
   },
   {
-    name: 'fable-jarvis',
-    repo: 'fable-jarvis',
-    tagline: 'Your own JARVIS in the terminal',
-    badge: 'npm · published',
-    href: 'https://www.npmjs.com/package/fable-jarvis',
+    name: 'PromptProbe',
+    repo: 'promptprobe',
+    tagline: 'BYOK LLM security scanner — red-teams your chatbot',
+    badge: 'Live · promptprobe.vercel.app',
+    href: 'https://promptprobe.vercel.app',
     description:
-      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
-    tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
-  },
-  {
-    name: 'NYE Media',
-    tagline: 'Landing page for a youth entrepreneurship network',
-    badge: 'Live · nye-media.vercel.app',
-    href: 'https://nye-media.vercel.app',
-    description:
-      'A venture-capital-grade landing page for NYE Media, a community connecting high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. Co-built with Colin Liu.',
-    tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
+      'A security scanner for LLMs, not code: paste your chatbot\'s API key and PromptProbe fires ~20 adversarial prompts across the OWASP LLM Top 10 — prompt injection, jailbreaks, system-prompt leaks, PII extraction — then an AI judge grades every response and returns a severity-weighted A–F score with a shareable scorecard. Your key is used server-side for one scan and never stored.',
+    tags: ['React', 'Vite', 'TypeScript', 'AI Security', 'OWASP LLM'],
   },
   {
     name: 'SlideAir',
@@ -94,34 +85,14 @@ export const projects = [
     tags: ['React', 'Vite', 'TypeScript', 'MediaPipe', 'On-device AI'],
   },
   {
-    name: 'RepoRoast',
-    repo: 'reporoast',
-    tagline: 'AI that roasts (then hypes) your GitHub',
-    badge: 'Live · reporoast-alpha.vercel.app',
-    href: 'https://reporoast-alpha.vercel.app',
+    name: 'fable-jarvis',
+    repo: 'fable-jarvis',
+    tagline: 'Your own JARVIS in the terminal',
+    badge: 'npm · published',
+    href: 'https://www.npmjs.com/package/fable-jarvis',
     description:
-      'A fun AI web app: drop in a GitHub username and an AI roast host delivers a savage-but-kind roast of your repos, then flips to a genuine hype-up — with a 0–100 heat score and a shareable card. Public GitHub data in, Claude Haiku out, no login, nothing stored. Built in a day as the fun counterweight to my security work.',
-    tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
-  },
-  {
-    name: 'SlideStack',
-    repo: 'slidestack',
-    tagline: 'AI Instagram carousel maker — topic in, PNGs out',
-    badge: 'Live · slidestack-beta.vercel.app',
-    href: 'https://slidestack-beta.vercel.app',
-    description:
-      'Carousels beat Reels in 2026 (saved ~9× more), so I built the fastest way to make one: type a topic, Claude Fable 5 writes a hook → points → CTA deck as structured JSON, and a canvas renderer paints 1080×1350 slides in three hand-built themes — downloadable as PNGs or a ZIP. 100% client-side BYOK: your API key never leaves the browser, enforced by a strict CSP.',
-    tags: ['React', 'Vite', 'TypeScript', 'Claude API', 'Canvas'],
-  },
-  {
-    name: 'PromptProbe',
-    repo: 'promptprobe',
-    tagline: 'BYOK LLM security scanner — red-teams your chatbot',
-    badge: 'Live · promptprobe.vercel.app',
-    href: 'https://promptprobe.vercel.app',
-    description:
-      'A security scanner for LLMs, not code: paste your chatbot\'s API key and PromptProbe fires ~20 adversarial prompts across the OWASP LLM Top 10 — prompt injection, jailbreaks, system-prompt leaks, PII extraction — then an AI judge grades every response and returns a severity-weighted A–F score with a shareable scorecard. Your key is used server-side for one scan and never stored.',
-    tags: ['React', 'Vite', 'TypeScript', 'AI Security', 'OWASP LLM'],
+      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
+    tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
   },
   {
     name: 'VulnScan',
@@ -144,6 +115,16 @@ export const projects = [
     tags: ['TypeScript', 'MCP', 'Node', 'Finance'],
   },
   {
+    name: 'SlideStack',
+    repo: 'slidestack',
+    tagline: 'AI Instagram carousel maker — topic in, PNGs out',
+    badge: 'Live · slidestack-beta.vercel.app',
+    href: 'https://slidestack-beta.vercel.app',
+    description:
+      'Carousels beat Reels in 2026 (saved ~9× more), so I built the fastest way to make one: type a topic, Claude Fable 5 writes a hook → points → CTA deck as structured JSON, and a canvas renderer paints 1080×1350 slides in three hand-built themes — downloadable as PNGs or a ZIP. 100% client-side BYOK: your API key never leaves the browser, enforced by a strict CSP.',
+    tags: ['React', 'Vite', 'TypeScript', 'Claude API', 'Canvas'],
+  },
+  {
     name: 'keyhound',
     repo: 'keyhound',
     tagline: 'Dependency-free Python secret scanner',
@@ -152,6 +133,25 @@ export const projects = [
     description:
       'A zero-dependency Python CLI that scans codebases and full git history for leaked API keys and secrets. Detects 25+ credential types plus high-entropy strings, scans deleted commits, redacts findings, and ships CI-ready exit codes. Built after I found a leaked key in my own project.',
     tags: ['Python', 'Cybersecurity', 'CLI', 'Open Source'],
+  },
+  {
+    name: 'RepoRoast',
+    repo: 'reporoast',
+    tagline: 'AI that roasts (then hypes) your GitHub',
+    badge: 'Live · reporoast-alpha.vercel.app',
+    href: 'https://reporoast-alpha.vercel.app',
+    description:
+      'A fun AI web app: drop in a GitHub username and an AI roast host delivers a savage-but-kind roast of your repos, then flips to a genuine hype-up — with a 0–100 heat score and a shareable card. Public GitHub data in, Claude Haiku out, no login, nothing stored. Built in a day as the fun counterweight to my security work.',
+    tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
+  },
+  {
+    name: 'NYE Media',
+    tagline: 'Landing page for a youth entrepreneurship network',
+    badge: 'Live · nye-media.vercel.app',
+    href: 'https://nye-media.vercel.app',
+    description:
+      'A venture-capital-grade landing page for NYE Media, a community connecting high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. Co-built with Colin Liu.',
+    tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
   },
   {
     name: 'EquityLens — AMZN Pitch',

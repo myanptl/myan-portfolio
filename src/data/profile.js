@@ -85,14 +85,13 @@ export const projects = [
     tags: ['React', 'Vite', 'TypeScript', 'MediaPipe', 'On-device AI'],
   },
   {
-    name: 'fable-jarvis',
-    repo: 'fable-jarvis',
-    tagline: 'Your own JARVIS in the terminal',
-    badge: 'npm · published',
-    href: 'https://www.npmjs.com/package/fable-jarvis',
+    name: 'NYE Media',
+    tagline: 'Landing page for a youth entrepreneurship network',
+    badge: 'Live · nye-media.vercel.app',
+    href: 'https://nye-media.vercel.app',
     description:
-      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
-    tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
+      'A venture-capital-grade landing page for NYE Media, a community connecting high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. Co-built with Colin Liu.',
+    tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
   },
   {
     name: 'VulnScan',
@@ -145,13 +144,14 @@ export const projects = [
     tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
   },
   {
-    name: 'NYE Media',
-    tagline: 'Landing page for a youth entrepreneurship network',
-    badge: 'Live · nye-media.vercel.app',
-    href: 'https://nye-media.vercel.app',
+    name: 'fable-jarvis',
+    repo: 'fable-jarvis',
+    tagline: 'Your own JARVIS in the terminal',
+    badge: 'npm · published',
+    href: 'https://www.npmjs.com/package/fable-jarvis',
     description:
-      'A venture-capital-grade landing page for NYE Media, a community connecting high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. Co-built with Colin Liu.',
-    tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
+      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
+    tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
   },
   {
     name: 'EquityLens — AMZN Pitch',

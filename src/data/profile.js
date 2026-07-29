@@ -177,6 +177,12 @@ export const credentials = {
     headline: '18 Anthropic Academy Certifications',
     detail:
       'Completed the full Anthropic Academy track — AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
+    also: {
+      name: 'AI-Powered Shopping ads',
+      issuer: 'Google',
+      year: '2026',
+      url: 'https://www.credential.net/977c1cbc-7b9f-4a88-8c54-9bae5571cd3f',
+    },
   },
   volunteering: {
     org: 'American India Foundation',

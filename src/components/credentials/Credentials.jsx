@@ -26,6 +26,19 @@ export function Credentials() {
               </span>
             </div>
             <p className="cred-detail">{certifications.detail}</p>
+            <p className="cred-also">
+              <span className="tok-comment">// also</span>{' '}
+              <a
+                href={certifications.also.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {certifications.also.name}
+              </a>{' '}
+              <span className="tok-comment">
+                {certifications.also.issuer} · {certifications.also.year}
+              </span>
+            </p>
           </Reveal>
 
           <Reveal className="cred-card cred-volunteer sheet" delay={90}>

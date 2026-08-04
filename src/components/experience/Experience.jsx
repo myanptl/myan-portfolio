@@ -17,7 +17,12 @@ export function Experience() {
 
         <ol className="exp-list">
           {experience.map((job, i) => (
-            <Reveal as="li" className="exp-item sheet" key={job.role} delay={i * 80}>
+            <Reveal
+              as="li"
+              className={job.featured ? 'exp-item exp-item-featured sheet' : 'exp-item sheet'}
+              key={job.role}
+              delay={i * 80}
+            >
               <div className="exp-head">
                 <h3 className="exp-role">{job.role}</h3>
                 <span className="exp-org mono">{job.org}</span>

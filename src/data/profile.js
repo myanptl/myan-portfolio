@@ -43,6 +43,7 @@ export const experience = [
     role: 'Founder',
     org: 'NYE Media',
     meta: 'Self-employed · Jul 2026 – Present',
+    featured: true,
     link: { label: 'nyemedia.org', href: 'https://nyemedia.org' },
     bullets: [
       'Co-founded a student-led nonprofit connecting high school builders with founders, investors, and mentors — I design, build, and run the web platform.',
@@ -54,6 +55,7 @@ export const experience = [
     role: 'Growth & Ops Intern',
     org: 'Dimenso',
     meta: 'Internship · Jul 2026 – Present · Cambridge, MA',
+    featured: true,
     bullets: [
       'Growth and operations at an early-stage startup building smart glasses for pharmaceutical labs.',
       'Building an internal lead-triage agent that classifies and routes inbound email so outreach gets to the right place without manual sorting.',
@@ -76,6 +78,7 @@ export const experience = [
 export const projects = [
   {
     name: 'FocusOS',
+    featured: true,
     repo: 'focusos',
     tagline: 'AI study app + OWASP security case study',
     badge: 'Live · focusos.live',
@@ -106,9 +109,27 @@ export const projects = [
   },
   {
     name: 'NYE Media',
-    tagline: 'Landing page for a youth entrepreneurship network',
+    featured: true,
+    tagline: 'The nonprofit I co-founded for student builders',
     badge: 'Live · nyemedia.org',
     href: 'https://nyemedia.org',
+    highlights: [
+      {
+        term: 'media',
+        detail:
+          'Founder interviews and podcasts that show how ventures actually get built, not how they get pitched.',
+      },
+      {
+        term: 'challenges',
+        detail:
+          'Build-and-pitch events where students ship an AI MVP against a real case study and present to founder and investor judges.',
+      },
+      {
+        term: 'community',
+        detail:
+          'A network putting high school builders in the same room as founders, mentors, and startups.',
+      },
+    ],
     description:
       'The site for NYE Media, the student-led nonprofit I co-founded to connect high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. It carried our first Innovation Challenge — July 27, 2026 at RSM in Boston, where 30 students across 5 teams built AI MVPs and pitched to founder and investor judges. Co-built with Colin Liu.',
     tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],

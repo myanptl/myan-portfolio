@@ -11,7 +11,7 @@ export function Credentials() {
       <div className="container">
         <SectionDecl
           name="credentials"
-          lineno={195}
+          lineno={216}
           title="Proof of work"
           titleId="more-title"
         />

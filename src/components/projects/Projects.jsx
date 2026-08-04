@@ -26,7 +26,7 @@ export function Projects() {
       <div className="container">
         <SectionDecl
           name="projects"
-          lineno={76}
+          lineno={78}
           title="Things I've shipped"
           titleId="projects-title"
         />
@@ -36,11 +36,13 @@ export function Projects() {
             <Reveal
               key={project.name}
               delay={i * 70}
-              className={i === 0 ? 'proj-cell proj-cell-featured' : 'proj-cell'}
+              className={project.featured ? 'proj-cell proj-cell-featured' : 'proj-cell'}
             >
               <a
                 className={
-                  i === 0 ? 'proj-card proj-card-featured sheet' : 'proj-card sheet'
+                  project.featured
+                    ? 'proj-card proj-card-featured sheet'
+                    : 'proj-card sheet'
                 }
                 href={project.href}
                 target="_blank"
@@ -56,6 +58,16 @@ export function Projects() {
                   </div>
                   <p className="proj-tagline">{project.tagline}</p>
                   <p className="proj-desc">{project.description}</p>
+                  {project.highlights && (
+                    <dl className="proj-highlights">
+                      {project.highlights.map((h) => (
+                        <div className="proj-highlight" key={h.term}>
+                          <dt className="proj-highlight-term mono">{h.term}</dt>
+                          <dd className="proj-highlight-detail">{h.detail}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
                   <RepoStats stat={project.repo ? stats[project.repo] : null} />
                   <ul className="proj-tags" aria-label="Tech stack">
                     {project.tags.map((tag) => (

@@ -117,6 +117,41 @@
   max-width: 62ch;
 }
 
+/* "What we do" block — only rendered on cards that define highlights.
+   Terms are entity-green because they name things, matching the token roles. */
+.proj-highlights {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 760px) {
+  .proj-highlights {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+}
+
+.proj-highlight-term {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--entity);
+}
+
+.proj-highlight-term::after {
+  content: ':';
+  color: var(--comment);
+}
+
+.proj-highlight-detail {
+  margin-top: 0.3rem;
+  margin-left: 0;
+  font-size: 0.9em;
+  color: var(--ink-soft);
+}
+
 .proj-stats {
   list-style: none;
   display: flex;

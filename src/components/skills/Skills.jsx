@@ -9,7 +9,7 @@ export function Skills() {
       <div className="container">
         <SectionDecl
           name="skills"
-          lineno={167}
+          lineno={187}
           title="What I work with"
           titleId="skills-title"
         />

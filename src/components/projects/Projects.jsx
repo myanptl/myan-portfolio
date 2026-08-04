@@ -26,7 +26,7 @@ export function Projects() {
       <div className="container">
         <SectionDecl
           name="projects"
-          lineno={56}
+          lineno={76}
           title="Things I've shipped"
           titleId="projects-title"
         />

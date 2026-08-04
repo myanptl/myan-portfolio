@@ -11,7 +11,7 @@ export function Credentials() {
       <div className="container">
         <SectionDecl
           name="credentials"
-          lineno={175}
+          lineno={195}
           title="Proof of work"
           titleId="more-title"
         />
@@ -26,19 +26,17 @@ export function Credentials() {
               </span>
             </div>
             <p className="cred-detail">{certifications.detail}</p>
-            <p className="cred-also">
-              <span className="tok-comment">// also</span>{' '}
-              <a
-                href={certifications.also.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {certifications.also.name}
-              </a>{' '}
-              <span className="tok-comment">
-                {certifications.also.issuer} · {certifications.also.year}
-              </span>
-            </p>
+            {certifications.also.map((cert) => (
+              <p className="cred-also" key={cert.name}>
+                <span className="tok-comment">// also</span>{' '}
+                <a href={cert.url} target="_blank" rel="noopener noreferrer">
+                  {cert.name}
+                </a>{' '}
+                <span className="tok-comment">
+                  {cert.issuer} · {cert.year}
+                </span>
+              </p>
+            ))}
           </Reveal>
 
           <Reveal className="cred-card cred-volunteer sheet" delay={90}>

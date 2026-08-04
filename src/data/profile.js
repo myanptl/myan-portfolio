@@ -40,6 +40,26 @@ export const experience = [
     ],
   },
   {
+    role: 'Founder',
+    org: 'NYE Media',
+    meta: 'Self-employed · Jul 2026 – Present',
+    link: { label: 'nyemedia.org', href: 'https://nyemedia.org' },
+    bullets: [
+      'Co-founded a student-led nonprofit connecting high school builders with founders, investors, and mentors — I design, build, and run the web platform.',
+      'Hosted the first NYE Media Innovation Challenge on July 27, 2026 at RSM in Boston: 30 students across 5 teams built AI MVPs against a real case study and pitched to a panel of founder and investor judges.',
+      'Shipped the site end to end — ambient video hero, sponsor track, founder profiles, privacy and terms pages, and lead capture that delivers straight to the team inbox.',
+    ],
+  },
+  {
+    role: 'Growth & Ops Intern',
+    org: 'Dimenso',
+    meta: 'Internship · Jul 2026 – Present · Cambridge, MA',
+    bullets: [
+      'Growth and operations at an early-stage startup building smart glasses for pharmaceutical labs.',
+      'Building an internal lead-triage agent that classifies and routes inbound email so outreach gets to the right place without manual sorting.',
+    ],
+  },
+  {
     role: 'Arcade Attendant',
     org: 'Kimball Farm',
     meta: 'Part-time · Apr 2026 – May 2026',
@@ -90,7 +110,7 @@ export const projects = [
     badge: 'Live · nyemedia.org',
     href: 'https://nyemedia.org',
     description:
-      'A venture-capital-grade landing page for NYE Media, a community connecting high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. Co-built with Colin Liu.',
+      'The site for NYE Media, the student-led nonprofit I co-founded to connect high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. It carried our first Innovation Challenge — July 27, 2026 at RSM in Boston, where 30 students across 5 teams built AI MVPs and pitched to founder and investor judges. Co-built with Colin Liu.',
     tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
   },
   {
@@ -177,12 +197,20 @@ export const credentials = {
     headline: '18 Anthropic Academy Certifications',
     detail:
       'Completed the full Anthropic Academy track — AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
-    also: {
-      name: 'AI-Powered Shopping ads',
-      issuer: 'Google',
-      year: '2026',
-      url: 'https://www.credential.net/977c1cbc-7b9f-4a88-8c54-9bae5571cd3f',
-    },
+    also: [
+      {
+        name: 'Y Combinator Startup School',
+        issuer: 'Y Combinator',
+        year: '2026',
+        url: 'https://www.startupschool.org/',
+      },
+      {
+        name: 'AI-Powered Shopping ads',
+        issuer: 'Google',
+        year: '2026',
+        url: 'https://www.credential.net/977c1cbc-7b9f-4a88-8c54-9bae5571cd3f',
+      },
+    ],
   },
   volunteering: {
     org: 'American India Foundation',

@@ -8,6 +8,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# Generated knowledge-graph output
+graphify-out/
+
 # Local agent/daemon state
 .claude-flow/
 .claude/proven-config.json

@@ -36,29 +36,29 @@ export const experience = [
       'Authored a full Product Requirements Document (PRD V4) covering user research, learning science, and the feature roadmap.',
       'Integrated an AI-generated active-recall quiz system using spaced-repetition methodology.',
       'Ran a full security audit (17 findings, 2 critical — all remediated) plus performance and real-time presence fixes.',
-      'Selected for the Suffolk University Pre-College Entrepreneurship Program and Summit STEM Fellowship (Summer 2026).',
+      'Completed the Suffolk University Pre-College Entrepreneurship Program and the Summit STEM Fellowship (Summer 2026).',
     ],
   },
   {
-    role: 'Founder',
+    role: 'Co-founder & CTO',
     org: 'NYE Media',
     meta: 'Self-employed · Jul 2026 – Present',
     featured: true,
     link: { label: 'nyemedia.org', href: 'https://nyemedia.org' },
     bullets: [
-      'Co-founded a student-led nonprofit connecting high school builders with founders, investors, and mentors — I design, build, and run the web platform.',
-      'Hosted the first NYE Media Innovation Challenge on July 27, 2026 at RSM in Boston: 30 students across 5 teams built AI MVPs against a real case study and pitched to a panel of founder and investor judges.',
-      'Shipped the site end to end — ambient video hero, sponsor track, founder profiles, privacy and terms pages, and lead capture that delivers straight to the team inbox.',
+      'Co-founded a student-led nonprofit connecting high school builders with founders, investors, and mentors. I design, build, and run the web platform.',
+      'Helped run the first NYE Media Innovation Challenge on July 27, 2026 at RSM in Boston: student teams got one shared case study at the same moment, built for five hours with mentors on the floor, then pitched to a panel of founder and investor judges.',
+      'Shipped nyemedia.org end to end: an editorial front page built on real event photography, a programs index, sponsor track, and lead capture that delivers straight to the team inbox.',
     ],
   },
   {
     role: 'Growth & Ops Intern',
     org: 'Dimenso',
-    meta: 'Internship · Jul 2026 – Present · Cambridge, MA',
+    meta: 'Internship · Jul 2026 – Aug 2026 · Cambridge, MA',
     featured: true,
     bullets: [
-      'Growth and operations at an early-stage startup building smart glasses for pharmaceutical labs.',
-      'Building an internal lead-triage agent that classifies and routes inbound email so outreach gets to the right place without manual sorting.',
+      'Growth and operations at an early-stage AI startup.',
+      'Built internal automation that replaced a manual ops process, written in TypeScript with a full test suite and shipped to the company codebase. Also worked across go-to-market: outreach process, data hygiene, and workflow design.',
     ],
   },
   {
@@ -131,7 +131,7 @@ export const projects = [
       },
     ],
     description:
-      'The site for NYE Media, the student-led nonprofit I co-founded to connect high school builders with founders, mentors, and startups. Ambient ink-in-water hero video, an editorial type system on a single deep-green accent, and capture forms that deliver straight to the team inbox. It carried our first Innovation Challenge — July 27, 2026 at RSM in Boston, where 30 students across 5 teams built AI MVPs and pitched to founder and investor judges. Co-built with Colin Liu.',
+      'The site for NYE Media, the student-led nonprofit I co-founded to connect high school builders with founders, mentors, and startups. An editorial front page built on real photography from our first Innovation Challenge, a single deep-green accent, and capture forms that deliver straight to the team inbox. The challenge ran July 27, 2026 at RSM in Boston, where student teams built against one shared case study and pitched to founder and investor judges. Co-built with Colin Liu.',
     tags: ['React', 'Vite', 'TypeScript', 'Tailwind CSS', 'Motion'],
   },
   {

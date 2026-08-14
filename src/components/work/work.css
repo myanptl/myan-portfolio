@@ -1,0 +1,263 @@
+/* ---------- Staggered pairs ---------- */
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(2.5rem, 5vw, 6rem) 1.5rem;
+  padding-block: var(--space-section);
+  align-items: start;
+}
+
+.pair__item {
+  grid-column: span 6;
+  opacity: 0;
+  transform: translateY(38px);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+
+.pair__item.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.pair__item--lg {
+  grid-column: span 7;
+}
+
+.pair__item--sm {
+  grid-column: span 4;
+}
+
+/* The offset is what stops a row of two reading as a grid. */
+.pair__item--offset {
+  grid-column-end: -1;
+  margin-top: clamp(3rem, 12vw, 11rem);
+}
+
+.pair__media {
+  overflow: hidden;
+  /* Clip-path wipe: the media is revealed rather than faded in. */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1000ms var(--ease) 120ms;
+}
+
+.pair__item.is-revealed .pair__media {
+  clip-path: inset(0 0 0 0);
+}
+
+.pair__media img {
+  width: 100%;
+  /* Color is the work. Hovering pulls it out, which is the inverse of the
+     usual treatment and keeps reminding you the color means something. */
+  transition:
+    filter var(--dur) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+
+.pair__link:hover .pair__media img {
+  filter: grayscale(1) contrast(1.1);
+  transform: scale(1.02);
+}
+
+/* Text-only entry, for work with no honest capture. */
+.pair__plate {
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(14rem, 26vw, 22rem);
+  padding: 1.75rem;
+  border: 1px solid var(--rule);
+}
+
+.pair__note {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  color: var(--fg-45);
+  line-height: 1.9;
+}
+
+.pair__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-top: 1.1rem;
+  margin-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.pair__line {
+  font-size: var(--text-work);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: var(--track-tight);
+  max-width: 22ch;
+}
+
+.pair__link:hover .pair__line {
+  opacity: 0.62;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+/* ---------- Takeovers ---------- */
+
+/* Full-bleed, but the media and the type never overlap.
+   These captures carry their own typography, so setting text on top of them
+   produced two competing headlines. The media gets the upper band to itself
+   and the type sits below it on solid ground. */
+.takeover {
+  position: relative;
+  /* Definite height, not min-height: a 1fr row only divides space that is
+     already known, otherwise the image's intrinsic aspect sizes the row and
+     pushes the type off-screen. */
+  height: 100svh;
+  min-height: 34rem;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+  /* Clears the sticky header, so the site's own wordmark never lands on top of
+     the captured product's navigation. */
+  padding-top: 3.5rem;
+  padding-bottom: clamp(2rem, 4vw, 3.5rem);
+  background: #000;
+}
+
+.takeover__media {
+  position: relative;
+  overflow: hidden;
+}
+
+/* <picture> is the actual grid child, so it has to carry the sizing.
+   Without this it takes its intrinsic height and pushes the type off-screen. */
+.takeover__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.takeover__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Per-capture, because the interesting part of each product sits at a
+     different height. */
+  object-position: var(--focus, center top);
+  transform: scale(1.08);
+  transition: transform 1600ms var(--ease);
+}
+
+.takeover.is-revealed .takeover__media img {
+  transform: scale(1);
+}
+
+/* Short fade into the type band so the crop edge is not a hard seam. */
+.takeover__media::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 28%;
+  background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+}
+
+.takeover__body {
+  position: relative;
+  width: 100%;
+  color: #fff;
+  padding-top: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.takeover__index,
+.takeover__meta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  padding-top: 0.8rem;
+}
+
+.takeover__index {
+  margin-bottom: 1.4rem;
+}
+
+.takeover__name {
+  font-size: clamp(2.5rem, 1rem + 7vw, 7.5rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: var(--track-tight);
+}
+
+.takeover__line {
+  font-size: clamp(1.1rem, 0.95rem + 0.9vw, 1.9rem);
+  max-width: 26ch;
+  margin: 0.9rem 0 1.6rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.takeover__meta {
+  justify-content: flex-start;
+  gap: 2.5rem;
+}
+
+.takeover__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.takeover__cta:hover {
+  background: #fff;
+  color: #000;
+}
+
+@media (max-width: 860px) {
+  /* Cropping a 1440-wide desktop capture into a phone-width band leaves an
+     illegible zoomed slice. Show the whole product instead and let it
+     letterbox. */
+  .takeover__media img {
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .takeover__media::after {
+    display: none;
+  }
+
+  .pair {
+    gap: 3.5rem 1rem;
+  }
+
+  .pair__item,
+  .pair__item--lg,
+  .pair__item--sm {
+    grid-column: 1 / -1;
+  }
+
+  .pair__item--offset {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pair__item,
+  .pair__media,
+  .takeover__media img {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}

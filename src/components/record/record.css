@@ -1,0 +1,159 @@
+.record {
+  padding-block: var(--space-section);
+}
+
+.record__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 2px solid var(--fg);
+  padding-bottom: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.record__title {
+  font-size: clamp(2rem, 1rem + 4vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: var(--track-tight);
+}
+
+/* ---- Index rows ---- */
+
+.record__list {
+  margin-bottom: clamp(4rem, 9vw, 8rem);
+}
+
+.record__row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.1fr) 2.4fr minmax(7rem, 0.9fr) 1.5rem;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding-block: 1.05rem;
+  border-bottom: 1px solid var(--rule);
+  transition:
+    padding-inline var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+/* Row inversion on hover: the whole line flips ground, which is a state
+   change you can feel rather than a decorative highlight. */
+.record__row:hover {
+  background: var(--fg);
+  color: var(--bg);
+  padding-inline: 1rem;
+}
+
+.record__row:hover .label {
+  color: rgba(var(--fg-rgb), 0.55);
+  mix-blend-mode: difference;
+}
+
+.record__name {
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.record__tagline {
+  color: var(--fg-70);
+}
+
+.record__row:hover .record__tagline {
+  color: inherit;
+  opacity: 0.72;
+}
+
+.record__stat {
+  font-variant-numeric: tabular-nums;
+}
+
+.record__arrow {
+  justify-self: end;
+  opacity: 0.35;
+}
+
+.record__row:hover .record__arrow {
+  opacity: 1;
+}
+
+/* ---- Detail blocks ---- */
+
+.record__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: clamp(2.5rem, 5vw, 5rem);
+}
+
+.record__blockTitle {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.7rem;
+  margin-bottom: 1.4rem;
+}
+
+.record__stack {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.record__role {
+  font-weight: 500;
+}
+
+.record__org {
+  color: var(--fg-70);
+}
+
+.record__org--soft {
+  font-size: 0.95rem;
+}
+
+.record__big {
+  font-size: clamp(3.5rem, 2rem + 6vw, 6rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: var(--track-tight);
+  margin-bottom: 0.5rem;
+}
+
+.record__also {
+  list-style: none;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.record__also a {
+  border-bottom: 1px solid currentColor;
+}
+
+.record__vol {
+  margin-top: 1.4rem;
+}
+
+@media (max-width: 780px) {
+  .record__row {
+    grid-template-columns: 1fr 1.5rem;
+    row-gap: 0.35rem;
+  }
+
+  .record__name {
+    grid-column: 1;
+  }
+
+  .record__arrow {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .record__tagline,
+  .record__stat {
+    grid-column: 1 / -1;
+  }
+}

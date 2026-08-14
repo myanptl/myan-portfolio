@@ -1,0 +1,43 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 1.1rem var(--gutter);
+  /* Follows the active section's polarity rather than blending. Difference
+     blending looked clever but dropped the right-hand link to near-zero
+     contrast on the white sections. */
+  color: var(--fg);
+  transition: color var(--dur) var(--ease);
+}
+
+.header__mark {
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  pointer-events: auto;
+}
+
+.header__label {
+  color: var(--fg-45);
+  flex: 1;
+}
+
+.header__link {
+  color: var(--fg);
+  pointer-events: auto;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.header__link:hover {
+  border-bottom-color: currentColor;
+}

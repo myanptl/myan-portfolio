@@ -1,48 +1,79 @@
+/* "The Record" — monochrome chrome, color only ever from work imagery.
+   Polarity is a single pair of tokens swapped per section, so inverting is
+   one attribute change rather than a parallel set of dark-mode rules. */
+
 :root {
-  /* "Syntax on paper" — a light editor theme as a design system.
-     Every accent maps to a token role and is used consistently:
-     keyword = actions/links · entity = names/titles · string = data/tags
-     comment = metadata. */
-  --paper: #f7f5f0;
-  --paper-deep: #eeeae1;
-  --surface: #ffffff;
-  --ink: #24211c;
-  --ink-soft: rgba(36, 33, 28, 0.74);
-  --ink-dim: rgba(36, 33, 28, 0.52);
+  --black: #000;
+  --white: #fff;
 
-  --keyword: #b42318; /* brick red — actions, links, emphasis */
-  --keyword-soft: rgba(180, 35, 24, 0.09);
-  --entity: #3f6b21; /* forest green — names, functions, headings */
-  --entity-soft: rgba(63, 107, 33, 0.1);
-  --string: #a16207; /* dark amber — string data, tags */
-  --string-soft: rgba(161, 98, 7, 0.1);
-  --comment: #8e8779; /* warm gray — comments, meta */
+  /* Default polarity: light on dark. Sections override via [data-polarity]. */
+  --bg: var(--black);
+  --fg: var(--white);
+  --fg-rgb: 255, 255, 255;
 
-  --line: #e6e1d5;
-  --line-strong: #d3ccba;
+  --fg-70: rgba(var(--fg-rgb), 0.7);
+  --fg-45: rgba(var(--fg-rgb), 0.45);
+  --fg-28: rgba(var(--fg-rgb), 0.28);
+  --rule: rgba(var(--fg-rgb), 0.16);
 
-  /* Typography */
-  --font-display: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
-  --font-body: 'Instrument Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+  /* Type */
+  --font-display: 'Switzer', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --text-hero: clamp(3.25rem, 1.25rem + 8.5vw, 8.25rem);
-  --text-section: clamp(2rem, 1.4rem + 3vw, 3.9rem);
-  --text-base: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-  --text-mono: clamp(0.85rem, 0.8rem + 0.25vw, 0.95rem);
+  --text-wordmark: clamp(3.5rem, 0.5rem + 13vw, 15rem);
+  --text-statement: clamp(2rem, 0.9rem + 5vw, 5.5rem);
+  --text-work: clamp(1.35rem, 1rem + 1.6vw, 2.6rem);
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-label: 0.6875rem;
+
+  --track-tight: -0.035em;
+  --track-label: 0.16em;
 
   /* Layout */
-  --gutter: clamp(2.6rem, 2rem + 2.5vw, 4.5rem);
-  --container: 1060px;
-  --space-section: clamp(4.5rem, 3.5rem + 6vw, 9rem);
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 4.5rem);
+  --container: 1400px;
+  --space-section: clamp(6rem, 4rem + 12vw, 16rem);
 
   /* Motion */
-  --duration-reveal: 650ms;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 220ms;
+  --dur: 600ms;
+  --dur-slow: 1100ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  --radius: 10px;
-  --radius-lg: 16px;
-  --shadow-lift:
-    0 2px 6px rgba(36, 33, 28, 0.05),
-    0 18px 40px -18px rgba(36, 33, 28, 0.28);
+[data-polarity='light'] {
+  --bg: var(--white);
+  --fg: var(--black);
+  --fg-rgb: 0, 0, 0;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/plexmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/plexmono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
 }

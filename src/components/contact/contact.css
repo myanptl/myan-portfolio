@@ -1,0 +1,65 @@
+.contact {
+  min-height: 92svh;
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-section);
+}
+
+.contact__kicker {
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.contact__title {
+  font-size: clamp(2.25rem, 1rem + 6vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: var(--track-tight);
+}
+
+.contact__links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.5rem;
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  border-top: 1px solid var(--rule);
+  padding-top: 1.5rem;
+}
+
+.contact__links a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: clamp(1.25rem, 1rem + 1.4vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: var(--track-tight);
+  position: relative;
+}
+
+/* Underline grows from the left rather than appearing all at once. */
+.contact__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+
+.contact__links a:hover::after {
+  transform: scaleX(1);
+}
+
+.contact__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  margin-top: clamp(4rem, 10vw, 8rem);
+  border-top: 1px solid var(--rule);
+  padding-top: 1.1rem;
+}

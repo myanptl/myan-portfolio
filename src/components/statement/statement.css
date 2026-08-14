@@ -1,0 +1,52 @@
+.statement {
+  padding-block: var(--space-section);
+}
+
+.statement__kicker {
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+.statement__body {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-statement);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: var(--track-tight);
+}
+
+/* Each line wipes up behind its own mask rather than fading in. */
+.statement__line {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 1000ms var(--ease);
+  transition-delay: calc(var(--i) * 110ms);
+}
+
+.statement__body {
+  overflow: hidden;
+}
+
+.statement__line {
+  overflow: hidden;
+}
+
+.statement.is-revealed .statement__line {
+  transform: translateY(0);
+}
+
+.statement__tail {
+  max-width: 46ch;
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  margin-left: auto;
+  color: var(--fg-70);
+  border-top: 1px solid var(--rule);
+  padding-top: 1.2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statement__line {
+    transform: none;
+    transition: none;
+  }
+}

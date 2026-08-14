@@ -8,7 +8,7 @@
       name="description"
       content="Myan Patel — rising junior at Westford Academy building AI products. Creator of FocusOS, VulnScan, keyhound, and etf-research-mcp. Interested in GenAI product and AI security."
     />
-    <meta name="theme-color" content="#f7f5f0" />
+    <meta name="theme-color" content="#000000" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="Myan Patel — AI Builder" />
@@ -32,11 +32,21 @@
     />
     <meta name="twitter:image" content="https://myan-portfolio.vercel.app/og.png" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts are self-hosted, so there is no third-party font request. Only
+         the two weights used above the fold are preloaded. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/switzer-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/plexmono-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <title>Myan Patel — AI Builder</title>

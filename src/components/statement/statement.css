@@ -1,51 +1,65 @@
 .statement {
   padding-block: var(--space-section);
+  position: relative;
+  z-index: 2;
 }
 
-.statement__kicker {
-  margin-bottom: clamp(2rem, 5vw, 4rem);
+.statement__inner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
 }
 
 .statement__body {
   display: flex;
   flex-direction: column;
-  font-size: var(--text-statement);
+  font-size: clamp(2.25rem, 0.8rem + 6.4vw, 7rem);
   font-weight: 500;
-  line-height: 1.02;
-  letter-spacing: var(--track-tight);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
 }
 
-/* Each line wipes up behind its own mask rather than fading in. */
+/* Each line slides up from behind a mask. */
 .statement__line {
   display: block;
+  overflow: hidden;
+}
+
+.statement__line > span {
+  display: block;
   transform: translateY(105%);
-  transition: transform 1000ms var(--ease);
+  transition: transform 950ms var(--ease);
   transition-delay: calc(var(--i) * 110ms);
 }
 
-.statement__body {
-  overflow: hidden;
-}
-
-.statement__line {
-  overflow: hidden;
-}
-
-.statement.is-revealed .statement__line {
+.statement.is-revealed .statement__line > span {
   transform: translateY(0);
 }
 
-.statement__tail {
-  max-width: 46ch;
-  margin-top: clamp(2.5rem, 6vw, 5rem);
-  margin-left: auto;
-  color: var(--fg-70);
+.statement__side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   border-top: 1px solid var(--rule);
-  padding-top: 1.2rem;
+  padding-top: 1.1rem;
+}
+
+.statement__tail {
+  color: var(--fg-70);
+  max-width: 42ch;
+}
+
+@media (max-width: 860px) {
+  .statement__inner {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .statement__line {
+  .statement__line > span {
     transform: none;
     transition: none;
   }

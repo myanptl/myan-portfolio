@@ -3,89 +3,146 @@
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
-  padding-block: 6rem 3.5rem;
+  padding-block: 5rem 4rem;
   overflow: hidden;
+  z-index: 2;
 }
 
-/* Low-res dither buffer blown up. pixelated is what keeps the dots hard. */
+/* Low-res dither buffer blown up. pixelated is what keeps the dots hard.
+   Drifts against the pointer, so the whole field responds to the mouse. */
 .hero__field {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
   image-rendering: pixelated;
-  opacity: 0.22;
+  opacity: 0.5;
   pointer-events: none;
+  /* Concentrated top-right and cleared off the type. At full bleed the dots
+     competed with the headline and made the mono labels unreadable. */
+  mask-image: radial-gradient(
+    62% 74% at 92% 54%,
+    #000 0%,
+    rgba(0, 0, 0, 0.62) 34%,
+    rgba(0, 0, 0, 0.16) 60%,
+    transparent 76%
+  );
+  transform: translate3d(
+    calc(var(--pnx, 0) * -1.6%),
+    calc(var(--pny, 0) * -1.6%),
+    0
+  );
 }
 
 .hero__inner {
   position: relative;
   width: 100%;
-}
-
-.hero__kicker {
   display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.9rem;
-  margin-bottom: clamp(2rem, 6vh, 5rem);
+  flex-direction: column;
+  gap: clamp(3rem, 12vh, 8rem);
 }
 
-.hero__wordmark {
-  font-size: var(--text-wordmark);
+/* Three-column technical header, the way the reference sites open. */
+.hero__top {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+}
+
+.hero__frag,
+.hero__bio {
+  color: var(--fg-70);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  line-height: 1.75;
+}
+
+.hero__bio {
+  max-width: 44ch;
+}
+
+.hero__display {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(2.5rem, 0.4rem + 8.6vw, 9.5rem);
   font-weight: 500;
-  line-height: 0.82;
-  letter-spacing: var(--track-tight);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.hero__line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero__line > * {
+  display: inline-block;
+}
+
+/* Each line clips up from behind its own edge. */
+.hero__display .hero__line {
+  clip-path: inset(0 0 100% 0);
+  animation: line-clip 1000ms var(--ease) forwards;
+  animation-delay: calc(var(--i) * 110ms + 150ms);
+}
+
+@keyframes line-clip {
+  to {
+    clip-path: inset(0 0 -0.2em 0);
+  }
+}
+
+.hero__line--last {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  flex-wrap: wrap;
+}
+
+.hero__badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  color: var(--fg-45);
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.hero__char {
-  display: inline-block;
-  transform: translateY(0.9em);
-  opacity: 0;
-  animation: char-rise 900ms var(--ease) forwards;
-  animation-delay: calc(var(--i) * 42ms + 120ms);
-}
-
-@keyframes char-rise {
-  to {
-    transform: translateY(0);
-    opacity: 1;
+@media (max-width: 860px) {
+  .hero__top {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
-}
 
-.hero__foot {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-top: clamp(2rem, 6vh, 4rem);
-  border-top: 1px solid var(--rule);
-  padding-top: 1.1rem;
-}
+  .hero__bio {
+    display: none;
+  }
 
-.hero__role {
-  font-size: clamp(1.05rem, 0.9rem + 0.8vw, 1.6rem);
-  max-width: 22ch;
-  color: var(--fg-70);
-}
-
-.hero__count {
-  font-variant-numeric: tabular-nums;
+  /* Portrait leaves no clear column beside the type, so the field moves to
+     the upper band and lightens rather than sitting behind the labels. */
+  .hero__field {
+    opacity: 0.34;
+    mask-image: radial-gradient(
+      92% 42% at 74% 22%,
+      #000 0%,
+      rgba(0, 0, 0, 0.5) 42%,
+      transparent 74%
+    );
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__char {
+  .hero__field {
     transform: none;
-    opacity: 1;
-    animation: none;
   }
-}
 
-@media (max-width: 640px) {
-  .hero__wordmark {
-    white-space: normal;
-    line-height: 0.88;
+  .hero__display .hero__line {
+    clip-path: none;
+    animation: none;
   }
 }

@@ -1,0 +1,143 @@
+/* ---------- Column grid + crosshairs ---------- */
+
+.grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid__col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(var(--fg-rgb), 0.11);
+  transition: background-color var(--dur) var(--ease);
+}
+
+/* Small plus marks at the grid intersections, like a registration mark. */
+.grid__cross {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  opacity: 0.34;
+}
+
+.grid__cross::before,
+.grid__cross::after {
+  content: '';
+  position: absolute;
+  background: var(--fg);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.grid__cross::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.grid__cross::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+/* ---------- Cursor ---------- */
+
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  /* Driven entirely by the custom properties usePointer writes, so tracking
+     costs no React renders. */
+  transform: translate3d(calc(var(--px, 50vw) - 13px), calc(var(--py, 50vh) - 13px), 0);
+  mix-blend-mode: difference;
+}
+
+.cursor::before,
+.cursor::after {
+  content: '';
+  position: absolute;
+  background: #fff;
+}
+
+.cursor::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.cursor::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+/* Grows into a bracket over anything interactive. */
+:where(a, button):hover ~ .cursor,
+body:has(:where(a, button):hover) .cursor {
+  width: 46px;
+  height: 46px;
+  transform: translate3d(calc(var(--px, 50vw) - 23px), calc(var(--py, 50vh) - 23px), 0);
+  transition:
+    width var(--dur-fast) var(--ease),
+    height var(--dur-fast) var(--ease);
+}
+
+@media (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ---------- Readouts ---------- */
+
+.readout {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 0.9rem var(--gutter);
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: var(--fg-45);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur) var(--ease);
+}
+
+@media (max-width: 720px) {
+  .readout__item--center {
+    display: none;
+  }
+
+  .grid__col:not(:nth-child(2)),
+  .grid__cross {
+    display: none;
+  }
+}

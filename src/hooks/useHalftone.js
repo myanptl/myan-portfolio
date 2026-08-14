@@ -59,12 +59,22 @@ export function useHalftone({ reducedMotion, rgb = [255, 255, 255] }) {
       return () => resizeObserver.disconnect();
     }
 
+    // Read the pointer from the custom properties usePointer publishes, rather
+    // than subscribing separately. One source of truth, no extra listener.
+    const root = document.documentElement;
+    const pointer = { x: 0, y: 0 };
+
     const loop = (t) => {
       raf = requestAnimationFrame(loop);
       if (!visible || document.hidden) return;
       if (t - last < interval) return;
       last = t;
-      renderDither(ctx, canvas.width, canvas.height, t, rgb);
+
+      const style = getComputedStyle(root);
+      pointer.x = parseFloat(style.getPropertyValue('--pnx')) || 0;
+      pointer.y = parseFloat(style.getPropertyValue('--pny')) || 0;
+
+      renderDither(ctx, canvas.width, canvas.height, t, rgb, pointer);
     };
 
     const inView = new IntersectionObserver(([entry]) => {

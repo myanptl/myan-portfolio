@@ -1,13 +1,14 @@
 import { Hero } from './components/hero/Hero';
 import { Statement } from './components/statement/Statement';
-import { StaggeredPair } from './components/work/StaggeredPair';
+import { WorkGrid } from './components/work/WorkGrid';
 import { Takeover } from './components/work/Takeover';
 import { Marquee } from './components/marquee/Marquee';
 import { Record } from './components/record/Record';
 import { Contact } from './components/contact/Contact';
 import { StickyHeader } from './components/layout/StickyHeader';
+import { Instrument } from './components/layout/Instrument';
 import { usePolarity } from './hooks/usePolarity';
-import { pairs, takeovers } from './data/work';
+import { takeovers, workA, workB, workC, workD } from './data/work';
 
 export default function App() {
   const { label } = usePolarity();
@@ -18,6 +19,7 @@ export default function App() {
         Skip to the full record
       </a>
 
+      <Instrument />
       <StickyHeader label={label} />
 
       <div id="top">
@@ -26,18 +28,19 @@ export default function App() {
         <main id="main-content">
           <Statement />
 
-          {/* Work alternates: a staggered pair, then a full-bleed takeover, so
-              no two consecutive screens share a shape. */}
-          <StaggeredPair pair={pairs[0]} />
+          {/* Uniform grids and full-bleed takeovers alternate. The grids keep
+              every card the same size; the takeovers pan a whole site through
+              a window as you scroll past. */}
+          <WorkGrid items={workA} />
           <Takeover item={takeovers[0]} index={1} eager />
 
-          <StaggeredPair pair={pairs[1]} />
+          <WorkGrid items={workB} />
           <Takeover item={takeovers[1]} index={2} />
 
-          <StaggeredPair pair={pairs[2]} />
+          <WorkGrid items={workC} />
           <Takeover item={takeovers[2]} index={3} />
 
-          <StaggeredPair pair={pairs[3]} />
+          <WorkGrid items={workD} />
 
           <Marquee />
 

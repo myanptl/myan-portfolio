@@ -26,11 +26,13 @@ export const BAYER_8 = (() => {
  * dark and leaves a real ramp only at the edges, which is what reads as
  * halftone.
  */
-export function fieldAt(x, y, w, h, t) {
-  const ax = w * (0.34 + 0.2 * Math.cos(t * 0.00021));
-  const ay = h * (0.42 + 0.26 * Math.sin(t * 0.00017));
-  const bx = w * (0.7 + 0.22 * Math.cos(t * 0.00013 + 2.1));
-  const by = h * (0.6 + 0.2 * Math.sin(t * 0.00024 + 1.3));
+export function fieldAt(x, y, w, h, t, pointer = { x: 0, y: 0 }) {
+  // The first lobe is pulled toward the pointer, so the field opens up around
+  // the cursor instead of just drifting on a timer.
+  const ax = w * (0.34 + 0.2 * Math.cos(t * 0.00021) + pointer.x * 0.22);
+  const ay = h * (0.42 + 0.26 * Math.sin(t * 0.00017) + pointer.y * 0.24);
+  const bx = w * (0.7 + 0.22 * Math.cos(t * 0.00013 + 2.1) - pointer.x * 0.1);
+  const by = h * (0.6 + 0.2 * Math.sin(t * 0.00024 + 1.3) - pointer.y * 0.1);
 
   const r = Math.max(w, h) * 0.46;
   const da = Math.max(0, 1 - Math.hypot(x - ax, y - ay) / r);
@@ -44,7 +46,7 @@ export function fieldAt(x, y, w, h, t) {
  * Paints one dithered frame of the field into ctx at the canvas's own
  * (low) resolution. `rgb` is the ink color as [r, g, b].
  */
-export function renderDither(ctx, w, h, t, rgb) {
+export function renderDither(ctx, w, h, t, rgb, pointer) {
   const image = ctx.createImageData(w, h);
   const px = image.data;
   const [r, g, b] = rgb;
@@ -52,7 +54,7 @@ export function renderDither(ctx, w, h, t, rgb) {
   for (let y = 0; y < h; y += 1) {
     const row = BAYER_8[y & 7];
     for (let x = 0; x < w; x += 1) {
-      const lit = fieldAt(x, y, w, h, t) > row[x & 7] ? 1 : 0;
+      const lit = fieldAt(x, y, w, h, t, pointer) > row[x & 7] ? 1 : 0;
       const i = (y * w + x) * 4;
       px[i] = r;
       px[i + 1] = g;

@@ -1,6 +1,7 @@
 import { profile } from '../../data/profile';
 import { useMagnetic } from '../../hooks/useMagnetic';
 import { RevealText } from '../common/RevealText';
+import { Scramble } from '../common/Scramble';
 import './contact.css';
 
 function MagneticLink({ link }) {
@@ -25,7 +26,7 @@ export function Contact() {
   return (
     <section className="contact" data-polarity="dark" data-section="contact">
       <div className="shell">
-        <p className="label contact__kicker">( Say hello )</p>
+        <Scramble as="p" className="label contact__kicker" text="( Say hello )" />
 
         <h2 className="contact__title">
           <RevealText text="Open to internships" stagger={55} />

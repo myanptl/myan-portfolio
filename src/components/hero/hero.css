@@ -14,17 +14,17 @@
   pointer-events: none;
 }
 
-/* Low-res WebGL buffer scaled up; pixelated keeps the dither cells hard. */
+/* Half-resolution WebGL surface, scaled up smoothly. Polished, not pixelated. */
 .hero__field {
   position: absolute;
   inset: -6%;
   width: 112%;
   height: 112%;
-  image-rendering: pixelated;
-  opacity: 0.92;
+
+  opacity: 1;
   pointer-events: none;
   mask-image: radial-gradient(
-    46% 66% at 87% 52%,
+    52% 72% at 84% 50%,
     #000 0%,
     #000 38%,
     rgba(0, 0, 0, 0.5) 58%,

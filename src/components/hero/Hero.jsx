@@ -1,11 +1,11 @@
-import { useLiquidMetal } from '../../hooks/useLiquidMetal';
+import { useChrome } from '../../hooks/useChrome';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { RevealText } from '../common/RevealText';
 import './hero.css';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
-  const canvasRef = useLiquidMetal({ reducedMotion });
+  const canvasRef = useChrome({ reducedMotion });
 
   return (
     <section className="hero" data-polarity="dark" data-section="index">

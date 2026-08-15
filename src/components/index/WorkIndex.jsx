@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { workIndex } from '../../data/work';
 import { useSectionInView } from '../../hooks/useSectionInView';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { Scramble } from '../common/Scramble';
 import './index.css';
 
 /**
@@ -22,11 +23,17 @@ export function WorkIndex() {
 
   const animate = useCallback(() => {
     const p = pos.current;
+    const prevX = p.x;
     p.x += (p.tx - p.x) * 0.12;
     p.y += (p.ty - p.y) * 0.12;
 
     if (previewRef.current) {
-      previewRef.current.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
+      // Leans into the direction of travel and lags slightly behind the
+      // pointer, which is what makes it read as a physical object being
+      // dragged rather than a tooltip pinned to the cursor.
+      const lean = Math.max(-14, Math.min(14, (p.x - prevX) * 1.6));
+      previewRef.current.style.transform =
+        `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0) rotate(${lean.toFixed(2)}deg)`;
     }
 
     if (Math.abs(p.tx - p.x) > 0.4 || Math.abs(p.ty - p.y) > 0.4) {
@@ -68,7 +75,7 @@ export function WorkIndex() {
     >
       <div className="shell">
         <header className="index__head">
-          <p className="label">( Selected work )</p>
+          <Scramble as="p" className="label" text="( Selected work )" />
           <p className="label">{workIndex.length} shipped</p>
         </header>
 

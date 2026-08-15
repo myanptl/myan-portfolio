@@ -1,5 +1,6 @@
 import { experience, skills } from '../../data/profile';
 import { useSectionInView } from '../../hooks/useSectionInView';
+import { Scramble } from '../common/Scramble';
 import './experience.css';
 
 export function Experience() {
@@ -14,7 +15,7 @@ export function Experience() {
     >
       <div className="shell exp__inner">
         <div className="exp__col">
-          <h2 className="label exp__title">( Roles )</h2>
+          <Scramble as="h2" className="label exp__title" text="( Roles )" />
           <ul className="exp__list">
             {experience.map((job, i) => (
               <li key={`${job.org}-${job.role}`} className="exp__item" style={{ '--i': i }}>
@@ -27,7 +28,7 @@ export function Experience() {
         </div>
 
         <div className="exp__col exp__col--narrow">
-          <h2 className="label exp__title">( Stack )</h2>
+          <Scramble as="h2" className="label exp__title" text="( Stack )" />
           <ul className="exp__stack">
             {skills.map((group, i) => (
               <li key={group.group} className="exp__item" style={{ '--i': i }}>

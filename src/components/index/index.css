@@ -15,6 +15,10 @@
 
 .index__list {
   list-style: none;
+  /* Leans with scroll speed, the same way the marquee does, so the list feels
+     attached to the motion of the page. */
+  transform: skewY(calc(var(--scroll-velocity, 0) * 0.4deg));
+  transition: transform 460ms var(--ease);
 }
 
 .index__row {
@@ -84,7 +88,9 @@
 }
 
 .index__role {
-  color: var(--fg-45);
+  /* Deliberately not --fg-45: at 45% on paper this row of supporting text
+     falls near the 4.5:1 line. */
+  color: rgba(var(--fg-rgb), 0.62);
   font-size: 0.95rem;
   transition: color var(--dur-fast) var(--ease);
 }
@@ -96,6 +102,7 @@
 .index__year {
   font-variant-numeric: tabular-nums;
   text-align: right;
+  color: rgba(var(--fg-rgb), 0.62);
 }
 
 .index__arrow {

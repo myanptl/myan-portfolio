@@ -56,11 +56,46 @@ button {
 /* Sections own their polarity. The body follows the active one via JS so the
    overscroll area never flashes the wrong ground. */
 section[data-polarity] {
+  position: relative;
+  isolation: isolate;
   background: var(--bg);
   color: var(--fg);
   transition:
     background-color var(--dur) var(--ease),
     color var(--dur) var(--ease);
+}
+
+/* A slow aura in the same violet and amber as the chrome, drifting against the
+   pointer. It is what stops the sections between the hero and the footer from
+   reading as flat panels, without putting an accent into the type or the UI. */
+section[data-polarity]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      42% 52% at calc(28% + var(--pnx, 0) * 9%) calc(34% + var(--pny, 0) * 8%),
+      rgba(150, 92, 224, var(--aura-a, 0.16)),
+      transparent 68%
+    ),
+    radial-gradient(
+      36% 46% at calc(80% - var(--pnx, 0) * 8%) calc(74% - var(--pny, 0) * 7%),
+      rgba(236, 138, 82, var(--aura-b, 0.12)),
+      transparent 70%
+    );
+}
+
+/* Dark grounds need much less of it before it turns into haze. */
+[data-polarity='dark']::before {
+  --aura-a: 0.1;
+  --aura-b: 0.07;
+}
+
+/* The hero has the chrome itself, so it does not need an aura underneath. */
+.hero::before {
+  display: none;
 }
 
 .shell {

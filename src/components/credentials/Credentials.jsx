@@ -1,5 +1,7 @@
 import { credentials } from '../../data/profile';
 import { useSectionInView } from '../../hooks/useSectionInView';
+import { useCountUp } from '../../hooks/useCountUp';
+import { Scramble } from '../common/Scramble';
 import './credentials.css';
 
 const { certifications, programs, volunteering } = credentials;
@@ -7,6 +9,7 @@ const { certifications, programs, volunteering } = credentials;
 export function Credentials() {
   const [ref, revealed] = useSectionInView({ threshold: 0.12, once: true });
   const unnamed = certifications.count - certifications.named.length;
+  const count = useCountUp(certifications.count, revealed);
 
   return (
     <section
@@ -17,12 +20,14 @@ export function Credentials() {
     >
       <div className="shell">
         <header className="creds__head">
-          <p className="label">( Credentials )</p>
-          <p className="label">Anthropic · Y Combinator · Google · AIF</p>
+          <Scramble as="p" className="label" text="( Credentials )" />
+          <Scramble as="p" className="label" text="Anthropic · Y Combinator · Google · AIF" />
         </header>
 
         <div className="creds__wall">
-          <p className="creds__count">{certifications.count}</p>
+          <p className="creds__count" aria-label={String(certifications.count)}>
+            <span aria-hidden="true">{count}</span>
+          </p>
           <div className="creds__body">
             <h2 className="creds__title">Anthropic Academy certifications</h2>
             <p className="creds__note">

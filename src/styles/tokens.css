@@ -44,11 +44,34 @@
   --scroll-velocity: 0;
 }
 
+/* The derived tokens have to be redeclared in every polarity scope.
+   A custom property resolves the var() inside it against the scope it was
+   DECLARED in, not the scope it is used in, so `--fg-70: rgba(var(--fg-rgb),
+   0.7)` declared once on :root stays locked to the root polarity forever.
+   On a light section while the root was dark, that painted every piece of
+   secondary text and every hairline paper-coloured on paper. */
 [data-polarity='light'] {
   --bg: var(--paper);
   --fg: var(--ink);
   --fg-rgb: 12, 12, 13;
   --bg-rgb: 239, 237, 232;
+
+  --fg-70: rgba(12, 12, 13, 0.7);
+  --fg-45: rgba(12, 12, 13, 0.45);
+  --fg-28: rgba(12, 12, 13, 0.28);
+  --rule: rgba(12, 12, 13, 0.18);
+}
+
+[data-polarity='dark'] {
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --fg-rgb: 239, 237, 232;
+  --bg-rgb: 12, 12, 13;
+
+  --fg-70: rgba(239, 237, 232, 0.7);
+  --fg-45: rgba(239, 237, 232, 0.45);
+  --fg-28: rgba(239, 237, 232, 0.28);
+  --rule: rgba(239, 237, 232, 0.18);
 }
 
 @font-face {

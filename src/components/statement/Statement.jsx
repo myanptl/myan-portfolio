@@ -1,11 +1,12 @@
 import { RevealText } from '../common/RevealText';
+import { Scramble } from '../common/Scramble';
 import './statement.css';
 
 export function Statement() {
   return (
     <section className="statement" data-polarity="dark" data-section="approach">
       <div className="shell statement__inner">
-        <p className="label statement__kicker">( The other half )</p>
+        <Scramble as="p" className="label statement__kicker" text="( The other half )" />
 
         <h2 className="statement__body">
           <RevealText text="Anyone can ship a demo." stagger={55} />

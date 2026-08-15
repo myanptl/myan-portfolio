@@ -87,10 +87,11 @@
   letter-spacing: -0.035em;
   display: block;
   overflow: hidden;
-  /* Room for descenders and overshoot. A mask sized to the line box alone
-     shears the tails off g, y and p at this size. */
-  padding-block: 0.1em;
-  margin-block: -0.1em;
+  /* The window is exactly one slot tall. Padding it for descenders made the
+     window taller than a slot, which let the second copy peek out underneath
+     and rendered every project name twice. Descender room comes from the slot
+     height itself instead. */
+  height: 1.16em;
 }
 
 .index__nameRoll {
@@ -98,14 +99,16 @@
   transition: transform 620ms var(--ease);
 }
 
+/* Each copy occupies exactly one slot, so the travel below is exact. */
 .index__nameRoll > span {
   display: block;
-  padding-block: 0.1em;
+  height: 1.16em;
+  line-height: 1.16em;
 }
 
 .index__link:hover .index__nameRoll,
 .index__link:focus-visible .index__nameRoll {
-  transform: translateY(-50%);
+  transform: translateY(-1.16em);
 }
 
 .index__role {

@@ -5,8 +5,44 @@
    No chrome accent anywhere. Colour arrives only through the work captures in
    the hover previews. */
 
+/* A registered property so the hue can actually be animated. Plain custom
+   properties are not interpolable, and doing this with filter: hue-rotate()
+   instead would create a containing block that degrades the chrome text's
+   background-attachment: fixed back to scroll, breaking the single continuous
+   sheen across the headline. */
+@property --chrome-hue {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: true;
+}
+
+/* Swings rather than cycling. A full rotation passes through green, which
+   does not belong anywhere in this palette. */
+@keyframes hue-travel {
+  0%,
+  100% {
+    --chrome-hue: -24deg;
+  }
+  50% {
+    --chrome-hue: 32deg;
+  }
+}
+
+html {
+  animation: hue-travel 30s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    animation: none;
+  }
+}
+
 :root {
-  --paper: #efedE8;
+  /* The light grounds carry a lilac cast so they belong to the same world as
+     the chrome. A neutral warm off-white read as a separate, unrelated site
+     every time the page turned over. */
+  --paper: #eceaf1;
   --ink: #0c0c0d;
 
   /* Default: ink ground, paper type. */
@@ -54,7 +90,7 @@
   --bg: var(--paper);
   --fg: var(--ink);
   --fg-rgb: 12, 12, 13;
-  --bg-rgb: 239, 237, 232;
+  --bg-rgb: 236, 234, 241;
 
   --fg-70: rgba(12, 12, 13, 0.7);
   --fg-45: rgba(12, 12, 13, 0.45);
@@ -90,13 +126,13 @@
 }
 
 [data-tone='bone'] {
-  --bg: #e9e5db;
-  --bg-rgb: 233, 229, 219;
+  --bg: #e6e2ef;
+  --bg-rgb: 230, 226, 239;
 }
 
 [data-tone='mist'] {
-  --bg: #dcdde2;
-  --bg-rgb: 220, 221, 226;
+  --bg: #dcd9e8;
+  --bg-rgb: 220, 217, 232;
 }
 
 /* Chrome lettering. The gradient is banded hard light against dark the way a
@@ -118,20 +154,20 @@ span.chrome-text {
      letters disappear into the background. */
   background-image: linear-gradient(
     166deg,
-    #e9e4ff 0%,
+    hsl(calc(258deg + var(--chrome-hue)) 70% 92%) 0%,
     #ffffff 7%,
-    #cbbdf2 14%,
-    #8f7fd0 19%,
+    hsl(calc(262deg + var(--chrome-hue)) 58% 84%) 14%,
+    hsl(calc(266deg + var(--chrome-hue)) 48% 66%) 19%,
     #ffffff 26%,
-    #ffeede 33%,
-    #d9cdfa 41%,
-    #a794e2 46%,
+    hsl(calc(36deg + var(--chrome-hue) * 0.35) 88% 92%) 33%,
+    hsl(calc(258deg + var(--chrome-hue)) 72% 89%) 41%,
+    hsl(calc(268deg + var(--chrome-hue)) 52% 73%) 46%,
     #ffffff 54%,
-    #f0e6ff 62%,
-    #b9a9ea 68%,
+    hsl(calc(272deg + var(--chrome-hue)) 76% 94%) 62%,
+    hsl(calc(264deg + var(--chrome-hue)) 50% 79%) 68%,
     #ffffff 76%,
-    #ffe4c4 84%,
-    #cfc3f4 92%,
+    hsl(calc(32deg + var(--chrome-hue) * 0.35) 90% 89%) 84%,
+    hsl(calc(260deg + var(--chrome-hue)) 60% 86%) 92%,
     #ffffff 100%
   );
   background-attachment: fixed;

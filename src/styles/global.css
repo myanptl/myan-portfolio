@@ -74,15 +74,17 @@ section[data-polarity]::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  /* Same travelling hue as the chrome, so the whole page shifts together
+     rather than the headline drifting away from its own background. */
   background:
     radial-gradient(
       42% 52% at calc(28% + var(--pnx, 0) * 9%) calc(34% + var(--pny, 0) * 8%),
-      rgba(150, 92, 224, var(--aura-a, 0.16)),
+      hsl(calc(266deg + var(--chrome-hue)) 62% 62% / var(--aura-a, 0.18)),
       transparent 68%
     ),
     radial-gradient(
       36% 46% at calc(80% - var(--pnx, 0) * 8%) calc(74% - var(--pny, 0) * 7%),
-      rgba(236, 138, 82, var(--aura-b, 0.12)),
+      hsl(calc(28deg + var(--chrome-hue) * 0.35) 78% 62% / var(--aura-b, 0.13)),
       transparent 70%
     );
 }

@@ -60,6 +60,36 @@
   max-width: 11ch;
 }
 
+/* Each word sits at its own depth and drifts against the pointer, so the
+   headline has parallax within itself rather than moving as one slab. The
+   transform goes on the mask, not the word: the word's transform is already
+   owned by the reveal. */
+.hero__display .reveal__mask {
+  transform: translate3d(
+    calc(var(--pnx, 0) * var(--depth, 6px) * -1),
+    calc(var(--pny, 0) * var(--depth, 6px) * -0.55),
+    0
+  );
+  transition: transform 620ms var(--ease);
+}
+
+.hero__display .reveal__mask:nth-child(3n + 1) {
+  --depth: 13px;
+}
+.hero__display .reveal__mask:nth-child(3n + 2) {
+  --depth: 6px;
+}
+.hero__display .reveal__mask:nth-child(3n + 3) {
+  --depth: 19px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__display .reveal__mask {
+    transform: none;
+    transition: none;
+  }
+}
+
 .hero__foot {
   display: flex;
   align-items: flex-end;

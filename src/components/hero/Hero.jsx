@@ -1,4 +1,4 @@
-import { useHalftone } from '../../hooks/useHalftone';
+import { useLiquidMetal } from '../../hooks/useLiquidMetal';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import './hero.css';
 
@@ -7,7 +7,7 @@ const LAST = 'THEM';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
-  const canvasRef = useHalftone({ reducedMotion });
+  const canvasRef = useLiquidMetal({ reducedMotion });
 
   return (
     <section className="hero" data-polarity="dark" data-section="index">

@@ -16,21 +16,16 @@
   width: 112%;
   height: 112%;
   image-rendering: pixelated;
-  opacity: 0.5;
+  opacity: 0.92;
   pointer-events: none;
-  /* Concentrated top-right and cleared off the type. At full bleed the dots
-     competed with the headline and made the mono labels unreadable. */
+  /* Held to the right of the headline. The metal is the loudest thing on the
+     page, so it gets its own column rather than sitting under the type. */
   mask-image: radial-gradient(
-    62% 74% at 92% 54%,
+    50% 70% at 84% 54%,
     #000 0%,
-    rgba(0, 0, 0, 0.62) 34%,
-    rgba(0, 0, 0, 0.16) 60%,
+    #000 38%,
+    rgba(0, 0, 0, 0.5) 58%,
     transparent 76%
-  );
-  transform: translate3d(
-    calc(var(--pnx, 0) * -1.6%),
-    calc(var(--pny, 0) * -1.6%),
-    0
   );
 }
 

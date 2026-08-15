@@ -1,4 +1,5 @@
 import { useSectionInView } from '../../hooks/useSectionInView';
+import { useImageDither } from '../../hooks/useImageDither';
 import { WorkMedia } from './WorkMedia';
 import './work.css';
 
@@ -9,6 +10,7 @@ import './work.css';
  */
 function WorkCard({ item, index }) {
   const [ref, revealed] = useSectionInView({ threshold: 0.15, once: true });
+  const ditherRef = useImageDither(item.media ? `/work/${item.media}-800.webp` : null);
 
   return (
     <article
@@ -25,6 +27,8 @@ function WorkCard({ item, index }) {
           ) : (
             <div className="card__media">
               <WorkMedia media={item.media} alt={item.alt} />
+              {/* One-bit version sits on top and lifts on hover. */}
+              <canvas ref={ditherRef} className="card__dither" aria-hidden="true" />
             </div>
           )}
 

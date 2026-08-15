@@ -1,4 +1,4 @@
-import { experience, projects, skills, credentials } from '../../data/profile';
+import { experience, projects, skills } from '../../data/profile';
 import { useGithubStats, formatPushed } from '../../hooks/useGithubStats';
 import './record.css';
 
@@ -71,29 +71,8 @@ export function Record() {
             </ul>
           </div>
 
-          <div className="record__block">
-            <h3 className="label record__blockTitle">Credentials</h3>
-            <p className="record__big">18</p>
-            <p className="record__org">
-              {credentials.certifications.headline.replace('18 ', '')}
-            </p>
-            <ul className="record__also">
-              {credentials.certifications.also.map((cert) => (
-                <li key={cert.name}>
-                  <a href={cert.url} target="_blank" rel="noopener noreferrer">
-                    {cert.name}
-                  </a>
-                  <span className="label">
-                    {' '}
-                    {cert.issuer} · {cert.year}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="record__org record__org--soft record__vol">
-              {credentials.volunteering.role}, {credentials.volunteering.org}
-            </p>
-          </div>
+          {/* Credentials live in their own section above, so they are not
+              repeated here. */}
         </div>
       </div>
     </section>

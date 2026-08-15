@@ -2,6 +2,7 @@ import { Hero } from './components/hero/Hero';
 import { Statement } from './components/statement/Statement';
 import { WorkGrid } from './components/work/WorkGrid';
 import { Takeover } from './components/work/Takeover';
+import { Credentials } from './components/credentials/Credentials';
 import { Marquee } from './components/marquee/Marquee';
 import { Record } from './components/record/Record';
 import { Contact } from './components/contact/Contact';
@@ -41,6 +42,8 @@ export default function App() {
           <Takeover item={takeovers[2]} index={3} />
 
           <WorkGrid items={workD} />
+
+          <Credentials />
 
           <Marquee />
 

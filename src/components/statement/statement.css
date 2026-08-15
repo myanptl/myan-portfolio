@@ -4,15 +4,20 @@
   z-index: 2;
 }
 
+/* Composed to the right, against the index and hero which both run left. The
+   page should not read as one column repeated down the page. */
 .statement__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 4rem);
+  justify-items: end;
+  text-align: right;
 }
 
 .statement__kicker {
   border-bottom: 1px solid var(--rule);
   padding-bottom: 1rem;
+  width: 100%;
 }
 
 .statement__body {
@@ -25,14 +30,16 @@
 
 .statement__tail {
   max-width: 46ch;
-  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
   color: var(--fg-70);
   border-top: 1px solid var(--rule);
   padding-top: 1.2rem;
 }
 
 @media (max-width: 860px) {
-  .statement__tail {
-    margin-left: 0;
+  .statement__inner {
+    justify-items: start;
+    text-align: left;
   }
 }

@@ -16,6 +16,7 @@ export function Credentials() {
       ref={ref}
       className={`creds ${revealed ? 'is-revealed' : ''}`}
       data-polarity="light"
+      data-tone="bone"
       data-section="credentials"
     >
       <div className="shell">

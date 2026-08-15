@@ -10,7 +10,7 @@ export function Marquee() {
   const strip = [...marqueeWords, ...marqueeWords];
 
   return (
-    <section className="marquee" data-polarity="dark" data-section="shipped">
+    <section className="marquee" data-polarity="dark" data-tone="slate" data-section="shipped">
       <div className="marquee__track" aria-hidden="true">
         {strip.map((word, i) => (
           <span key={`${word}-${i}`} className="marquee__word">

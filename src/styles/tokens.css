@@ -74,6 +74,97 @@
   --rule: rgba(239, 237, 232, 0.18);
 }
 
+/* Grounds, layered on top of polarity.
+   Straight black to white and back reads as a switch being flipped. Every
+   reference site moves through several related tones instead: cream, bone,
+   slate, a violet-leaning near-black. These override only the ground, so the
+   contrast direction set by polarity still holds. */
+[data-tone='slate'] {
+  --bg: #17181d;
+  --bg-rgb: 23, 24, 29;
+}
+
+[data-tone='violet'] {
+  --bg: #141019;
+  --bg-rgb: 20, 16, 25;
+}
+
+[data-tone='bone'] {
+  --bg: #e9e5db;
+  --bg-rgb: 233, 229, 219;
+}
+
+[data-tone='mist'] {
+  --bg: #dcdde2;
+  --bg-rgb: 220, 221, 226;
+}
+
+/* Chrome lettering. The gradient is banded hard light against dark the way a
+   polished surface reflects a horizon, with iridescent fringing either side.
+   Its position tracks the pointer, so the letters catch the light as the
+   cursor moves across them. */
+/* The paint goes on the innermost text spans, not the wrapper: the reveal
+   masks use overflow:hidden, which establishes its own painting context and
+   stops an ancestor's background-clip:text from ever reaching the glyphs.
+
+   background-attachment: fixed anchors the gradient to the viewport rather
+   than to each word, so one continuous sheen runs across the whole line
+   instead of restarting inside every word. */
+.chrome-text .reveal__word,
+.chrome-text > span:only-child,
+span.chrome-text {
+  /* Weighted bright. Chrome on a dark ground reads as a mostly luminous
+     surface with narrow dark bands for definition; the inverse just makes the
+     letters disappear into the background. */
+  background-image: linear-gradient(
+    166deg,
+    #e9e4ff 0%,
+    #ffffff 7%,
+    #cbbdf2 14%,
+    #8f7fd0 19%,
+    #ffffff 26%,
+    #ffeede 33%,
+    #d9cdfa 41%,
+    #a794e2 46%,
+    #ffffff 54%,
+    #f0e6ff 62%,
+    #b9a9ea 68%,
+    #ffffff 76%,
+    #ffe4c4 84%,
+    #cfc3f4 92%,
+    #ffffff 100%
+  );
+  background-attachment: fixed;
+  background-size: 150vw 150vh;
+  background-position: calc(50% + var(--pnx, 0) * 16%) calc(46% + var(--pny, 0) * 20%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 280ms var(--ease);
+}
+
+/* Without background-clip: text the fill stays transparent and there is no
+   clipped background to reveal it, so the headline renders as nothing at all.
+   Fall back to plain ink. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .chrome-text .reveal__word,
+  .chrome-text > span:only-child,
+  span.chrome-text {
+    background-image: none;
+    color: inherit;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chrome-text .reveal__word,
+  .chrome-text > span:only-child,
+  span.chrome-text {
+    transition: none;
+  }
+}
+
 @font-face {
   font-family: 'Switzer';
   src: url('/fonts/switzer-400.woff2') format('woff2');

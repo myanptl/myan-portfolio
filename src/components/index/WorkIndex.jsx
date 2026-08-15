@@ -94,7 +94,15 @@ export function WorkIndex() {
                 <span className="label index__num">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="index__name">{item.name}</span>
+                {/* Two stacked copies. On hover the pair slides so the second
+                    takes the first's place, which reads as the row answering
+                    rather than just highlighting. */}
+                <span className="index__name" aria-label={item.name}>
+                  <span className="index__nameRoll" aria-hidden="true">
+                    <span>{item.name}</span>
+                    <span>{item.name}</span>
+                  </span>
+                </span>
                 <span className="index__role">{item.role}</span>
                 <span className="label index__year">{item.year}</span>
                 <span className="index__arrow" aria-hidden="true">

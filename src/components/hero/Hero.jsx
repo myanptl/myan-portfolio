@@ -1,6 +1,7 @@
 import { useChrome } from '../../hooks/useChrome';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { RevealText } from '../common/RevealText';
+import { Scramble } from '../common/Scramble';
 import './hero.css';
 
 export function Hero() {
@@ -9,24 +10,23 @@ export function Hero() {
 
   return (
     <section className="hero" data-polarity="dark" data-section="index">
-      {/* The canvas bleeds past the section edges, so the clipping lives on its
-          own wrapper. Putting overflow:hidden on the section itself also
-          sheared the hero's own text when the content ran taller than the
-          viewport. */}
+      {/* The chrome is no longer a blob parked in the corner. It runs the full
+          width behind the type as atmosphere, and the lettering itself carries
+          the polished surface. */}
       <div className="hero__fieldWrap" aria-hidden="true">
         <canvas ref={canvasRef} className="hero__field" />
       </div>
 
       <div className="hero__inner shell">
         <header className="hero__top">
-          <p className="label">Myan Patel</p>
-          <p className="label">Product & security</p>
-          <p className="label hero__where">Westford, Massachusetts</p>
+          <Scramble as="p" className="label" text="Myan Patel" />
+          <Scramble as="p" className="label" text="Product & security" />
+          <Scramble as="p" className="label hero__where" text="Westford, Massachusetts" />
         </header>
 
         <h1 className="hero__display">
-          <RevealText text="Build and secure" delay={120} stagger={70} />
-          <RevealText text="AI products." delay={260} stagger={70} />
+          <RevealText className="chrome-text" text="Build and secure" delay={120} stagger={70} />
+          <RevealText className="chrome-text" text="AI products." delay={260} stagger={70} />
         </h1>
 
         <footer className="hero__foot">

@@ -4,7 +4,12 @@ import './statement.css';
 
 export function Statement() {
   return (
-    <section className="statement" data-polarity="dark" data-section="approach">
+    <section
+      className="statement"
+      data-polarity="dark"
+      data-tone="violet"
+      data-section="approach"
+    >
       <div className="shell statement__inner">
         <Scramble as="p" className="label statement__kicker" text="( The other half )" />
 

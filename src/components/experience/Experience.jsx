@@ -11,6 +11,7 @@ export function Experience() {
       ref={ref}
       className={`exp ${revealed ? 'is-revealed' : ''}`}
       data-polarity="dark"
+      data-tone="slate"
       data-section="experience"
     >
       <div className="shell exp__inner">

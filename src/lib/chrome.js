@@ -28,14 +28,14 @@ float smin(float a, float b, float k) {
   return mix(b, a, h) - k * h * (1.0 - h);
 }
 
-const vec2 HOME = vec2(0.30, -0.04);
+const vec2 HOME = vec2(0.02, -0.02);
 const float K = 0.24;
 
 float sdf(vec2 uv, vec2 m, float t) {
-  float d = length(uv - HOME - vec2(cos(t * 0.62) * 0.13, sin(t * 0.48) * 0.10)) - 0.175;
-  d = smin(d, length(uv - HOME - vec2(cos(t * 0.41 + 2.0) * 0.17, sin(t * 0.73 + 1.0) * 0.13)) - 0.140, K);
-  d = smin(d, length(uv - HOME - vec2(cos(t * 0.86 + 4.1) * 0.11, sin(t * 0.55 + 3.0) * 0.15)) - 0.115, K);
-  d = smin(d, length(uv - HOME - vec2(cos(t * 0.33 + 1.4) * 0.19, sin(t * 0.64 + 5.2) * 0.08)) - 0.100, K);
+  float d = length(uv - HOME - vec2(cos(t * 0.62) * 0.34, sin(t * 0.48) * 0.14)) - 0.300;
+  d = smin(d, length(uv - HOME - vec2(cos(t * 0.41 + 2.0) * 0.44, sin(t * 0.73 + 1.0) * 0.17)) - 0.250, K);
+  d = smin(d, length(uv - HOME - vec2(cos(t * 0.86 + 4.1) * 0.30, sin(t * 0.55 + 3.0) * 0.19)) - 0.215, K);
+  d = smin(d, length(uv - HOME - vec2(cos(t * 0.33 + 1.4) * 0.50, sin(t * 0.64 + 5.2) * 0.11)) - 0.190, K);
   // The pointer is a blob in the same field, so the metal reaches for it.
   d = smin(d, length(uv - m) - 0.105, 0.28);
   return d;

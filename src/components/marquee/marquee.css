@@ -1,29 +1,38 @@
 .marquee {
-  padding-block: clamp(3rem, 7vw, 6rem);
+  padding-block: clamp(2.5rem, 6vw, 5rem);
   overflow: hidden;
   border-block: 1px solid var(--rule);
+  position: relative;
+  z-index: 2;
 }
 
 .marquee__track {
   display: flex;
   width: max-content;
-  gap: 2.5rem;
-  animation: marquee-run 42s linear infinite;
+  gap: 3rem;
+  animation: marquee-run 38s linear infinite;
+  /* Leans with scroll direction, so the strip feels attached to the page
+     rather than playing independently of it. */
+  transform: skewY(calc(var(--scroll-velocity, 0) * -1.1deg));
+  transition: transform 420ms var(--ease);
 }
 
 .marquee__word {
   display: inline-flex;
   align-items: center;
-  gap: 2.5rem;
-  font-size: clamp(2rem, 1rem + 4.5vw, 5rem);
+  gap: 3rem;
+  font-size: clamp(2rem, 1rem + 4vw, 4.75rem);
   font-weight: 500;
   letter-spacing: var(--track-tight);
   white-space: nowrap;
 }
 
 .marquee__dot {
-  font-style: normal;
-  color: var(--fg-28);
+  width: 0.34em;
+  height: 0.34em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
 }
 
 @keyframes marquee-run {
@@ -37,7 +46,6 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
-  clip: rect(0 0 0 0);
   clip-path: inset(50%);
   white-space: nowrap;
 }
@@ -45,7 +53,7 @@
 @media (prefers-reduced-motion: reduce) {
   .marquee__track {
     animation: none;
-    /* Without the run, show one legible pass instead of a clipped strip. */
+    transform: none;
     width: 100%;
     flex-wrap: wrap;
     gap: 1rem 2rem;

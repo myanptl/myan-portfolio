@@ -1,50 +1,54 @@
-/* "The Record" — monochrome chrome, color only ever from work imagery.
-   Polarity is a single pair of tokens swapped per section, so inverting is
-   one attribute change rather than a parallel set of dark-mode rules. */
+/* Polarity is one pair of tokens, swapped per section. Sections alternate
+   between paper and ink so the page has real contrast beats rather than being
+   one long dark scroll.
+
+   No chrome accent anywhere. Colour arrives only through the work captures in
+   the hover previews. */
 
 :root {
-  --black: #000;
-  --white: #fff;
+  --paper: #efedE8;
+  --ink: #0c0c0d;
 
-  /* Default polarity: light on dark. Sections override via [data-polarity]. */
-  --bg: var(--black);
-  --fg: var(--white);
-  --fg-rgb: 255, 255, 255;
+  /* Default: ink ground, paper type. */
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --fg-rgb: 239, 237, 232;
+  --bg-rgb: 12, 12, 13;
 
   --fg-70: rgba(var(--fg-rgb), 0.7);
   --fg-45: rgba(var(--fg-rgb), 0.45);
   --fg-28: rgba(var(--fg-rgb), 0.28);
-  --rule: rgba(var(--fg-rgb), 0.16);
+  --rule: rgba(var(--fg-rgb), 0.18);
 
   /* Type */
   --font-display: 'Switzer', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --text-wordmark: clamp(3.5rem, 0.5rem + 13vw, 15rem);
-  --text-statement: clamp(2rem, 0.9rem + 5vw, 5.5rem);
-  --text-work: clamp(1.35rem, 1rem + 1.6vw, 2.6rem);
   --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
   --text-label: 0.6875rem;
-
   --track-tight: -0.035em;
   --track-label: 0.16em;
 
   /* Layout */
   --gutter: clamp(1.25rem, 0.6rem + 3vw, 4.5rem);
-  --container: 1400px;
-  --space-section: clamp(6rem, 4rem + 12vw, 16rem);
+  --container: 1440px;
+  --space-section: clamp(6rem, 4rem + 10vw, 14rem);
 
   /* Motion */
-  --dur-fast: 220ms;
-  --dur: 600ms;
+  --dur-fast: 240ms;
+  --dur: 620ms;
   --dur-slow: 1100ms;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Published by the smooth scroller, consumed for velocity-linked motion. */
+  --scroll-velocity: 0;
 }
 
 [data-polarity='light'] {
-  --bg: var(--white);
-  --fg: var(--black);
-  --fg-rgb: 0, 0, 0;
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --fg-rgb: 12, 12, 13;
+  --bg-rgb: 239, 237, 232;
 }
 
 @font-face {

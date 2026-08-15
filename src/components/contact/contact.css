@@ -1,57 +1,62 @@
 .contact {
-  min-height: 92svh;
+  min-height: 88svh;
   display: flex;
   align-items: center;
   padding-block: var(--space-section);
+  position: relative;
+  z-index: 2;
 }
 
 .contact__kicker {
-  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
 }
 
 .contact__title {
-  font-size: clamp(2.25rem, 1rem + 6vw, 6.5rem);
+  font-size: clamp(2rem, 0.8rem + 5.2vw, 6.25rem);
   font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: var(--track-tight);
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 .contact__links {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 2.5rem;
-  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  gap: 1rem 3.5rem;
+  margin-top: clamp(3rem, 7vw, 5rem);
   border-top: 1px solid var(--rule);
-  padding-top: 1.5rem;
+  padding-top: 2rem;
 }
 
-.contact__links a {
+.contact__link {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.5rem;
-  font-size: clamp(1.25rem, 1rem + 1.4vw, 2.25rem);
+  gap: 0.6rem;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.75rem);
   font-weight: 500;
   letter-spacing: var(--track-tight);
   position: relative;
+  will-change: transform;
 }
 
-/* Underline grows from the left rather than appearing all at once. */
-.contact__links a::after {
+.contact__link::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: -0.15em;
-  width: 100%;
+  right: 0;
+  bottom: -0.12em;
   height: 1px;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur) var(--ease);
+  transform-origin: right;
+  transition: transform 520ms var(--ease);
 }
 
-.contact__links a:hover::after {
+.contact__link:hover::after {
   transform: scaleX(1);
+  transform-origin: left;
 }
 
 .contact__foot {
@@ -59,7 +64,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: space-between;
-  margin-top: clamp(4rem, 10vw, 8rem);
+  margin-top: clamp(4rem, 10vw, 7rem);
   border-top: 1px solid var(--rule);
   padding-top: 1.1rem;
 }

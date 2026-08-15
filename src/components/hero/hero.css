@@ -2,14 +2,19 @@
   position: relative;
   min-height: 100svh;
   display: flex;
-  align-items: flex-end;
-  padding-block: 5rem 4rem;
-  overflow: hidden;
+  align-items: center;
+  padding-block: 6rem 4rem;
   z-index: 2;
 }
 
-/* Low-res dither buffer blown up. pixelated is what keeps the dots hard.
-   Drifts against the pointer, so the whole field responds to the mouse. */
+.hero__fieldWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Low-res WebGL buffer scaled up; pixelated keeps the dither cells hard. */
 .hero__field {
   position: absolute;
   inset: -6%;
@@ -18,10 +23,8 @@
   image-rendering: pixelated;
   opacity: 0.92;
   pointer-events: none;
-  /* Held to the right of the headline. The metal is the loudest thing on the
-     page, so it gets its own column rather than sitting under the type. */
   mask-image: radial-gradient(
-    50% 70% at 84% 54%,
+    46% 66% at 87% 52%,
     #000 0%,
     #000 38%,
     rgba(0, 0, 0, 0.5) 58%,
@@ -34,110 +37,78 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(3rem, 12vh, 8rem);
+  gap: clamp(2.5rem, 8vh, 5rem);
 }
 
-/* Three-column technical header, the way the reference sites open. */
 .hero__top {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.4fr;
+  display: flex;
+  justify-content: space-between;
   gap: 1.5rem;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--rule);
   padding-bottom: 1rem;
 }
 
-.hero__frag,
-.hero__bio {
-  color: var(--fg-70);
-  text-transform: none;
-  letter-spacing: 0.02em;
-  line-height: 1.75;
-}
-
-.hero__bio {
-  max-width: 44ch;
-}
-
 .hero__display {
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(2.5rem, 0.4rem + 8.6vw, 9.5rem);
+  font-size: clamp(2.5rem, 0.5rem + 7.4vw, 8rem);
   font-weight: 500;
-  line-height: 0.9;
+  line-height: 0.92;
   letter-spacing: -0.045em;
-  text-transform: uppercase;
+  max-width: 11ch;
 }
 
-.hero__line {
-  display: block;
-  overflow: hidden;
-}
-
-.hero__line > * {
-  display: inline-block;
-}
-
-/* Each line clips up from behind its own edge. */
-.hero__display .hero__line {
-  clip-path: inset(0 0 100% 0);
-  animation: line-clip 1000ms var(--ease) forwards;
-  animation-delay: calc(var(--i) * 110ms + 150ms);
-}
-
-@keyframes line-clip {
-  to {
-    clip-path: inset(0 0 -0.2em 0);
-  }
-}
-
-.hero__line--last {
+.hero__foot {
   display: flex;
-  align-items: baseline;
-  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
   flex-wrap: wrap;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.2rem;
 }
 
-.hero__badge {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  color: var(--fg-45);
-  text-transform: uppercase;
-  white-space: nowrap;
+.hero__bio {
+  max-width: 40ch;
+  color: var(--fg-70);
 }
 
-@media (max-width: 860px) {
-  .hero__top {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
+.hero__scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Draws itself out and retracts, so the hero is never fully still. */
+.hero__rule {
+  display: block;
+  width: 4rem;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  animation: scroll-rule 2.6s var(--ease) infinite;
+}
+
+@keyframes scroll-rule {
+  0%,
+  100% {
+    transform: scaleX(0.15);
+    opacity: 0.4;
   }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
 
-  .hero__bio {
+@media (max-width: 760px) {
+  .hero__where {
     display: none;
-  }
-
-  /* Portrait leaves no clear column beside the type, so the field moves to
-     the upper band and lightens rather than sitting behind the labels. */
-  .hero__field {
-    opacity: 0.34;
-    mask-image: radial-gradient(
-      92% 42% at 74% 22%,
-      #000 0%,
-      rgba(0, 0, 0, 0.5) 42%,
-      transparent 74%
-    );
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__field {
-    transform: none;
-  }
-
-  .hero__display .hero__line {
-    clip-path: none;
+  .hero__rule {
     animation: none;
+    transform: scaleX(1);
   }
 }

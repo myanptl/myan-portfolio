@@ -11,8 +11,8 @@ export function StickyHeader({ label }) {
         <p className="label header__label" aria-live="polite">
           {label}
         </p>
-        <a className="label header__link" href="#the-record">
-          The Record
+        <a className="label header__link" href="#work">
+          The work
         </a>
       </div>
     </header>

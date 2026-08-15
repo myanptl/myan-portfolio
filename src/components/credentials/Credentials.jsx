@@ -5,14 +5,14 @@ import './credentials.css';
 const { certifications, programs, volunteering } = credentials;
 
 export function Credentials() {
-  const [ref, revealed] = useSectionInView({ threshold: 0.15, once: true });
+  const [ref, revealed] = useSectionInView({ threshold: 0.12, once: true });
   const unnamed = certifications.count - certifications.named.length;
 
   return (
     <section
       ref={ref}
       className={`creds ${revealed ? 'is-revealed' : ''}`}
-      data-polarity="dark"
+      data-polarity="light"
       data-section="credentials"
     >
       <div className="shell">
@@ -22,14 +22,12 @@ export function Credentials() {
         </header>
 
         <div className="creds__wall">
-          <p className="creds__count" aria-hidden="true">
-            {certifications.count}
-          </p>
-          <div className="creds__countBody">
+          <p className="creds__count">{certifications.count}</p>
+          <div className="creds__body">
             <h2 className="creds__title">Anthropic Academy certifications</h2>
             <p className="creds__note">
-              The full track, completed. Seven named below, plus {unnamed} more
-              on the same track.
+              The full track. Seven named here, plus {unnamed} more on the same
+              program.
             </p>
           </div>
         </div>
@@ -37,16 +35,10 @@ export function Credentials() {
         <ul className="creds__list">
           {certifications.named.map((name, i) => (
             <li key={name} className="creds__item" style={{ '--i': i }}>
-              <span className="label creds__num">
-                {String(i + 1).padStart(2, '0')}
-              </span>
+              <span className="label creds__num">{String(i + 1).padStart(2, '0')}</span>
               <span className="creds__name">{name}</span>
             </li>
           ))}
-          <li className="creds__item creds__item--rest" style={{ '--i': certifications.named.length }}>
-            <span className="label creds__num">+</span>
-            <span className="creds__name">{unnamed} more on the same track</span>
-          </li>
         </ul>
 
         <div className="creds__grid">

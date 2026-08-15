@@ -27,7 +27,11 @@ export function usePolarity() {
           label: hit.target.dataset.section || '',
         });
       },
-      { rootMargin: '0px 0px -85% 0px', threshold: 0 },
+      // Switches the moment a section reaches the very top of the viewport,
+      // which is what sits behind the fixed header. A larger bottom margin
+      // flipped the header's colour before the section under it had changed,
+      // leaving the wordmark near-invisible across the boundary.
+      { rootMargin: '0px 0px -99% 0px', threshold: 0 },
     );
 
     sections.forEach((s) => observer.observe(s));

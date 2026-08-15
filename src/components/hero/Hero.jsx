@@ -1,9 +1,7 @@
 import { useLiquidMetal } from '../../hooks/useLiquidMetal';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { RevealText } from '../common/RevealText';
 import './hero.css';
-
-const LINES = ['I BUILD AI', 'PRODUCTS AND', 'THEN I BREAK'];
-const LAST = 'THEM';
 
 export function Hero() {
   const reducedMotion = useReducedMotion();
@@ -11,32 +9,36 @@ export function Hero() {
 
   return (
     <section className="hero" data-polarity="dark" data-section="index">
-      <canvas ref={canvasRef} className="hero__field" aria-hidden="true" />
+      {/* The canvas bleeds past the section edges, so the clipping lives on its
+          own wrapper. Putting overflow:hidden on the section itself also
+          sheared the hero's own text when the content ran taller than the
+          viewport. */}
+      <div className="hero__fieldWrap" aria-hidden="true">
+        <canvas ref={canvasRef} className="hero__field" />
+      </div>
 
       <div className="hero__inner shell">
         <header className="hero__top">
           <p className="label">Myan Patel</p>
-          <p className="label hero__frag">
-            Shipping in public. Auditing in private.
-          </p>
-          <p className="label hero__bio">
-            Rising junior at Westford Academy. I build generative AI products
-            end to end, then run them through the OWASP Top 10 myself. Eleven
-            things live.
-          </p>
+          <p className="label">Product & security</p>
+          <p className="label hero__where">Westford, Massachusetts</p>
         </header>
 
-        <h1 className="hero__display" aria-label={`${LINES.join(' ')} ${LAST}`}>
-          {LINES.map((line, i) => (
-            <span key={line} className="hero__line" style={{ '--i': i }} aria-hidden="true">
-              {line}
-            </span>
-          ))}
-          <span className="hero__line hero__line--last" style={{ '--i': 3 }} aria-hidden="true">
-            {LAST}
-            <em className="hero__badge">( 11 shipped )</em>
-          </span>
+        <h1 className="hero__display">
+          <RevealText text="Build and secure" delay={120} stagger={70} />
+          <RevealText text="AI products." delay={260} stagger={70} />
         </h1>
+
+        <footer className="hero__foot">
+          <p className="hero__bio">
+            Rising junior at Westford Academy. I take products the whole way,
+            then run them through the OWASP Top 10 myself.
+          </p>
+          <p className="label hero__scroll">
+            <span>Scroll</span>
+            <span className="hero__rule" aria-hidden="true" />
+          </p>
+        </footer>
       </div>
     </section>
   );

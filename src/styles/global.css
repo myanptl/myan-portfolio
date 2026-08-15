@@ -10,7 +10,10 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
+  /* Deliberately NOT scroll-behavior: smooth. The lerped scroller drives the
+     page with per-frame scrollTo calls, and CSS smooth scrolling turns each of
+     those into its own animation that the next frame cancels, so the page
+     crawls instead of moving. Smoothness comes from the scroller. */
 }
 
 body {

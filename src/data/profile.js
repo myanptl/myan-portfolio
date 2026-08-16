@@ -62,6 +62,17 @@ export const experience = [
     ],
   },
   {
+    // A fellowship, so it sits with the roles rather than under credentials.
+    role: 'Summit STEM Fellow',
+    org: 'Summit Education',
+    meta: 'Fellowship · Jul 2026 – Aug 2026',
+    bullets: [
+      // Both figures are Summit’s own, from their suggested wording.
+      'Selected from 4,500 applicants from 100+ countries to attend the 2026 Summit STEM Fellowship.',
+      'Learned from 50+ mentors from Harvard, Stanford, MIT, and other institutions.',
+    ],
+  },
+  {
     role: 'Arcade Attendant',
     org: 'Kimball Farm',
     meta: 'Part-time · Apr 2026 – May 2026',
@@ -252,13 +263,9 @@ export const credentials = {
       issuer: 'Suffolk University',
       year: 'Summer 2026',
     },
-    {
-      // Completed Aug 2026; certificate of achievement issued by Summit
-      // Education. Selection figures are Summit's own.
-      name: '2026 Summit STEM Fellowship',
-      issuer: 'Summit Education',
-      year: 'Completed Aug 2026',
-    },
+    // The Summit STEM Fellowship lives in `experience` above, not here. It is
+    // a fellowship rather than a credential, and listing it in both places
+    // would double-count it.
   ],
   volunteering: {
     org: 'American India Foundation',

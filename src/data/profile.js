@@ -253,9 +253,11 @@ export const credentials = {
       year: 'Summer 2026',
     },
     {
-      name: 'Summit STEM Fellowship',
-      issuer: 'Summit',
-      year: 'Summer 2026',
+      // Completed Aug 2026; certificate of achievement issued by Summit
+      // Education. Selection figures are Summit's own.
+      name: '2026 Summit STEM Fellowship',
+      issuer: 'Summit Education',
+      year: 'Completed Aug 2026',
     },
   ],
   volunteering: {

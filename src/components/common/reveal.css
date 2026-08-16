@@ -1,0 +1,38 @@
+.reveal {
+  display: block;
+}
+
+/* The mask. Padding on the block axis is deliberate: display type with a tight
+   line-height overflows its line box, and a mask clipped to the box alone
+   shears the tops and tails off letters. This is the bug that cut the top off
+   the credentials numeral in the previous build. */
+.reveal__mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-block: 0.14em;
+  margin-block: -0.14em;
+  vertical-align: bottom;
+}
+
+.reveal__mask:not(:last-child)::after {
+  content: ' ';
+  white-space: pre;
+}
+
+.reveal__word {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 950ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.reveal.is-revealed .reveal__word {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal__word {
+    transform: none;
+    transition: none;
+  }
+}

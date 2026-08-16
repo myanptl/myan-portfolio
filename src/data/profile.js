@@ -215,9 +215,21 @@ export const skills = [
 
 export const credentials = {
   certifications: {
+    count: 18,
     headline: '18 Anthropic Academy Certifications',
     detail:
       'Completed the full Anthropic Academy track — AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
+    // The seven that are named on the record. The remaining eleven are part of
+    // the same track; they are counted, not invented.
+    named: [
+      'AI Fluency for Students',
+      'AI Fluency for Nonprofits',
+      'AI Fluency for Small Business',
+      'Introduction to Subagents & Agent Skills',
+      'Model Context Protocol: Advanced Topics',
+      'Claude with Amazon Bedrock',
+      'Claude with Google Cloud Vertex AI',
+    ],
     also: [
       {
         name: 'Y Combinator Startup School',
@@ -233,6 +245,19 @@ export const credentials = {
       },
     ],
   },
+  // Selective programs, sourced from the FocusOS role on the record.
+  programs: [
+    {
+      name: 'Pre-College Entrepreneurship Program',
+      issuer: 'Suffolk University',
+      year: 'Summer 2026',
+    },
+    {
+      name: 'Summit STEM Fellowship',
+      issuer: 'Summit',
+      year: 'Summer 2026',
+    },
+  ],
   volunteering: {
     org: 'American India Foundation',
     role: 'Fundraising Volunteer / Youth Ambassador',

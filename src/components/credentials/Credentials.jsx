@@ -1,55 +1,93 @@
-import { Reveal } from '../layout/Reveal';
-import { SectionDecl, SectionClose } from '../layout/SectionDecl';
 import { credentials } from '../../data/profile';
+import { useSectionInView } from '../../hooks/useSectionInView';
+import { useCountUp } from '../../hooks/useCountUp';
+import { Scramble } from '../common/Scramble';
 import './credentials.css';
 
+const { certifications, programs, volunteering } = credentials;
+
 export function Credentials() {
-  const { certifications, volunteering } = credentials;
+  const [ref, revealed] = useSectionInView({ threshold: 0.12, once: true });
+  const unnamed = certifications.count - certifications.named.length;
+  const count = useCountUp(certifications.count, revealed);
 
   return (
-    <section className="section" id="more" aria-labelledby="more-title">
-      <div className="container">
-        <SectionDecl
-          name="credentials"
-          lineno={216}
-          title="Proof of work"
-          titleId="more-title"
-        />
+    <section
+      ref={ref}
+      className={`creds ${revealed ? 'is-revealed' : ''}`}
+      data-polarity="light"
+      data-tone="bone"
+      data-section="credentials"
+    >
+      <div className="shell">
+        <header className="creds__head">
+          <Scramble as="p" className="label" text="( Credentials )" />
+          <Scramble as="p" className="label" text="Anthropic · Y Combinator · Google · AIF" />
+        </header>
 
-        <div className="cred-grid">
-          <Reveal className="cred-card cred-certs sheet">
-            <span className="cred-kicker tok-comment">// certifications</span>
-            <div className="cred-stat">
-              <span className="cred-stat-num">18</span>
-              <span className="cred-stat-label mono">
-                Anthropic Academy certifications
-              </span>
-            </div>
-            <p className="cred-detail">{certifications.detail}</p>
-            {certifications.also.map((cert) => (
-              <p className="cred-also" key={cert.name}>
-                <span className="tok-comment">// also</span>{' '}
-                <a href={cert.url} target="_blank" rel="noopener noreferrer">
-                  {cert.name}
-                </a>{' '}
-                <span className="tok-comment">
-                  {cert.issuer} · {cert.year}
-                </span>
-              </p>
-            ))}
-          </Reveal>
-
-          <Reveal className="cred-card cred-volunteer sheet" delay={90}>
-            <span className="cred-kicker tok-comment">// volunteering</span>
-            <h3 className="cred-title">{volunteering.org}</h3>
-            <p className="cred-role mono">
-              {volunteering.role} · {volunteering.meta}
+        <div className="creds__wall">
+          <p className="creds__count" aria-label={String(certifications.count)}>
+            <span aria-hidden="true">{count}</span>
+          </p>
+          <div className="creds__body">
+            <h2 className="creds__title">Anthropic Academy certifications</h2>
+            <p className="creds__note">
+              The full track. Seven named here, plus {unnamed} more on the same
+              program.
             </p>
-            <p className="cred-detail">{volunteering.detail}</p>
-          </Reveal>
+          </div>
         </div>
 
-        <SectionClose />
+        <ul className="creds__list">
+          {certifications.named.map((name, i) => (
+            <li key={name} className="creds__item" style={{ '--i': i }}>
+              <span className="label creds__num">{String(i + 1).padStart(2, '0')}</span>
+              <span className="creds__name">{name}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="creds__grid">
+          <div className="creds__block">
+            <h3 className="label creds__blockTitle">Also certified</h3>
+            <ul>
+              {certifications.also.map((cert) => (
+                <li key={cert.name}>
+                  <a href={cert.url} target="_blank" rel="noopener noreferrer">
+                    {cert.name}
+                    <span aria-hidden="true"> ↗</span>
+                  </a>
+                  <span className="label">
+                    {cert.issuer} · {cert.year}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="creds__block">
+            <h3 className="label creds__blockTitle">Programs</h3>
+            <ul>
+              {programs.map((program) => (
+                <li key={program.name}>
+                  <span className="creds__plain">{program.name}</span>
+                  <span className="label">
+                    {program.issuer} · {program.year}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="creds__block creds__block--wide">
+            <h3 className="label creds__blockTitle">Volunteering</h3>
+            <p className="creds__org">{volunteering.org}</p>
+            <p className="label creds__role">
+              {volunteering.role} · {volunteering.meta}
+            </p>
+            <p className="creds__detail">{volunteering.detail}</p>
+          </div>
+        </div>
       </div>
     </section>
   );

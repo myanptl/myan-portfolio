@@ -1,0 +1,212 @@
+.index {
+  position: relative;
+  padding-block: var(--space-section);
+  z-index: 2;
+}
+
+.index__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.index__list {
+  list-style: none;
+  /* Leans with scroll speed, the same way the marquee does, so the list feels
+     attached to the motion of the page. */
+  transform: skewY(calc(var(--scroll-velocity, 0) * 0.4deg));
+  transition: transform 460ms var(--ease);
+}
+
+.index__row {
+  border-bottom: 1px solid var(--rule);
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+  transition-delay: calc(var(--i) * 45ms);
+}
+
+.index.is-revealed .index__row {
+  opacity: 1;
+  transform: none;
+}
+
+.index__link {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(8rem, 1.1fr) 2fr 5rem 1.5rem;
+  gap: 1.5rem;
+  align-items: baseline;
+  /* Generous vertical rhythm: the list is the page's main surface, so the rows
+     get room rather than being packed. */
+  padding-block: clamp(1.1rem, 2vw, 1.9rem);
+  position: relative;
+  transition: padding-inline 420ms var(--ease);
+}
+
+/* The row slides inward on hover and its ground inverts. A wipe, not a fade. */
+.index__link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--fg);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 480ms var(--ease);
+  z-index: -1;
+}
+
+.index__link:hover::before,
+.index__link:focus-visible::before {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.index__link:hover,
+.index__link:focus-visible {
+  color: var(--bg);
+  padding-inline: 1.25rem;
+}
+
+.index__link:hover .label {
+  color: rgba(var(--bg-rgb), 0.55);
+}
+
+.index__num {
+  font-variant-numeric: tabular-nums;
+}
+
+.index__name {
+  font-size: clamp(1.35rem, 1rem + 1.9vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  display: block;
+  overflow: hidden;
+  /* The window is exactly one slot tall. Padding it for descenders made the
+     window taller than a slot, which let the second copy peek out underneath
+     and rendered every project name twice. Descender room comes from the slot
+     height itself instead. */
+  height: 1.16em;
+}
+
+.index__nameRoll {
+  display: block;
+  transition: transform 620ms var(--ease);
+}
+
+/* Each copy occupies exactly one slot, so the travel below is exact. */
+.index__nameRoll > span {
+  display: block;
+  height: 1.16em;
+  line-height: 1.16em;
+}
+
+.index__link:hover .index__nameRoll,
+.index__link:focus-visible .index__nameRoll {
+  transform: translateY(-1.16em);
+}
+
+.index__role {
+  /* Deliberately not --fg-45: at 45% on paper this row of supporting text
+     falls near the 4.5:1 line. */
+  color: rgba(var(--fg-rgb), 0.62);
+  font-size: 0.95rem;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.index__link:hover .index__role {
+  color: rgba(var(--bg-rgb), 0.7);
+}
+
+.index__year {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: rgba(var(--fg-rgb), 0.62);
+}
+
+.index__arrow {
+  justify-self: end;
+  opacity: 0.3;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.index__link:hover .index__arrow {
+  opacity: 1;
+  transform: translate(3px, -3px);
+}
+
+/* ---- Floating preview ---- */
+
+.preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: clamp(18rem, 26vw, 30rem);
+  margin: -0.5rem 0 0 1.75rem;
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.94;
+  transition:
+    opacity 340ms var(--ease),
+    scale 480ms var(--ease);
+  will-change: transform;
+}
+
+.preview.is-active {
+  opacity: 1;
+  scale: 1;
+}
+
+.preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Whole capture, never cropped, never filtered. */
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 0 26px 60px -24px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 900px) {
+  .index__link {
+    grid-template-columns: 2.5rem 1fr 1.5rem;
+    row-gap: 0.3rem;
+  }
+
+  .index__role,
+  .index__year {
+    grid-column: 2 / -1;
+  }
+
+  .preview {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .index__row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .index__link::before,
+  .index__nameRoll {
+    transition: none;
+  }
+
+  .index__link:hover .index__nameRoll {
+    transform: none;
+  }
+
+  .index__list {
+    transform: none;
+  }
+}

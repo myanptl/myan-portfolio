@@ -79,12 +79,12 @@ section[data-polarity]::before {
   background:
     radial-gradient(
       42% 52% at calc(28% + var(--pnx, 0) * 9%) calc(34% + var(--pny, 0) * 8%),
-      hsl(calc(266deg + var(--chrome-hue)) 62% 62% / var(--aura-a, 0.18)),
+      hsl(calc(250deg + var(--chrome-hue)) 66% 62% / var(--aura-a, 0.19)),
       transparent 68%
     ),
     radial-gradient(
       36% 46% at calc(80% - var(--pnx, 0) * 8%) calc(74% - var(--pny, 0) * 7%),
-      hsl(calc(28deg + var(--chrome-hue) * 0.35) 78% 62% / var(--aura-b, 0.13)),
+      hsl(calc(202deg + var(--chrome-hue) * 0.3) 72% 60% / var(--aura-b, 0.14)),
       transparent 70%
     );
 }

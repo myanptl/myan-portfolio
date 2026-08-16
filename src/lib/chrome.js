@@ -2,7 +2,7 @@
 //
 // One fullscreen fragment shader, no three.js. A signed-distance blob is given
 // a normal, then shaded as polished metal with thin-film interference colour,
-// which is where the violet/amber/teal shift comes from. Rendered at half
+// which is where the blue to purple shift comes from. Rendered at half
 // resolution and scaled up smoothly, so it stays cheap without looking blocky.
 
 const VERT = `
@@ -67,13 +67,17 @@ void main() {
   // Banded environment. The bands are the reflected "room" the chrome sits in.
   float bands = 0.5 + 0.5 * sin(R.y * 7.0 + R.x * 4.0 + t * 0.7);
 
-  // Thin-film interference. The range is deliberately narrow: sweeping the
-  // full palette reads as a rainbow gradient rather than a metal, and that
-  // look has been rejected here before. This stays in a violet through
-  // magenta to amber band and is cut with silver so it reads as chrome.
-  vec3 iri = palette(fres * 0.26 + R.x * 0.09 + t * 0.026 + 0.18);
-  vec3 silver = vec3(0.74, 0.75, 0.80);
-  iri = mix(silver, iri, 0.62);
+  // Thin-film interference, held to the blue-to-purple band the rest of the
+  // page uses. The offset picks that region of the cosine palette and the
+  // spread is small, so it never wanders into magenta or green. Cut with a
+  // cool silver so it reads as metal rather than a coloured gradient.
+  // The time term oscillates; it must never accumulate. A linear t term walks
+  // the offset around the whole colour wheel as the page stays open, so the
+  // field starts blue, turns green after half a minute and keeps going. This
+  // stays bounded inside the blue-to-purple band.
+  vec3 iri = palette(fres * 0.14 + R.x * 0.05 + sin(t * 0.055) * 0.035 + 0.29);
+  vec3 silver = vec3(0.72, 0.75, 0.83);
+  iri = mix(silver, iri, 0.60);
 
   vec3 L = normalize(vec3(0.45, 0.75, 0.55));
   float spec = pow(max(dot(n, L), 0.0), 42.0);

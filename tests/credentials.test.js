@@ -4,10 +4,11 @@ import { credentials } from '../src/data/profile.js';
 const { certifications, programs, volunteering } = credentials;
 
 describe('credentials', () => {
-  // The section prints "plus N more on the same track", where N is derived.
-  // If the named list ever grows past the count, that sentence goes negative.
-  test('named certifications never exceed the total count', () => {
-    expect(certifications.named.length).toBeLessThanOrEqual(certifications.count);
+  // The section now claims every certification is listed below, so the named
+  // list and the headline figure have to agree exactly. If one drifts, the
+  // page starts lying about the other.
+  test('every certification counted is also named', () => {
+    expect(certifications.named).toHaveLength(certifications.count);
   });
 
   test('the headline count matches the structured count', () => {

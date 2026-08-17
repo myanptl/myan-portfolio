@@ -230,16 +230,28 @@ export const credentials = {
     headline: '18 Anthropic Academy Certifications',
     detail:
       'Completed the full Anthropic Academy track — AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
-    // The seven that are named on the record. The remaining eleven are part of
-    // the same track; they are counted, not invented.
+    // All eighteen, read off the LinkedIn certifications list on 17 Aug 2026.
+    // Ordered foundations first, then Claude, then agents, MCP and cloud;
+    // LinkedIn's own order is arbitrary.
     named: [
+      'AI Fluency: Framework & Foundations',
       'AI Fluency for Students',
+      'AI Fluency for Educators',
       'AI Fluency for Nonprofits',
-      'AI Fluency for Small Business',
-      'Introduction to Subagents & Agent Skills',
+      'AI Fluency for Small Businesses',
+      'Teaching AI Fluency',
+      'AI Capabilities and Limitations',
+      'Claude 101',
+      'Claude Code 101',
+      'Claude Code in Action',
+      'Introduction to Claude Cowork',
+      'Building with the Claude API',
+      'Introduction to Subagents',
+      'Introduction to Agent Skills',
+      'Introduction to Model Context Protocol',
       'Model Context Protocol: Advanced Topics',
       'Claude with Amazon Bedrock',
-      'Claude with Google Cloud Vertex AI',
+      "Claude with Google Cloud's Vertex AI",
     ],
     also: [
       {

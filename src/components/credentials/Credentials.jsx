@@ -8,7 +8,6 @@ const { certifications, programs, volunteering } = credentials;
 
 export function Credentials() {
   const [ref, revealed] = useSectionInView({ threshold: 0.12, once: true });
-  const unnamed = certifications.count - certifications.named.length;
   const count = useCountUp(certifications.count, revealed);
 
   return (
@@ -32,8 +31,7 @@ export function Credentials() {
           <div className="creds__body">
             <h2 className="creds__title">Anthropic Academy certifications</h2>
             <p className="creds__note">
-              The full track. Seven named here, plus {unnamed} more on the same
-              program.
+              The full track, completed. Every one of them listed below.
             </p>
           </div>
         </div>

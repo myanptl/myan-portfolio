@@ -1,0 +1,316 @@
+/* Lab styling borrows the portfolio's tokens so every demo is judged in the
+   palette it would actually live in. Blue to purple, ink ground, two families. */
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('/fonts/plexmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --ink: #0c0c0d;
+  --violet: #111320;
+  --paper: #eaebf4;
+  --fg-rgb: 234, 235, 244;
+  --fg: var(--paper);
+  --fg-70: rgba(var(--fg-rgb), 0.7);
+  --fg-45: rgba(var(--fg-rgb), 0.45);
+  --rule: rgba(var(--fg-rgb), 0.18);
+  --accent: hsl(250 70% 68%);
+  --accent-2: hsl(222 70% 66%);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ink);
+  color: var(--fg);
+  font-family: 'Switzer', system-ui, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ---------- rail ---------- */
+
+.rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  padding: 2rem 1.25rem;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rail__title,
+.rail__sub,
+.demo__ref,
+.ctl__label,
+.tag {
+  font-family: 'Plex Mono', ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.rail__title {
+  color: var(--fg);
+}
+.rail__sub {
+  color: var(--fg-45);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.rail__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.rail__link {
+  font-family: 'Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--fg-45);
+  text-decoration: none;
+  padding: 0.42rem 0.5rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition:
+    color 200ms var(--ease),
+    background-color 200ms var(--ease);
+}
+
+.rail__link:hover,
+.rail__link.is-active {
+  color: var(--fg);
+  background: rgba(var(--fg-rgb), 0.06);
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex: none;
+}
+.dot[data-v='core'] {
+  background: var(--accent);
+}
+.dot[data-v='fits'] {
+  background: hsl(150 50% 55%);
+}
+.dot[data-v='maybe'] {
+  background: hsl(45 70% 60%);
+}
+.dot[data-v='risky'] {
+  background: hsl(8 70% 62%);
+}
+
+/* ---------- sheet ---------- */
+
+.sheet {
+  padding: 4rem clamp(1.5rem, 4vw, 4rem) 6rem;
+  max-width: 1100px;
+}
+
+.intro {
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 3rem;
+}
+
+.intro__h {
+  font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.2rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.intro__p {
+  margin-top: 1.4rem;
+  color: var(--fg-70);
+  max-width: 54ch;
+  line-height: 1.6;
+}
+
+.demo {
+  padding-block: 3.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.demo__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.demo__head h2 {
+  font-size: clamp(1.15rem, 1rem + 0.8vw, 1.7rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.demo__ref {
+  color: var(--fg-45);
+}
+
+.demo__stage {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--violet);
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+}
+
+.demo__note {
+  margin-top: 1.25rem;
+  color: var(--fg-70);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  max-width: 68ch;
+}
+
+.demo__note code {
+  font-family: 'Plex Mono', monospace;
+  font-size: 0.85em;
+  color: var(--fg);
+  background: rgba(var(--fg-rgb), 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}
+
+.demo__note strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+/* ---------- controls ---------- */
+
+.ctls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.6rem;
+  padding: 0.9rem 1.1rem;
+  border-top: 1px solid var(--rule);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.ctl {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 132px;
+}
+
+.ctl__label {
+  color: var(--fg-45);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ctl__label b {
+  color: var(--fg);
+  font-weight: 400;
+}
+
+.ctl input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--rule);
+  outline: none;
+}
+
+.ctl input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.btn {
+  font-family: 'Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--rule);
+  padding: 0.5rem 0.9rem;
+  border-radius: 2px;
+  cursor: pointer;
+  align-self: end;
+  transition:
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease);
+}
+
+.btn:hover {
+  background: rgba(var(--fg-rgb), 0.08);
+  border-color: rgba(var(--fg-rgb), 0.4);
+}
+
+.outro {
+  padding-top: 3rem;
+  color: var(--fg-45);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+@media (max-width: 860px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+  .rail {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .rail__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

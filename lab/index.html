@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Motion lab / not the site</title>
+    <link rel="stylesheet" href="./lab.css" />
+  </head>
+  <body>
+    <aside class="rail">
+      <p class="rail__title">MOTION LAB</p>
+      <p class="rail__sub">Study only. Nothing here is on the portfolio.</p>
+      <nav class="rail__nav" id="rail-nav"></nav>
+    </aside>
+
+    <main class="sheet">
+      <header class="intro">
+        <h1 class="intro__h">Ten mechanics,<br />taken apart.</h1>
+        <p class="intro__p">
+          Each one rebuilt from scratch after reading how the reference site
+          actually does it. Controls are live. Drag the sliders and watch what
+          each number is responsible for.
+        </p>
+      </header>
+
+      <section class="demo" id="spring" data-verdict="core">
+        <div class="demo__head">
+          <h2>01 / Spring against lerp</h2>
+          <p class="demo__ref">The gap between your motion and theirs</p>
+        </div>
+        <div class="demo__stage" data-stage="spring"></div>
+        <div class="demo__note" data-note="spring"></div>
+      </section>
+
+      <section class="demo" id="cursor" data-verdict="fits">
+        <div class="demo__head">
+          <h2>02 / Velocity cursor</h2>
+          <p class="demo__ref">Mechanic measured on cuberto.com</p>
+        </div>
+        <div class="demo__stage" data-stage="cursor"></div>
+        <div class="demo__note" data-note="cursor"></div>
+      </section>
+
+      <section class="demo" id="magnetic" data-verdict="fits">
+        <div class="demo__head">
+          <h2>03 / Magnetic, sprung</h2>
+          <p class="demo__ref">Upgrade of your useMagnetic</p>
+        </div>
+        <div class="demo__stage" data-stage="magnetic"></div>
+        <div class="demo__note" data-note="magnetic"></div>
+      </section>
+
+      <section class="demo" id="split" data-verdict="fits">
+        <div class="demo__head">
+          <h2>04 / Two tier split</h2>
+          <p class="demo__ref">Mechanic measured on matvoyce.tv</p>
+        </div>
+        <div class="demo__stage" data-stage="split"></div>
+        <div class="demo__note" data-note="split"></div>
+      </section>
+
+      <section class="demo" id="blur" data-verdict="fits">
+        <div class="demo__head">
+          <h2>05 / Blur reveal</h2>
+          <p class="demo__ref">Rauno Freiberg, via Codrops</p>
+        </div>
+        <div class="demo__stage" data-stage="blur"></div>
+        <div class="demo__note" data-note="blur"></div>
+      </section>
+
+      <section class="demo" id="weight" data-verdict="fits">
+        <div class="demo__head">
+          <h2>06 / Weight wave</h2>
+          <p class="demo__ref">Discrete swap, no variable font needed</p>
+        </div>
+        <div class="demo__stage" data-stage="weight"></div>
+        <div class="demo__note" data-note="weight"></div>
+      </section>
+
+      <section class="demo" id="scroll" data-verdict="core">
+        <div class="demo__head">
+          <h2>07 / Scroll velocity</h2>
+          <p class="demo__ref">What your --scroll-velocity could drive</p>
+        </div>
+        <div class="demo__stage" data-stage="scroll"></div>
+        <div class="demo__note" data-note="scroll"></div>
+      </section>
+
+      <section class="demo" id="wipe" data-verdict="fits">
+        <div class="demo__head">
+          <h2>08 / Clip wipe</h2>
+          <p class="demo__ref">Replaces the uniform fade up</p>
+        </div>
+        <div class="demo__stage" data-stage="wipe"></div>
+        <div class="demo__note" data-note="wipe"></div>
+      </section>
+
+      <section class="demo" id="grain" data-verdict="maybe">
+        <div class="demo__head">
+          <h2>09 / Grain</h2>
+          <p class="demo__ref">Atmosphere layer, activetheory.net</p>
+        </div>
+        <div class="demo__stage" data-stage="grain"></div>
+        <div class="demo__note" data-note="grain"></div>
+      </section>
+
+      <section class="demo" id="displace" data-verdict="risky">
+        <div class="demo__head">
+          <h2>10 / Pointer displacement</h2>
+          <p class="demo__ref">Careful. Close to something you rejected.</p>
+        </div>
+        <div class="demo__stage" data-stage="displace"></div>
+        <div class="demo__note" data-note="displace"></div>
+      </section>
+
+      <footer class="outro">
+        <p>
+          Verdicts and the argument for each are in the chat, not here. Nothing
+          in this folder is imported by the site, and Vite has no entry pointing
+          at it, so none of it can ship by accident.
+        </p>
+      </footer>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

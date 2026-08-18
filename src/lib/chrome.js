@@ -67,17 +67,23 @@ void main() {
   // Banded environment. The bands are the reflected "room" the chrome sits in.
   float bands = 0.5 + 0.5 * sin(R.y * 7.0 + R.x * 4.0 + t * 0.7);
 
-  // Thin-film interference, held to the blue-to-purple band the rest of the
-  // page uses. The offset picks that region of the cosine palette and the
-  // spread is small, so it never wanders into magenta or green. Cut with a
-  // cool silver so it reads as metal rather than a coloured gradient.
+  // Thin-film interference, held to a warm champagne band so the room matches
+  // the metal the lettering is made of. The offset used to sit at 0.29, which
+  // is the violet region of the cosine palette; with steel lettering in front
+  // of it that left a purple room behind a neutral headline, which is the
+  // two-unrelated-palettes problem the retone exists to prevent. Purple over
+  // near-black is also its own recognisable signature.
+  //
+  // 0.92 lands around (0.94, 0.50, 0.09), a warm gold, and the mix is down
+  // from 0.60 to 0.22 so it tints the silver rather than colouring it.
+  //
   // The time term oscillates; it must never accumulate. A linear t term walks
   // the offset around the whole colour wheel as the page stays open, so the
-  // field starts blue, turns green after half a minute and keeps going. This
-  // stays bounded inside the blue-to-purple band.
-  vec3 iri = palette(fres * 0.14 + R.x * 0.05 + sin(t * 0.055) * 0.035 + 0.29);
-  vec3 silver = vec3(0.72, 0.75, 0.83);
-  iri = mix(silver, iri, 0.60);
+  // field starts warm, turns green after half a minute and keeps going. This
+  // stays bounded.
+  vec3 iri = palette(fres * 0.14 + R.x * 0.05 + sin(t * 0.055) * 0.035 + 0.92);
+  vec3 silver = vec3(0.79, 0.78, 0.75);
+  iri = mix(silver, iri, 0.22);
 
   vec3 L = normalize(vec3(0.45, 0.75, 0.55));
   float spec = pow(max(dot(n, L), 0.0), 42.0);

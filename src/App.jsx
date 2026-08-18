@@ -7,11 +7,15 @@ import { Credentials } from './components/credentials/Credentials';
 import { Contact } from './components/contact/Contact';
 import { StickyHeader } from './components/layout/StickyHeader';
 import { Instrument } from './components/layout/Instrument';
+import { useDitherFields } from './hooks/useDitherFields';
 import { usePolarity } from './hooks/usePolarity';
+import { useReducedMotion } from './hooks/useReducedMotion';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 
 export default function App() {
+  const reducedMotion = useReducedMotion();
   useSmoothScroll();
+  useDitherFields({ reducedMotion });
   const { label } = usePolarity();
 
   return (

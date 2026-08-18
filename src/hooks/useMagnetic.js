@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createSpring, createClock } from '../lib/spring';
 
 /**
  * Pulls an element toward the pointer while it is nearby, and lets it spring
@@ -7,8 +8,12 @@ import { useEffect, useRef } from 'react';
  *
  * Writes transforms directly rather than through React state, so hovering
  * costs no renders.
+ *
+ * The return is deliberately underdamped, ratio around 0.75. Pull a link and
+ * flick away and it whips past centre before settling, which is the difference
+ * between a link that feels physical and one that feels animated.
  */
-export function useMagnetic({ strength = 0.32, radius = 90 } = {}) {
+export function useMagnetic({ strength = 0.32, radius = 90, stiffness = 260, damping = 24 } = {}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -17,25 +22,25 @@ export function useMagnetic({ strength = 0.32, radius = 90 } = {}) {
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    const sx = createSpring({ stiffness, damping });
+    const sy = createSpring({ stiffness, damping });
+    const tick = createClock();
     let raf = 0;
-    let tx = 0;
-    let ty = 0;
-    let cx = 0;
-    let cy = 0;
 
-    const frame = () => {
-      cx += (tx - cx) * 0.16;
-      cy += (ty - cy) * 0.16;
+    const frame = (now) => {
+      const dt = tick(now);
+      sx.step(dt);
+      sy.step(dt);
 
-      if (Math.abs(tx - cx) < 0.05 && Math.abs(ty - cy) < 0.05) {
-        cx = tx;
-        cy = ty;
-        el.style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0)`;
+      el.style.transform = `translate3d(${sx.value.toFixed(2)}px, ${sy.value.toFixed(2)}px, 0)`;
+
+      // Stop the loop once it has genuinely come to rest, not merely got close.
+      // Velocity has to be near zero too, or an overshooting spring parks
+      // mid-flight.
+      if (sx.settled(0.02) && sy.settled(0.02)) {
         raf = 0;
         return;
       }
-
-      el.style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0)`;
       raf = requestAnimationFrame(frame);
     };
 
@@ -50,18 +55,18 @@ export function useMagnetic({ strength = 0.32, radius = 90 } = {}) {
       const distance = Math.hypot(dx, dy);
 
       if (distance > rect.width / 2 + radius) {
-        tx = 0;
-        ty = 0;
+        sx.target = 0;
+        sy.target = 0;
       } else {
-        tx = dx * strength;
-        ty = dy * strength;
+        sx.target = dx * strength;
+        sy.target = dy * strength;
       }
       start();
     };
 
     const onLeave = () => {
-      tx = 0;
-      ty = 0;
+      sx.target = 0;
+      sy.target = 0;
       start();
     };
 
@@ -74,7 +79,7 @@ export function useMagnetic({ strength = 0.32, radius = 90 } = {}) {
       cancelAnimationFrame(raf);
       el.style.transform = '';
     };
-  }, [strength, radius]);
+  }, [strength, radius, stiffness, damping]);
 
   return ref;
 }

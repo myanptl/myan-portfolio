@@ -65,39 +65,31 @@ section[data-polarity] {
     color var(--dur) var(--ease);
 }
 
-/* A slow aura in the same violet and amber as the chrome, drifting against the
-   pointer. It is what stops the sections between the hero and the footer from
-   reading as flat panels, without putting an accent into the type or the UI. */
-section[data-polarity]::before {
-  content: '';
+/* Sections need something behind them or they read as flat panels. This used
+   to be two blurred radial gradients, which is the glow-orb shape that marks a
+   layout as generated no matter how low the opacity goes.
+
+   Replaced with an ordered-dither field: two drifting lobes thresholded
+   against an 8x8 Bayer matrix, painted in the section's own type colour. It
+   does the same job and cannot read as an orb, because it has no soft edge
+   anywhere in it. Painted by useDitherFields, see src/lib/dither.js.
+
+   The field is a gyroid slice quantised to a ten-step ASCII ramp and drawn in
+   IBM Plex Mono, the face the site already loads. It runs at full resolution
+   because it is text, so no image-rendering hint belongs here. */
+section[data-polarity] > .field {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
   pointer-events: none;
-  /* Same travelling hue as the chrome, so the whole page shifts together
-     rather than the headline drifting away from its own background. */
-  background:
-    radial-gradient(
-      42% 52% at calc(28% + var(--pnx, 0) * 9%) calc(34% + var(--pny, 0) * 8%),
-      hsl(calc(250deg + var(--chrome-hue)) 66% 62% / var(--aura-a, 0.19)),
-      transparent 68%
-    ),
-    radial-gradient(
-      36% 46% at calc(80% - var(--pnx, 0) * 8%) calc(74% - var(--pny, 0) * 7%),
-      hsl(calc(202deg + var(--chrome-hue) * 0.3) 72% 60% / var(--aura-b, 0.14)),
-      transparent 70%
-    );
+  opacity: var(--field-a, 0.1);
 }
 
 /* Dark grounds need much less of it before it turns into haze. */
-[data-polarity='dark']::before {
-  --aura-a: 0.1;
-  --aura-b: 0.07;
-}
-
-/* The hero has the chrome itself, so it does not need an aura underneath. */
-.hero::before {
-  display: none;
+[data-polarity='dark'] > .field {
+  --field-a: 0.07;
 }
 
 .shell {

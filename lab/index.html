@@ -16,7 +16,7 @@
 
     <main class="sheet">
       <header class="intro">
-        <h1 class="intro__h">Ten mechanics,<br />taken apart.</h1>
+        <h1 class="intro__h">Thirteen mechanics,<br />taken apart.</h1>
         <p class="intro__p">
           Each one rebuilt from scratch after reading how the reference site
           actually does it. Controls are live. Drag the sliders and watch what
@@ -114,11 +114,39 @@
         <div class="demo__note" data-note="displace"></div>
       </section>
 
+      <section class="demo" id="orbdither" data-verdict="core">
+        <div class="demo__head">
+          <h2>11 / Orb against dither</h2>
+          <p class="demo__ref">Shipped. De-slop item 2</p>
+        </div>
+        <div class="demo__stage" data-stage="orbdither"></div>
+        <div class="demo__note" data-note="orbdither"></div>
+      </section>
+
+      <section class="demo" id="reveals" data-verdict="core">
+        <div class="demo__head">
+          <h2>12 / Three reveals</h2>
+          <p class="demo__ref">Shipped. One per section, on purpose</p>
+        </div>
+        <div class="demo__stage" data-stage="reveals"></div>
+        <div class="demo__note" data-note="reveals"></div>
+      </section>
+
+      <section class="demo" id="sequence" data-verdict="core">
+        <div class="demo__head">
+          <h2>13 / The arrival</h2>
+          <p class="demo__ref">Shipped. The landing's entry sequence</p>
+        </div>
+        <div class="demo__stage" data-stage="sequence"></div>
+        <div class="demo__note" data-note="sequence"></div>
+      </section>
+
       <footer class="outro">
         <p>
-          Verdicts and the argument for each are in the chat, not here. Nothing
-          in this folder is imported by the site, and Vite has no entry pointing
-          at it, so none of it can ship by accident.
+          Verdicts and the argument for each are in the chat. 01 to 10 are the
+          study; 11 to 13 are what actually shipped, and those import the real
+          modules out of src/ so they cannot drift from the site. Vite has no
+          entry pointing at this folder, so none of it reaches the bundle.
         </p>
       </footer>
     </main>

@@ -7,15 +7,15 @@ export function Statement() {
     <section
       className="statement"
       data-polarity="dark"
-      data-tone="violet"
+      data-tone="graphite"
       data-section="approach"
     >
       <div className="shell statement__inner">
         <Scramble as="p" className="label statement__kicker" text="( The other half )" />
 
         <h2 className="statement__body">
-          <RevealText text="Anyone can ship a demo." stagger={55} />
-          <RevealText text="Fewer can break it first." delay={180} stagger={55} />
+          <RevealText text="I audit my own work" stagger={55} />
+          <RevealText text="after it goes live." delay={180} stagger={55} />
         </h2>
 
         <p className="statement__tail">

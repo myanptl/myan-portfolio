@@ -1,0 +1,53 @@
+.kinetic {
+  display: block;
+}
+
+/* The mask. Vertical padding is mandatory: without it the ascenders and
+   descenders of large display type fall outside the line box and get sheared
+   off by the overflow. */
+.kinetic__line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.08em;
+}
+
+/* Words stay whole so lines break between words, never mid-word. */
+.kinetic__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.kinetic__word:not(:last-child)::after {
+  content: ' ';
+  white-space: pre;
+}
+
+.kinetic__char {
+  display: inline-block;
+  transform: translateY(115%);
+  will-change: transform;
+  transition:
+    transform 880ms var(--ease),
+    font-weight 120ms linear;
+  transition-delay: calc(var(--delay, 0ms) + var(--i) * var(--stagger, 26ms));
+}
+
+.kinetic.is-in .kinetic__char {
+  transform: translateY(var(--lift, 0px));
+}
+
+/* Flies in heavy, settles to regular. Discrete swap between two loaded
+   weights, so no variable font is required. */
+.kinetic__char.is-heavy {
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic__char {
+    transform: none;
+    transition: none;
+  }
+  .kinetic.is-in .kinetic__char {
+    transform: none;
+  }
+}

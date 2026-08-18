@@ -63,8 +63,20 @@
   height: 26px;
   pointer-events: none;
   /* Driven entirely by the custom properties usePointer writes, so tracking
-     costs no React renders. */
-  transform: translate3d(calc(var(--px, 50vw) - 13px), calc(var(--py, 50vh) - 13px), 0);
+     costs no React renders.
+
+     Rotating to --pangle aligns the crosshair with the direction of travel,
+     and the scale stretches it along that axis and squashes it across, so a
+     fast flick reads as speed rather than as a shape being dragged. Both
+     numbers come free out of the pointer spring's velocity.
+
+     mix-blend-mode: difference is what makes one cursor correct on every
+     ground. The page alternates ink and paper, and a fixed colour would need
+     to know the current polarity. This never does. */
+  transform:
+    translate3d(calc(var(--px, 50vw) - 13px), calc(var(--py, 50vh) - 13px), 0)
+    rotate(var(--pangle, 0deg))
+    scale(calc(1 + var(--pspeed, 0) * 0.55), calc(1 - var(--pspeed, 0) * 0.3));
   mix-blend-mode: difference;
 }
 
@@ -91,15 +103,31 @@
   transform: translateY(-50%);
 }
 
-/* Grows into a bracket over anything interactive. */
+/* Grows into a bracket over anything interactive. States are declared in the
+   markup with data-cursor rather than being hard-coded per component, so a new
+   surface opts in by adding one attribute. */
 :where(a, button):hover ~ .cursor,
 body:has(:where(a, button):hover) .cursor {
   width: 46px;
   height: 46px;
-  transform: translate3d(calc(var(--px, 50vw) - 23px), calc(var(--py, 50vh) - 23px), 0);
+  transform:
+    translate3d(calc(var(--px, 50vw) - 23px), calc(var(--py, 50vh) - 23px), 0)
+    rotate(var(--pangle, 0deg))
+    scale(calc(1 + var(--pspeed, 0) * 0.35), calc(1 - var(--pspeed, 0) * 0.2));
   transition:
     width var(--dur-fast) var(--ease),
     height var(--dur-fast) var(--ease);
+}
+
+/* Wider still over a work row, where the pointer is aiming at a whole line
+   rather than a word. */
+body:has([data-cursor='view']:hover) .cursor {
+  width: 74px;
+  height: 74px;
+  transform:
+    translate3d(calc(var(--px, 50vw) - 37px), calc(var(--py, 50vh) - 37px), 0)
+    rotate(var(--pangle, 0deg))
+    scale(calc(1 + var(--pspeed, 0) * 0.25), calc(1 - var(--pspeed, 0) * 0.15));
 }
 
 @media (pointer: coarse) {

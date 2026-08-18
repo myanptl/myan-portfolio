@@ -84,6 +84,7 @@ export function WorkIndex() {
             <li key={item.name} className="index__row" style={{ '--i': i }}>
               <a
                 className="index__link"
+                data-cursor="view"
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"

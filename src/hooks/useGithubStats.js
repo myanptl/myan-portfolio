@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 
 const CACHE_KEY = 'gh-stats-myanptl';
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour — stays well inside the 60 req/hr unauthenticated limit
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour, stays well inside the 60 req/hr unauthenticated limit
 
 /**
  * Live repo stats for github.com/myanptl, keyed by repo name.
  * Returns {} until loaded; stays {} on rate-limit or network failure so
- * cards render cleanly without stats rather than with placeholders.
+ * consumers render cleanly without stats rather than with placeholders.
+ *
+ * NOTE: currently has no consumers. The stat cards this fed were removed in
+ * the August rebuild. Kept because the fetch, caching and failure handling are
+ * all correct and worth reusing, but it ships nothing today.
  */
 export function useGithubStats() {
   const [stats, setStats] = useState({});
@@ -42,11 +46,11 @@ export function useGithubStats() {
         try {
           sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), data }));
         } catch {
-          // storage full/blocked — fine, we just refetch next visit
+          // storage full or blocked. Fine, we just refetch next visit.
         }
       })
       .catch(() => {
-        // rate-limited or offline — cards render without stats
+        // rate-limited or offline. Consumers render without stats.
       });
 
     return () => controller.abort();

@@ -25,18 +25,19 @@
   gap: clamp(1.75rem, 3vw, 2.75rem);
 }
 
+/* Unrolls downward from its own top edge. This list is chronological, so the
+   reveal reads as a record being added to a stack rather than a card fading
+   into place. Deliberately a different direction from the work index and the
+   credentials list; one shared fade across every section is the single most
+   reliable sign that nobody chose anything. */
 .exp__item {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 700ms var(--ease),
-    transform 700ms var(--ease);
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 780ms var(--ease);
   transition-delay: calc(var(--i) * 80ms);
 }
 
 .exp.is-revealed .exp__item {
-  opacity: 1;
-  transform: none;
+  clip-path: inset(0 0 0 0);
 }
 
 .exp__org {
@@ -71,6 +72,10 @@
   .exp__item {
     opacity: 1;
     transform: none;
+    /* Mandatory. The reveal is a clip-path now, so without this reset a
+       reduced-motion visitor gets rows clipped to zero width permanently,
+       which reads as a blank section rather than a still one. */
+    clip-path: none;
     transition: none;
   }
 }

@@ -3,7 +3,9 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  padding-block: 6rem 4rem;
+  /* The lower padding clears the fixed readout strip. Without it the bio's
+     last line prints on top of the coordinates. */
+  padding-block: 5.5rem 7rem;
   z-index: 2;
 }
 
@@ -23,8 +25,8 @@
 
   /* Held well back. This is the room the chrome lettering is reflecting, not
      an object competing with it. */
-  opacity: 0.30;
-  filter: blur(30px) saturate(1.2);
+  opacity: 0.24;
+  filter: blur(30px) saturate(0.8);
   pointer-events: none;
   mask-image: radial-gradient(
     88% 92% at 50% 46%,
@@ -40,7 +42,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(2.5rem, 8vh, 5rem);
+  gap: clamp(1.75rem, 5vh, 3.25rem);
 }
 
 .hero__top {
@@ -48,23 +50,27 @@
   justify-content: space-between;
   gap: 1.5rem;
   flex-wrap: wrap;
-  border-bottom: 1px solid var(--rule);
   padding-bottom: 1rem;
 }
 
+/* Set to fill. The headline is the page, so it runs to the measure of the
+   container rather than sitting politely inside an 11ch column. Line-height
+   below 1 is what makes three lines read as one mass. */
 .hero__display {
-  font-size: clamp(2.5rem, 0.5rem + 7.4vw, 8rem);
-  font-weight: 500;
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-  max-width: 11ch;
+  font-size: clamp(2.6rem, 0.4rem + 9.4vw, 11rem);
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: -0.05em;
+  max-width: 14ch;
 }
 
 /* Each word sits at its own depth and drifts against the pointer, so the
-   headline has parallax within itself rather than moving as one slab. The
-   transform goes on the mask, not the word: the word's transform is already
-   owned by the reveal. */
-.hero__display .reveal__mask {
+   headline has parallax within itself rather than moving as one slab.
+
+   The transform goes on the word, never on the character: the character's
+   transform is owned by the entry animation and the weight wave's lift, and
+   two owners on one property means one of them silently loses. */
+.hero__display .kinetic__word {
   transform: translate3d(
     calc(var(--pnx, 0) * var(--depth, 6px) * -1),
     calc(var(--pny, 0) * var(--depth, 6px) * -0.55),
@@ -73,18 +79,94 @@
   transition: transform 620ms var(--ease);
 }
 
-.hero__display .reveal__mask:nth-child(3n + 1) {
+.hero__display .kinetic__word:nth-child(3n + 1) {
   --depth: 13px;
 }
-.hero__display .reveal__mask:nth-child(3n + 2) {
+.hero__display .kinetic__word:nth-child(3n + 2) {
   --depth: 6px;
 }
-.hero__display .reveal__mask:nth-child(3n + 3) {
+.hero__display .kinetic__word:nth-child(3n + 3) {
   --depth: 19px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__display .reveal__mask {
+  .hero__display .kinetic__word {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Entry sequence ----------
+   Rules draw out from the left, then the headline rises character by
+   character, then the meta and footer arrive. Everything is gated on
+   .is-ready, which lands one frame after mount so the transitions have a
+   start value to run from. */
+/* The rules live on ::after so they can draw themselves out. */
+.hero__top,
+.hero__foot {
+  position: relative;
+}
+
+.hero__top::after,
+.hero__foot::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1000ms var(--ease);
+}
+
+.hero__top::after {
+  bottom: 0;
+}
+.hero__foot::after {
+  top: 0;
+}
+
+.hero.is-ready .hero__top::after {
+  transform: scaleX(1);
+  transition-delay: 120ms;
+}
+.hero.is-ready .hero__foot::after {
+  transform: scaleX(1);
+  transition-delay: 320ms;
+}
+
+.hero__top > *,
+.hero__foot > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+}
+
+.hero.is-ready .hero__top > * {
+  opacity: 1;
+  transform: none;
+  transition-delay: 240ms;
+}
+
+/* Last in, after the headline has finished arriving. */
+.hero.is-ready .hero__foot > * {
+  opacity: 1;
+  transform: none;
+  transition-delay: 1180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__top::after,
+  .hero__foot::after {
+    transform: scaleX(1);
+    transition: none;
+  }
+  .hero__top > *,
+  .hero__foot > * {
+    opacity: 1;
     transform: none;
     transition: none;
   }
@@ -96,7 +178,6 @@
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  border-top: 1px solid var(--rule);
   padding-top: 1.2rem;
 }
 

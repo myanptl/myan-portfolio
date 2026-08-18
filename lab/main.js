@@ -3,6 +3,7 @@ import { cursorDemo } from './cursor.js';
 import { splitDemo, blurDemo, weightDemo } from './type.js';
 import { scrollVelocityDemo, wipeDemo } from './scroll.js';
 import { grainDemo, displaceDemo } from './surface.js';
+import { orbVsDitherDemo, revealsDemo, sequenceDemo } from './shipped.js';
 
 const demos = [
   ['spring', 'Spring vs lerp', springDemo],
@@ -15,6 +16,9 @@ const demos = [
   ['wipe', 'Clip wipe', wipeDemo],
   ['grain', 'Grain', grainDemo],
   ['displace', 'Displacement', displaceDemo],
+  ['orbdither', 'Orb vs dither', orbVsDitherDemo],
+  ['reveals', 'Three reveals', revealsDemo],
+  ['sequence', 'The arrival', sequenceDemo],
 ];
 
 const nav = document.getElementById('rail-nav');

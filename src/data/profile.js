@@ -1,5 +1,5 @@
 // All content sourced from Myan Patel's real LinkedIn + GitHub (June 2026).
-// Single source of truth — edit here to update the site.
+// Single source of truth. Edit here to update the site.
 
 export const profile = {
   name: 'Myan',
@@ -32,10 +32,10 @@ export const experience = [
     meta: 'Self-employed · Jun 2026 – Present',
     link: { label: 'focusos.live', href: 'https://focusos.live' },
     bullets: [
-      'Designed, built, and secured an AI-powered adaptive study app for high schoolers — React + Vite, Supabase, and the Claude API via edge functions.',
+      'Designed, built, and secured an AI-powered adaptive study app for high schoolers. React + Vite, Supabase, and the Claude API via edge functions.',
       'Authored a full Product Requirements Document (PRD V4) covering user research, learning science, and the feature roadmap.',
       'Integrated an AI-generated active-recall quiz system using spaced-repetition methodology.',
-      'Ran a full security audit (17 findings, 2 critical — all remediated) plus performance and real-time presence fixes.',
+      'Ran a full security audit (17 findings, 2 critical, all remediated) plus performance and real-time presence fixes.',
       'Completed the Suffolk University Pre-College Entrepreneurship Program and the Summit STEM Fellowship (Summer 2026).',
     ],
   },
@@ -95,17 +95,17 @@ export const projects = [
     badge: 'Live · focusos.live',
     href: 'https://focusos.live',
     description:
-      'An AI study app for high schoolers built with React, Supabase, and the Claude API. After launch I ran a full security audit against the OWASP Top 10 for LLM applications — found 17 issues, fixed two critical ones (an API key leak and a paywall bypass), and documented the rest.',
+      'An AI study app for high schoolers built with React, Supabase, and the Claude API. After launch I ran a full security audit against the OWASP Top 10 for LLM applications. Found 17 issues, fixed two critical ones (an API key leak and a paywall bypass), and documented the rest.',
     tags: ['React', 'Vite', 'Supabase', 'Claude API', 'Security'],
   },
   {
     name: 'PromptProbe',
     repo: 'promptprobe',
-    tagline: 'BYOK LLM security scanner — red-teams your chatbot',
+    tagline: 'BYOK LLM security scanner that red-teams your chatbot',
     badge: 'Live · promptprobe.vercel.app',
     href: 'https://promptprobe.vercel.app',
     description:
-      'A security scanner for LLMs, not code: paste your chatbot\'s API key and PromptProbe fires ~20 adversarial prompts across the OWASP LLM Top 10 — prompt injection, jailbreaks, system-prompt leaks, PII extraction — then an AI judge grades every response and returns a severity-weighted A–F score with a shareable scorecard. Your key is used server-side for one scan and never stored.',
+      'Paste your chatbot\'s API key and PromptProbe fires ~20 adversarial prompts across the OWASP LLM Top 10, covering prompt injection, jailbreaks, system-prompt leaks and PII extraction. An AI judge grades every response and returns a severity-weighted A–F score with a shareable scorecard. It probes how the model behaves rather than reading your source. Your key is used server-side for one scan and never stored.',
     tags: ['React', 'Vite', 'TypeScript', 'AI Security', 'OWASP LLM'],
   },
   {
@@ -121,14 +121,14 @@ export const projects = [
   {
     name: 'NYE Media',
     featured: true,
-    tagline: 'The nonprofit I co-founded for student builders',
+    tagline: 'Nonprofit I co-founded for student builders',
     badge: 'Live · nyemedia.org',
     href: 'https://nyemedia.org',
     highlights: [
       {
         term: 'media',
         detail:
-          'Founder interviews and podcasts that show how ventures actually get built, not how they get pitched.',
+          'Founder interviews and podcasts that show how ventures actually get built.',
       },
       {
         term: 'challenges',
@@ -152,7 +152,7 @@ export const projects = [
     badge: 'Live · v1',
     href: 'https://vulnscan-xi.vercel.app/',
     description:
-      'An AI security scanner that catches OWASP Top 10 vulnerabilities before they catch you. Paste code or drop a GitHub repo link and get a real vulnerability report in seconds — auto-detects 12 languages, no login, no friction.',
+      'A static analysis scanner for the OWASP Top 10. Paste code or drop in a GitHub repo link and get a vulnerability report in seconds. It auto-detects 12 languages, with no login and no friction.',
     tags: ['React', 'Vite', 'Static Analysis', 'OWASP', 'Vercel'],
   },
   {
@@ -162,17 +162,17 @@ export const projects = [
     badge: 'npm · published',
     href: 'https://www.npmjs.com/package/etf-research-mcp',
     description:
-      'An open-source MCP server that gives Claude real-time ETF research tools — installable by anyone in one line, no API key required. 7 tools covering theme search, live quotes, expense ratios, AUM, top holdings, side-by-side comparisons, and 5-year performance.',
+      'An open-source MCP server that gives Claude real-time ETF research tools, installable by anyone in one line with no API key required. 7 tools covering theme search, live quotes, expense ratios, AUM, top holdings, side-by-side comparisons, and 5-year performance.',
     tags: ['TypeScript', 'MCP', 'Node', 'Finance'],
   },
   {
     name: 'SlideStack',
     repo: 'slidestack',
-    tagline: 'AI Instagram carousel maker — topic in, PNGs out',
+    tagline: 'AI Instagram carousel maker. Topic in, PNGs out',
     badge: 'Live · slidestack-beta.vercel.app',
     href: 'https://slidestack-beta.vercel.app',
     description:
-      'Carousels beat Reels in 2026 (saved ~9× more), so I built the fastest way to make one: type a topic, Claude Fable 5 writes a hook → points → CTA deck as structured JSON, and a canvas renderer paints 1080×1350 slides in three hand-built themes — downloadable as PNGs or a ZIP. 100% client-side BYOK: your API key never leaves the browser, enforced by a strict CSP.',
+      'Carousels beat Reels in 2026 (saved ~9× more), so I built the fastest way to make one: type a topic, Claude Fable 5 writes a hook → points → CTA deck as structured JSON, and a canvas renderer paints 1080×1350 slides in three hand-built themes, downloadable as PNGs or a ZIP. 100% client-side BYOK: your API key never leaves the browser, enforced by a strict CSP.',
     tags: ['React', 'Vite', 'TypeScript', 'Claude API', 'Canvas'],
   },
   {
@@ -192,26 +192,26 @@ export const projects = [
     badge: 'Live · reporoast-alpha.vercel.app',
     href: 'https://reporoast-alpha.vercel.app',
     description:
-      'A fun AI web app: drop in a GitHub username and an AI roast host delivers a savage-but-kind roast of your repos, then flips to a genuine hype-up — with a 0–100 heat score and a shareable card. Public GitHub data in, Claude Haiku out, no login, nothing stored. Built in a day as the fun counterweight to my security work.',
+      'Drop in a GitHub username and an AI host roasts your repos, then flips to a genuine hype-up, with a 0–100 heat score and a shareable card. Public GitHub data in, Claude Haiku out, no login, nothing stored. Built in a day.',
     tags: ['React', 'Vite', 'Claude API', 'GitHub API', 'Design'],
   },
   {
     name: 'fable-jarvis',
     repo: 'fable-jarvis',
-    tagline: 'Your own JARVIS in the terminal',
+    tagline: 'Terminal assistant on the Claude Agent SDK',
     badge: 'npm · published',
     href: 'https://www.npmjs.com/package/fable-jarvis',
     description:
-      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing — weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools: it can look, never touch.',
+      'An open-source terminal assistant anyone can install: npm i -g fable-jarvis, type jarvis, and a Claude-powered assistant chats with a personality, remembers what you tell it, and gives a daily briefing covering weather, which of your repos have uncommitted work, and your reminders. Built on the Claude Agent SDK with allowlisted read-only tools, so it can read the filesystem but not write to it.',
     tags: ['TypeScript', 'Claude Agent SDK', 'CLI', 'Open Source'],
   },
   {
-    name: 'EquityLens — AMZN Pitch',
+    name: 'EquityLens: AMZN Pitch',
     tagline: 'Self-built stock/ETF scoring tool',
     badge: 'Case study',
     href: 'https://github.com/myanptl',
     description:
-      'A stock-scoring tool I built (Valuation 40 / Earnings 25 / Insider 20 / Attention 15), used to produce a full Amazon (AMZN) equity pitch rated Buy — walking through AWS + AI growth, valuation, and risks with real June 2026 numbers. Educational, not investment advice.',
+      'A stock-scoring tool I built (Valuation 40 / Earnings 25 / Insider 20 / Attention 15), used to produce a full Amazon (AMZN) equity pitch rated Buy, walking through AWS + AI growth, valuation, and risks with real June 2026 numbers. Educational, not investment advice.',
     tags: ['React', 'Finance', 'Data Viz', 'Research'],
   },
 ];
@@ -229,7 +229,7 @@ export const credentials = {
     count: 18,
     headline: '18 Anthropic Academy Certifications',
     detail:
-      'Completed the full Anthropic Academy track — AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
+      'Completed the full Anthropic Academy track: AI Fluency (Students, Nonprofits, Small Business), Introduction to Subagents & Agent Skills, Model Context Protocol: Advanced Topics, Claude with Amazon Bedrock, Claude with Google Cloud Vertex AI, and more.',
     // All eighteen, read off the LinkedIn certifications list on 17 Aug 2026.
     // Ordered foundations first, then Claude, then agents, MCP and cloud;
     // LinkedIn's own order is arbitrary.

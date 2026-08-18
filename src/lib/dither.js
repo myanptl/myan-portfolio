@@ -65,3 +65,65 @@ export function renderDither(ctx, w, h, t, rgb, pointer) {
 
   ctx.putImageData(image, 0, 0);
 }
+
+/**
+ * Gyroid slice.
+ *
+ * The two-lobe field above is soft and shapeless, which is fine as a
+ * replacement for a glow but has no structure of its own. A gyroid is a
+ * triply-periodic minimal surface: sampling one moving 2D slice of it gives
+ * continuous woven bands that never repeat visibly and never resolve into a
+ * blob.
+ *
+ * Adapted from the layer vocabulary on fluid.krackeddevs.com (gyroid, truchet,
+ * cellular, interference). The function is standard maths rather than anything
+ * taken from that site.
+ */
+export function gyroidAt(x, y, w, h, t, pointer = { x: 0, y: 0 }) {
+  // Normalised, aspect-corrected, and drifting with both time and the pointer.
+  const s = 6.2;
+  const nx = (x / w - 0.5) * s + pointer.x * 0.5;
+  const ny = (y / h - 0.5) * s * (h / w) + pointer.y * 0.4;
+  const nz = t * 0.00008;
+
+  const g =
+    Math.sin(nx) * Math.cos(ny) +
+    Math.sin(ny) * Math.cos(nz) +
+    Math.sin(nz) * Math.cos(nx);
+
+  // g lands in about -2..2. Fold it to 0..1 and bias so most of the canvas is
+  // empty, leaving the bands as the only lit region.
+  const v = 1 - Math.min(1, Math.abs(g) * 0.85);
+  return v * v;
+}
+
+/** Density ramp, sparse to dense. Rendered in the mono face the site loads. */
+export const ASCII_RAMP = ' .:-=+*#%@';
+
+/**
+ * Paints the field as characters rather than as thresholded pixels.
+ *
+ * Cells are addressed in device pixels and drawn with fillText, so this canvas
+ * is full resolution and must NOT carry image-rendering: pixelated. It is the
+ * one place on the site where the mono face is doing something other than
+ * labelling.
+ */
+export function renderAscii(ctx, w, h, cell, t, rgb, pointer, alpha = 1) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.font = `${cell}px 'IBM Plex Mono', ui-monospace, monospace`;
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+
+  const cols = Math.ceil(w / cell);
+  const rows = Math.ceil(h / (cell * 1.6));
+  const last = ASCII_RAMP.length - 1;
+
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      const v = gyroidAt(c * cell, r * cell * 1.6, w, h, t, pointer);
+      const ch = ASCII_RAMP[Math.min(last, Math.round(v * last))];
+      if (ch === ' ') continue;
+      ctx.fillText(ch, c * cell, r * cell * 1.6);
+    }
+  }
+}

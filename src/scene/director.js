@@ -10,7 +10,7 @@
  * past it.
  */
 
-import { onFrame, clamp, mapRange, smoothstep } from '../lib/frame.js';
+import { onFrame, clamp, lerp, mapRange, smoothstep } from '../lib/frame.js';
 
 /* Portrait and narrow-landscape viewports cannot afford a side-by-side
    composition, so the drive is lifted clear of the copy instead of being pushed
@@ -31,8 +31,14 @@ export function direct(stage, els) {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fadeFrom = still ? teardown : tail;
 
-  // The order a bench teardown actually goes in: cover first, board last.
-  const ordered = stage.parts.slice().sort((a, b) => b.userData.order - a.userData.order);
+  /*
+   * The order the teardown walks, taken from the data rather than from the
+   * geometry. Axial order and strip order are not the same thing for every
+   * object: a laminated stack comes apart top down, an engine front to back.
+   * `step` is each part's index in the authored list, so the walk follows how
+   * the thing is actually taken apart.
+   */
+  const ordered = stage.parts.slice().sort((a, b) => a.userData.step - b.userData.step);
   let shown = -1;
   let swapTimer = 0;
 
@@ -53,8 +59,10 @@ export function direct(stage, els) {
     // lower left.
     stage.setExplode(0);
     stage.setFraming(0);
-    stage.setOrbit(-0.5 + p * 0.22, 0.34);
-    stage.setPan(isNarrow() ? 0 : -0.22 + p * 0.07, isNarrow() ? -0.52 : -0.1);
+    // Swung round to the front quarter, which is the only angle where the fan
+    // is visible through the inlet. Broadside, a nacelle is just a tube.
+    stage.setOrbit(-1.0 + p * 0.14, 0.3);
+    stage.setPan(isNarrow() ? 0 : -0.34 + p * 0.07, isNarrow() ? -0.52 : -0.08);
     stage.setInteractive(false);
   }
 
@@ -87,7 +95,21 @@ export function direct(stage, els) {
     // toward level puts the eye edge-on to a stack of flat plates, which is the
     // one angle where an exploded view reads as nothing at all, and the
     // platters in particular vanish to lines.
-    stage.setOrbit(mapRange(p, 0, 1, -0.5, 0.72), mapRange(p, 0, 1, 0.34, 0.54));
+    /*
+     * Yaw is driven by the EXPLODE, not by scroll progress.
+     *
+     * The hero sits at a front three-quarter angle, which is the only one where
+     * the fan is visible down the inlet. The row needs the opposite: near
+     * broadside, or perspective puts the cowl in your face and squashes the
+     * whole core into the distance behind it. Tying the swing to `e` means the
+     * camera comes round exactly as the engine comes apart, and goes back as it
+     * closes, rather than drifting on a schedule of its own.
+     *
+     * Pitch still stays raised throughout, or the discs go edge on and eleven
+     * rotors become eleven lines.
+     */
+    const hold = mapRange(p, 0.24, 0.84, -0.3, 0.3);
+    stage.setOrbit(lerp(-0.8, hold, e), mapRange(p, 0, 1, 0.3, 0.44));
     stage.setFraming(e);
     stage.setPan(isNarrow() ? 0 : -0.14, isNarrow() ? -0.4 : -0.08);
 

@@ -10,11 +10,17 @@ Live: myan-portfolio.vercel.app
 
 ## The design, in four rules
 
-**1. One object, and it is the only colour on the site.** A 3.5 inch hard drive,
-built from primitives in `src/scene/`, comes apart as you scroll. The UI is
-monochrome: one text colour at three strengths, no accent, no polarity flip. The
-only chromatic pixels anywhere are the amber Kapton flex and the copper voice
-coil, and both are honest materials rather than decoration.
+**1. One object, and it is the only colour on the site.** A high bypass
+turbofan, built from primitives in `src/scene/`, comes apart as you scroll. The
+UI is monochrome: one text colour at three strengths, no accent, no polarity
+flip. The only chromatic pixels anywhere are the engine's hot section, and that
+colour is a fact rather than a choice: a combustor and the turbine behind it run
+heat discoloured for their whole service life.
+
+**1b. It never stops moving.** Both spools turn continuously, open or closed.
+The version before this gated rotation on `1 - explode`, so every moving part
+froze the moment the object opened and the entire teardown, the part anyone
+actually scrolls through, was a still image. Do not reintroduce that gate.
 
 **2. Scale contrast is the hierarchy.** The name is enormous, everything else is
 a mono label. There is deliberately no middle size. If something needs emphasis
@@ -35,10 +41,10 @@ only) and **IBM Plex Mono** (labels, readouts). Not Inter.
 ## Layout of the scene
 
 ```
-src/data/parts.js     the seven parts as plain data, no three import
-src/scene/shapes.js   primitive builders (rounded box, tapered arm, sector, ribbon)
-src/scene/materials.js  one material set PER PART, so one can light while six dim
-src/scene/drive.js    the assembly: which part sits on which, and its home Y
+src/data/parts.js     the eleven parts as plain data, no three import
+src/scene/shapes.js   primitive builders (rounded box, blade, lathe, ribbon)
+src/scene/materials.js  one material set PER PART, so one can light while ten dim
+src/scene/turbofan.js the assembly: what sits where, and the packed exploded row
 src/scene/stage.js    renderer, lights, springs, explode, focus, hover, dispose
 src/scene/director.js scroll choreography for every section
 ```
@@ -66,8 +72,28 @@ markup, so the 3D and the accessible list can never drift.
 - **Large recessed metal needs a LIGHTER tint, small proud metal a darker one.**
   The casting is a deep tub and rendered as glossy black plastic until it was
   tinted up; the opposite rule applies everywhere else.
-- **A part parked end-on reads as debris.** The head stack held at its real park
-  angle collapsed four arms into one chevron. It rests extended instead.
+- **A part parked end-on reads as debris.** Blades must be boxes, never planes:
+  a zero-thickness blade vanishes edge on and a stage of them reads as scattered
+  debris rather than as a disc.
+- **The exploded row is packed by each part's real size, not on a fixed pitch.**
+  An even pitch suits a laminated stack. Here the nacelle is 6.5 long and the HP
+  turbine is 0.5, so a fixed spacing buries ten parts inside the cowl. See the
+  layout pass at the end of `turbofan.js`.
+- **Frame the exploded row from its MEASURED width.** Estimating it from the
+  assembled size is short by most of a nacelle, and put the cowl across half the
+  screen.
+- **`setFraming` must not clobber a focused part's distance.** It runs every
+  frame; without the `if (!focused)` guard the zoom onto a named part is undone
+  before the spring travels a pixel.
+- **Frame a focused part on ITS OWN extents.** Using the engine's height meant
+  the 5.4 nacelle diameter dominated every calculation and the camera never
+  moved in.
+- **Do not bake a hub radius into blade geometry.** Scaling a stage then shrinks
+  its hub along with its span, and in a real compressor those go opposite ways.
+  Each instance carries its own radial offset instead.
+- **Yaw is driven by the explode, not by scroll progress.** The hero wants a
+  front three-quarter angle to see the fan down the inlet; the exploded row
+  wants near broadside, or perspective squashes the core behind the cowl.
 - **The group origin is not the part.** Labels anchor to each part's
   bounding-box centre, measured once in local space.
 - **`ch` in a max-width resolves against the element's own font-size, but inside
@@ -91,6 +117,12 @@ npm test        # includes a slop lint over src/: em dashes, emoji, gradients
 - Copy register: short declarative fragments. State what a thing is. No slogans,
   no swagger, no lines about breaking things.
 - Files under 500 lines.
+
+## Measuring in the automation browser
+An occluded Chrome window throttles rAF to 1 Hz, which shows up as ~1000 ms
+frames and makes `take_screenshot` hang forever waiting for a fresh frame. It is
+not the scene. `select_page` with `bringToFront` fixes it. Verify with a frame
+timing sample before optimising anything.
 
 ## Audit before calling it done
 Check at 390, 768, 1024, 1440: no horizontal overflow, the part label never runs

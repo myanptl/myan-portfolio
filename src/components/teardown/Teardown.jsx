@@ -18,10 +18,10 @@ export function Teardown() {
     <section className="teardown" id="teardown" aria-labelledby="teardown-h">
       <div className="teardown__pin">
         <div className="teardown__ui shell">
-          <h2 className="sr-only" id="teardown-h">A hard drive, taken apart</h2>
+          <h2 className="sr-only" id="teardown-h">A jet engine, taken apart</h2>
 
           <p className="label teardown__note">
-            A 3.5 inch drive, drawn in the browser from primitives.
+            A high bypass turbofan, drawn in the browser from primitives.
             <span className="teardown__noteBreak"> No model files, no textures.</span>
           </p>
 

@@ -9,19 +9,25 @@
 
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { buildDrive, ARM_INNER, ARM_OUTER, ARM_REST } from './drive.js';
+import { buildEngine } from './turbofan.js';
 import { createSpring } from '../lib/spring.js';
-import { onFrame, clamp } from '../lib/frame.js';
+import { onFrame, clamp, lerp } from '../lib/frame.js';
 
-// Explode spacing per unit of part order. Tuned by eye against the drive's own
-// height. Far enough that every layer is separately readable, close enough
-// that it still reads as one machine coming apart.
-const SPREAD = 0.94;
-
-// Platter speed. A real drive turns at 120 rev/s, which on a 60 Hz display is
-// pure strobe. 1.4 rev/s is the fastest that still reads as rotation rather
-// than as a flicker, and the clamp screws are what make it visible at all.
-const SPIN_RATE = 8.8;
+/*
+ * Spool speeds, in radians per second, and the whole reason for this rebuild.
+ *
+ * These are NOT gated on the explode. The previous object stopped every moving
+ * part the moment it opened, so the entire teardown, which is the part anyone
+ * actually scrolls through, was a still image.
+ *
+ * Both are far slower than the real thing, for one reason: aliasing. Twenty fan
+ * blades at a true 2 500 rpm cross the frame 830 times a second, and on a 60 Hz
+ * display that is not rotation, it is a strobe. At 0.54 rev/s the fan passes
+ * eleven blades a second and reads as unmistakably turning. The high spool runs
+ * 2.4x faster and the other way, which is what makes the two legible as two.
+ */
+const LP_RATE = 3.4;
+const HP_RATE = -8.2;
 
 // Widest a part label gets, plus its gap. Used to decide when to flip it.
 const HOT_LABEL_W = 210;
@@ -65,15 +71,12 @@ export function createStage(host, hotspotHost) {
 
   const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 140);
 
-  const { drive, parts, platterSpin, hubSpin, armPivot } = buildDrive();
-  scene.add(drive);
+  const { engine, parts, size, explodedWidth } = buildEngine();
+  scene.add(engine);
 
-  // Frame from the drive's own bounds, so changing the geometry never silently
+  // Frame from the engine's own bounds, so changing the geometry never silently
   // crops it.
-  const box = new THREE.Box3().setFromObject(drive);
-  const size = box.getSize(new THREE.Vector3());
-  const orders = parts.map((p) => p.userData.order);
-  const spreadY = (Math.max(...orders) - Math.min(...orders)) * SPREAD;
+
 
   /**
    * Distance at which a world-space box of w x h fills `fill` of the frame.
@@ -98,16 +101,21 @@ export function createStage(host, hotspotHost) {
      *
      * distFor already accounts for aspect, so the object fits the frame it was
      * measured against. What it cannot know is that the object is ORBITED: at a
-     * yaw of half a radian the drive's projected width is wider than the
-     * `size.x * 0.84` it was framed on, and on a wide screen the spare margin
-     * absorbs that while on a phone it does not, so the casting ran off the
-     * left edge. Less fill is the margin.
+     * yaw of half a radian the engine's projected width is wider than the
+     * length it was framed on, and on a wide screen the spare margin absorbs
+     * that while on a phone it does not. Less fill is the margin.
      */
     const narrow = innerWidth / innerHeight < 1.25;
-    // Foreshortening: seen from a raised three-quarter angle the drive's length
-    // projects shorter, so framing on raw length leaves dead space either side.
-    distAssembled = distFor(size.x * 0.84, size.z + size.y, narrow ? 0.5 : 0.64);
-    distExploded = distFor(size.x * 0.84, spreadY + size.y, narrow ? 0.58 : 0.72);
+    // Foreshortening: seen from a raised three-quarter angle the engine's
+    // length projects shorter, so framing on raw length leaves dead space
+    // either side. Exploding widens the object rather than heightening it,
+    // because the explode runs along the same axis as its own length.
+    distAssembled = distFor(size.x * 0.86, size.y, narrow ? 0.52 : 0.66);
+    // Framed from the packed row's MEASURED width. Estimating it was the bug
+    // that put the cowl across half the screen: the widest single part is
+    // nearly as long as the assembled engine, so any guess based on the
+    // assembled size is short by most of a nacelle.
+    distExploded = distFor(explodedWidth, size.y, narrow ? 0.72 : 0.88);
   }
   recomputeFraming();
 
@@ -134,16 +142,13 @@ export function createStage(host, hotspotHost) {
   // type has its own column instead of colliding with the object.
   const panX = createSpring({ stiffness: 60, damping: 18 });
   const panY = createSpring({ stiffness: 60, damping: 18 });
-  // Vertical tracking, so the camera rides down the stack as the caption walks
+  // Axial tracking, so the camera rides ALONG the engine as the caption walks
   // and brings the named part toward the middle of the frame.
-  const followY = createSpring({ stiffness: 55, damping: 17 });
+  const followX = createSpring({ stiffness: 55, damping: 17 });
   // Global dim gate. At 0 nothing recedes, which is correct while the drive is
   // opening or closing; at 1 the unselected parts fall back so the named one is
   // unmistakable.
   const focusMode = createSpring({ stiffness: 90, damping: 20 });
-  // Arm angle, sprung rather than set, so a seek lands with weight.
-  const armAngle = createSpring({ stiffness: 26, damping: 11, value: ARM_REST });
-
   parts.forEach((p) => {
     p.userData.offset = createSpring({ stiffness: 110, damping: 21 });
     // One highlight value per part, driven by BOTH hover and the scroll walk.
@@ -153,6 +158,9 @@ export function createStage(host, hotspotHost) {
   });
 
   let focused = null;
+  // Last distance asked for by the section, kept so releasing a focus can fall
+  // back to it rather than to a guess.
+  let framed = distAssembled;
 
   /* Hover ---------------------------------------------------------------- */
   const ray = new THREE.Raycaster();
@@ -213,32 +221,42 @@ export function createStage(host, hotspotHost) {
   const follow = new THREE.Vector3();
   const anchorOf = (p, out) => out.copy(p.userData.anchor).applyMatrix4(p.matrixWorld);
 
-  let spinPhase = 0;
-  let seekPhase = 0;
+  let lpPhase = 0;
+  let hpPhase = 0;
 
   const stop = onFrame((dt) => {
     if (!onScreen || document.hidden) return;
 
-    [explode, camDist, yaw, pitch, ptrX, ptrY, panX, panY, focusMode, armAngle]
+    [explode, camDist, yaw, pitch, ptrX, ptrY, panX, panY, focusMode]
       .forEach((s) => s.step(dt));
 
     // Partial tracking, not full centring. Following the part all the way to
     // the middle of the frame pushes the rest of the stack off the bottom and
     // loses the sense of an assembly; 0.6 improves the viewing angle while
     // keeping the neighbouring layers in shot for context.
-    followY.target = focused ? anchorOf(focused, follow).y * 0.6 : 0;
-    followY.step(dt);
+    followX.target = focused ? anchorOf(focused, follow).x * 0.7 : 0;
+    followX.step(dt);
 
     const e = clamp(explode.value, 0, 1);
     const fm = focusMode.value;
 
     parts.forEach((p) => {
       const u = p.userData;
-      u.offset.target = u.order * SPREAD * e;
+      /*
+       * Lerp from where the part really sits to its slot in the packed row,
+       * rather than adding an offset to where it sits.
+       *
+       * The engine comes apart along its LONG axis, which is the opposite
+       * situation to a laminated stack: the parts are already spread across six
+       * units before anything moves, so adding offsets would only stretch an
+       * arrangement that is already too wide. The target positions are computed
+       * once in turbofan.js, packed by each part's real size.
+       */
+      u.offset.target = e;
       u.offset.step(dt);
       u.hi.target = hovered === p || focused === p ? 1 : 0;
       u.hi.step(dt);
-      p.position.y = u.home.y + u.offset.value;
+      p.position.x = lerp(u.home.x, u.exploded, clamp(u.offset.value, 0, 1));
 
       // Everything that is not the named part recedes, and the named one is
       // pushed slightly past its own baseline so it gains rather than merely
@@ -258,19 +276,27 @@ export function createStage(host, hotspotHost) {
       }
     });
 
-    /* The drive runs while it is closed and stops as it opens, which is the
-       honest way round: you cannot spin a platter with the lid off. */
-    const running = 1 - e;
-    spinPhase += dt * SPIN_RATE * running;
-    if (platterSpin) platterSpin.rotation.y = spinPhase;
-    if (hubSpin) hubSpin.rotation.y = spinPhase;
-
-    // Seeking, on the same gate. The arm walks the data band while the drive is
-    // closed and returns to its ramp as soon as it comes apart.
-    seekPhase += dt * 0.42;
-    const band = (Math.sin(seekPhase) * 0.5 + 0.5) * (ARM_OUTER - ARM_INNER) + ARM_INNER;
-    armAngle.target = ARM_REST + (band - ARM_REST) * (still ? 0 : running);
-    if (armPivot) armPivot.rotation.y = armAngle.value;
+    /*
+     * Both spools turn continuously, open or closed. An exploded engine whose
+     * rotors have stopped is a diagram; one still spinning is a machine that
+     * happens to be apart, and it is the only thing on the page that keeps
+     * moving while you read.
+     */
+    if (!still) {
+      lpPhase += dt * LP_RATE;
+      hpPhase += dt * HP_RATE;
+    }
+    for (const p of parts) {
+      const spin = p.userData.spin;
+      if (spin === 'lp') p.rotation.x = lpPhase;
+      else if (spin === 'hp') p.rotation.x = hpPhase;
+      else if (spin === 'both') {
+        // The shafts carry one of each, which is the clearest place on the
+        // whole engine to see that there are two of them.
+        p.userData.spools.lp.rotation.x = lpPhase;
+        p.userData.spools.hp.rotation.x = hpPhase;
+      }
+    }
 
     /* Camera. Orbit from the springs, with pointer parallax layered on top. */
     const py = pitch.value + ptrY.value * 0.15;
@@ -289,7 +315,10 @@ export function createStage(host, hotspotHost) {
     const halfH = Math.tan(vFov / 2) * d;
     right.set(Math.cos(ya), 0, -Math.sin(ya));
     panVec.copy(right).multiplyScalar(panX.value * halfH * camera.aspect);
-    panVec.y += panY.value * halfH + followY.value;
+    // followX is already in world units along the engine's own axis, so it is
+    // added directly rather than scaled by the frame.
+    panVec.y += panY.value * halfH;
+    panVec.x += followX.value;
     camera.position.add(panVec);
     camera.lookAt(panVec);
 
@@ -319,9 +348,14 @@ export function createStage(host, hotspotHost) {
     /* The called-out part floats toward the camera. */
     parts.forEach((p) => {
       const l = p.userData.hi.value;
-      if (l < 0.001) { p.position.x = 0; p.position.z = 0; return; }
-      tmp.copy(camera.position).normalize().multiplyScalar(l * 0.55);
-      p.position.x = tmp.x;
+      if (l < 0.001) { p.position.y = 0; p.position.z = 0; return; }
+      // Perpendicular to the engine axis only. Lifting it along X as well would
+      // shove the part out of its slot on the exploded grid and into its
+      // neighbour.
+      tmp.copy(camera.position);
+      tmp.x = 0;
+      tmp.normalize().multiplyScalar(l * 0.5);
+      p.position.y = tmp.y;
       p.position.z = tmp.z;
     });
 
@@ -367,13 +401,40 @@ export function createStage(host, hotspotHost) {
     setOrbit(y, p) { yaw.target = y; pitch.target = p; },
     /** t: 0 frames the closed drive, 1 frames the full exploded stack. */
     setFraming(t) {
-      camDist.target = distAssembled + (distExploded - distAssembled) * clamp(t, 0, 1);
+      framed = distAssembled + (distExploded - distAssembled) * clamp(t, 0, 1);
+      // A focused part owns the camera distance. Without this guard the section
+      // rewrites the target every frame and the zoom onto a named part is
+      // undone before the spring can travel a pixel.
+      if (!focused) camDist.target = framed;
     },
     /** Screen-space composition, in half-frames. -1 is a full frame left. */
     setPan(x, y) { panX.target = x; panY.target = y; },
     setInteractive(v) { interactive = v && !still; },
-    /** Call out one part, or null for none. */
-    setFocus(p) { focused = p || null; focusMode.target = focused ? 1 : 0; },
+    /**
+     * Call out one part, or null for none.
+     *
+     * Focusing also takes over the camera distance, and frames the part on its
+     * own size rather than on a fixed zoom. The row runs from a 6.5 long cowl
+     * to a 0.5 turbine: one distance that suits both does not exist, and the
+     * whole row held in frame leaves the small parts a few dozen pixels across.
+     * Showing roughly the named part plus its neighbours is what a teardown
+     * actually does.
+     */
+    setFocus(p) {
+      focused = p || null;
+      focusMode.target = focused ? 1 : 0;
+      // Framed on the PART's own extents, not the engine's. Using the whole
+      // engine's height meant the 5.4 nacelle diameter dominated every
+      // calculation and the camera never actually moved in: a 1.5 tall
+      // compressor was framed as though it were as tall as the cowl.
+      camDist.target = focused
+        ? distFor(
+          clamp(focused.userData.width * 3.2, 3.4, explodedWidth),
+          clamp(focused.userData.height * 2.0, 2.6, size.y),
+          0.74,
+        )
+        : framed;
+    },
     /** Used by the intro so the drive assembles itself on first paint. */
     prime() { explode.jump(1); camDist.jump(distExploded * 1.8); },
 

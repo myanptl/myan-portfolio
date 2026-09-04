@@ -20,7 +20,7 @@ export function Contact() {
 
         <p className="label contact__foot">
           <span>{profile.name}, 2026</span>
-          <span>Drive built with three.js</span>
+          <span>Engine built with three.js</span>
         </p>
       </div>
     </footer>

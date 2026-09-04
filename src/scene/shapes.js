@@ -83,6 +83,84 @@ export function ribbon(points, width = 0.26, thick = 0.012, steps = 44) {
   return new THREE.ExtrudeGeometry(s, { extrudePath: path, steps, bevelEnabled: false });
 }
 
+/**
+ * A turbomachinery blade, built along the engine's radial axis.
+ *
+ * Span runs up +Y, chord along X (the engine axis), thickness in Z, so a whole
+ * stage is just this instanced at N angles about X.
+ *
+ * Three deformations, and all three are what separate a blade from a fin:
+ *   twist  the blade rotates about its own span, a lot at the root and little
+ *          at the tip, because the oncoming air meets the root and the tip at
+ *          completely different angles. This is what catches the light as a
+ *          travelling band when the stage turns.
+ *   sweep  the tip rakes backwards, quadratically. Straight blades read as a
+ *          paddle wheel.
+ *   camber the aerofoil section itself, so the blade has a suction side.
+ *
+ * A BOX, never a plane: a zero-thickness blade disappears edge on, and a stage
+ * of them reads as scattered debris rather than as a disc.
+ */
+export function bladeGeometry({
+  chord, span, thick = 0.03, twist = 0.8, sweep = 0.25, seg = 6, chordSeg = 3,
+}) {
+  // Segmentation is the whole triangle budget of this scene: one blade is
+  // nothing, but a compressor is several hundred of them. Only the span needs
+  // real subdivision, because that is the axis the twist runs along. The first
+  // pass subdivided the chord six ways across a blade 0.17 long, which is finer
+  // than the blade is wide and cost 260 000 triangles across the engine.
+  const g = new THREE.BoxGeometry(chord, span, thick, chordSeg, seg, 1);
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const t = (y + span / 2) / span; // 0 at root, 1 at tip
+
+    // Camber, applied before the twist so it rotates with the section.
+    const c = (1 - (x / (chord / 2)) ** 2) * chord * 0.1 * (1 - t * 0.45);
+
+    // Twist about the span axis. Unwinds toward the tip.
+    const a = twist * (1 - t) - twist * 0.35;
+    const cs = Math.cos(a);
+    const sn = Math.sin(a);
+    const zc = z + c;
+    pos.setX(i, x * cs - zc * sn + t * t * sweep);
+    pos.setZ(i, x * sn + zc * cs);
+  }
+  pos.needsUpdate = true;
+  g.computeVertexNormals();
+  /*
+   * The root sits at y = 0, NOT on a hub radius baked into the geometry.
+   *
+   * Baking the hub in means scaling a stage down shrinks its hub along with its
+   * span, and in a real compressor those go opposite ways: the drum swells
+   * toward the back while the blades get shorter, because the annulus is
+   * narrowing. With the hub baked in, the later stages scaled their roots
+   * inward and eight rows of blades disappeared inside their own drum. Each
+   * instance now carries its own radial offset instead.
+   */
+  g.translate(0, span / 2, 0);
+  return g;
+}
+
+/**
+ * A surface of revolution about the engine axis, from a profile given as
+ * [radius, axial] pairs.
+ *
+ * LatheGeometry revolves around Y, so the profile is fed in as (x=radius,
+ * y=axial) and the result is rotated to put the axis on X. Closing the profile
+ * back on itself gives a shell with real wall thickness, which is what makes a
+ * cowl read as a cowl instead of as a paper tube.
+ */
+export function lathe(profile, segments = 64) {
+  const pts = profile.map(([r, a]) => new THREE.Vector2(r, a));
+  const g = new THREE.LatheGeometry(pts, segments);
+  g.rotateZ(-Math.PI / 2);
+  g.computeVertexNormals();
+  return g;
+}
+
 /** Small deterministic PRNG, so procedural clutter is identical every load. */
 export function mulberry(a) {
   return function () {

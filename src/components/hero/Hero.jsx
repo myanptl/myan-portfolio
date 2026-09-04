@@ -20,7 +20,7 @@ export function Hero() {
           <p className="hero__lead">{profile.lead}</p>
         </div>
 
-        <p className="label hero__cue">Scroll to open it</p>
+        <p className="label hero__cue">Scroll to take it apart</p>
       </div>
     </section>
   );

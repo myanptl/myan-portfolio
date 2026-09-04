@@ -1,49 +1,31 @@
 import { Hero } from './components/hero/Hero';
-import { Statement } from './components/statement/Statement';
-import { WorkIndex } from './components/index/WorkIndex';
-import { Marquee } from './components/marquee/Marquee';
-import { Experience } from './components/experience/Experience';
-import { Credentials } from './components/credentials/Credentials';
+import { Teardown } from './components/teardown/Teardown';
+import { Work } from './components/work/Work';
 import { Contact } from './components/contact/Contact';
-import { StickyHeader } from './components/layout/StickyHeader';
-import { Instrument } from './components/layout/Instrument';
-import { useDitherFields } from './hooks/useDitherFields';
-import { usePolarity } from './hooks/usePolarity';
-import { useReducedMotion } from './hooks/useReducedMotion';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
+import { useTeardown } from './hooks/useTeardown';
 
 export default function App() {
-  const reducedMotion = useReducedMotion();
   useSmoothScroll();
-  useDitherFields({ reducedMotion });
-  const { label } = usePolarity();
+  useTeardown();
 
   return (
     <>
-      <a className="skip-link" href="#work">
-        Skip to the work
-      </a>
+      <a className="skip-link" href="#work">Skip to the work</a>
 
-      <Instrument />
-      <StickyHeader label={label} />
+      {/* The object. Fixed behind the page; the stage appends its own canvas
+          here on mount. Purely visual, and fully described in the teardown's
+          own screen-reader list, so it is hidden from the tree. */}
+      <div className="stage" id="stage" aria-hidden="true">
+        <div className="stage__hotspots" />
+      </div>
 
-      <div id="top">
+      <div className="page">
         <Hero />
-
-        <main id="main-content">
-          <Statement />
-
-          {/* The work is a typographic index; hovering a row floats that
-              project's capture whole beside the pointer. */}
-          <div id="work">
-            <WorkIndex />
-          </div>
-
-          <Marquee />
-          <Experience />
-          <Credentials />
+        <main>
+          <Teardown />
+          <Work />
         </main>
-
         <Contact />
       </div>
     </>

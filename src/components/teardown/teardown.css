@@ -1,0 +1,188 @@
+/* The scroll-driven-scene pattern, and the only one that works: a tall parent,
+   and a child that is position:sticky and exactly one viewport tall. The child
+   holds still while the parent scrolls past, so scroll reads as moving through
+   the object rather than past it. */
+.teardown {
+  position: relative;
+  height: 340svh;
+}
+
+.teardown__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: flex-end;
+}
+
+.teardown__ui {
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+    'note   note'
+    'idx    hint'
+    'cap    cap'
+    'scrub  scrub';
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0.75rem 1.5rem;
+  padding-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+.teardown__note {
+  grid-area: note;
+  margin-bottom: auto;
+  color: var(--fg-32);
+}
+/* Kept on one line where there is room, broken where there is not, without a
+   second string to maintain. */
+.teardown__noteBreak {
+  display: block;
+}
+
+.teardown__readout {
+  grid-area: idx;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  color: var(--fg-32);
+}
+.teardown__idx {
+  font-size: 1rem;
+  color: var(--fg);
+}
+
+.teardown__hint {
+  grid-area: hint;
+  color: var(--fg-32);
+  transition: opacity var(--dur) var(--ease);
+}
+.teardown__hint.is-off {
+  opacity: 0;
+}
+/* There is no hover on a touch screen, so the instruction is a lie there. */
+@media (pointer: coarse) {
+  .teardown__hint {
+    display: none;
+  }
+}
+
+.caption {
+  grid-area: cap;
+  max-width: 42ch;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+/* The swap: out, change the text, back in. The director cancels any pending
+   swap before scheduling the next, or a stale one lands after the readout has
+   already advanced and the number disagrees with the name beside it. */
+.caption.is-swap {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.caption__name {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: var(--track-tight);
+}
+
+.caption__spec {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--fg-55);
+}
+
+.scrub {
+  grid-area: scrub;
+  height: 1px;
+  margin-top: 0.5rem;
+  background: var(--rule);
+}
+.scrub__fill {
+  display: block;
+  height: 100%;
+  background: var(--fg);
+  /* scaleX from a zero-width origin, not a width animation. Width is a layout
+     property and animating it on every scroll frame is the one guaranteed way
+     to make a scroll-linked scene stutter. */
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+@media (min-width: 900px) {
+  .teardown__ui {
+    grid-template-areas:
+      'note   .'
+      'cap    idx'
+      'scrub  hint';
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .teardown__noteBreak {
+    display: inline;
+  }
+  .teardown__idx {
+    font-size: 1.25rem;
+  }
+}
+
+/* Same rules as .sr-only. Not the class itself, because this element stops
+   being hidden below and a utility that sometimes does not apply is worse than
+   no utility. */
+.teardown__parts {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Not a token gesture. With motion off the drive never opens, so the pinned
+   scene has nothing to show: 340svh of empty scroll and a caption naming one
+   part out of seven, with no way to reach the other six. The section collapses
+   to its natural height and the caption is replaced by the whole list. */
+@media (prefers-reduced-motion: reduce) {
+  .teardown {
+    height: auto;
+  }
+  .teardown__pin {
+    position: static;
+    height: auto;
+    padding-top: clamp(5rem, 4rem + 6vw, 10rem);
+  }
+  .teardown__readout,
+  .caption,
+  .scrub,
+  .teardown__hint {
+    display: none;
+  }
+
+  .teardown__parts {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+  .teardown__parts > div {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .teardown__parts dt {
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    font-weight: 500;
+    letter-spacing: var(--track-tight);
+  }
+  .teardown__parts dd {
+    margin-top: 0.25rem;
+    font-size: 0.9375rem;
+    color: var(--fg-55);
+  }
+}

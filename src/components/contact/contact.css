@@ -1,70 +1,55 @@
 .contact {
-  min-height: 88svh;
-  display: flex;
-  align-items: center;
-  padding-block: var(--space-section);
   position: relative;
-  z-index: 2;
+  padding-bottom: clamp(2rem, 1.5rem + 2vw, 3.5rem);
 }
 
-.contact__kicker {
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 1rem;
-  margin-bottom: clamp(2rem, 5vw, 4rem);
+.contact__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 2rem + 3vw, 5rem);
+  padding-top: clamp(4rem, 3rem + 5vw, 8rem);
 }
 
-.contact__title {
-  font-size: clamp(2rem, 0.8rem + 5.2vw, 6.25rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.04em;
+.contact__now {
+  font-size: var(--text-lead);
+  line-height: 1.4;
+  max-width: 30ch;
+  color: var(--fg-55);
 }
 
 .contact__links {
-  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem 3.5rem;
-  margin-top: clamp(3rem, 7vw, 5rem);
-  border-top: 1px solid var(--rule);
-  padding-top: 2rem;
+  gap: 0 clamp(1.5rem, 1rem + 3vw, 4rem);
+  list-style: none;
 }
 
 .contact__link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.75rem);
+  display: inline-block;
+  font-size: clamp(2rem, 1rem + 5vw, 4.5rem);
   font-weight: 500;
   letter-spacing: var(--track-tight);
-  position: relative;
-  will-change: transform;
+  line-height: 1.15;
+  /* The underline grows from the left on hover. It is drawn as a background
+     rather than as text-decoration so it can be animated at all, and sized in
+     em so it tracks the type instead of drifting at other viewport widths. */
+  background-image: linear-gradient(var(--fg), var(--fg));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 0.04em;
+  transition: background-size var(--dur) var(--ease);
 }
-
-.contact__link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.12em;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 520ms var(--ease);
-}
-
-.contact__link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.contact__link:hover,
+.contact__link:focus-visible {
+  background-size: 100% 0.04em;
 }
 
 .contact__foot {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   justify-content: space-between;
-  margin-top: clamp(4rem, 10vw, 7rem);
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
   border-top: 1px solid var(--rule);
-  padding-top: 1.1rem;
+  color: var(--fg-32);
 }

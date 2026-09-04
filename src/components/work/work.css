@@ -1,0 +1,85 @@
+.work {
+  position: relative;
+  padding: clamp(6rem, 4rem + 8vw, 12rem) 0 clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+.work__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.work__count {
+  color: var(--fg-32);
+}
+
+.work__list {
+  list-style: none;
+}
+
+.work__row {
+  display: grid;
+  grid-template-areas:
+    'idx  name'
+    'idx  role'
+    'idx  at';
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.15rem 0;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.work__idx {
+  grid-area: idx;
+  color: var(--fg-32);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.work__name {
+  grid-area: name;
+  /* Capped at 1.75rem, not 1.875. The longest name in the index is
+     "etf-research-mcp" at sixteen characters, and above this size it no longer
+     fits the name column and wraps mid-package-name. */
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: var(--track-tight);
+  line-height: 1.1;
+}
+
+.work__role {
+  grid-area: role;
+  font-size: 0.9375rem;
+  color: var(--fg-55);
+}
+
+.work__at {
+  grid-area: at;
+  color: var(--fg-32);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+/* Hover is feedback on a link, not decoration. The row does not lift, scale,
+   glow or slide: the rule under it goes to full strength and the two dimmed
+   columns come up to meet the name. */
+.work__row:hover,
+.work__row:focus-visible {
+  border-color: var(--fg);
+}
+.work__row:hover .work__idx,
+.work__row:hover .work__at,
+.work__row:focus-visible .work__idx,
+.work__row:focus-visible .work__at {
+  color: var(--fg);
+}
+
+@media (min-width: 760px) {
+  .work__row {
+    grid-template-areas: 'idx name role at';
+    grid-template-columns: 3.5rem minmax(0, 15rem) minmax(0, 1fr) auto;
+    gap: 0 1.5rem;
+    padding: 1.35rem 0;
+  }
+}

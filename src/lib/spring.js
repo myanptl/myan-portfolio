@@ -1,9 +1,9 @@
-// Semi-implicit Euler spring, the integrator behind every piece of motion on
-// the site.
+// Semi-implicit Euler spring.
 //
-// This replaced `value += (target - value) * ease` in usePointer, useMagnetic
-// and the smooth scroller. Exponential smoothing has two problems that no
-// amount of tuning fixes:
+// Every piece of motion on the page runs on this: the explode offsets, the
+// camera orbit, distance and pan, the part highlights and the actuator angle.
+// Exponential smoothing (`value += (target - value) * ease`) has two problems
+// that no amount of tuning fixes:
 //
 //   1. It cannot overshoot. It only ever approaches, so nothing lands with any
 //      weight. The settle past the mark is most of what reads as expensive.

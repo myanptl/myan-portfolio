@@ -11,28 +11,32 @@
 html {
   -webkit-text-size-adjust: 100%;
   /* Deliberately NOT scroll-behavior: smooth. The lerped scroller drives the
-     page with per-frame scrollTo calls, and CSS smooth scrolling turns each of
+     page with per-frame scroll writes, and CSS smooth scrolling turns each of
      those into its own animation that the next frame cancels, so the page
      crawls instead of moving. Smoothness comes from the scroller. */
 }
 
+/* Lenis, inlined rather than imported: the package ships dist/lenis.css but
+   does not list it in its exports map, so importing it fails to resolve. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
-  background: var(--bg);
+  background: var(--ink);
   color: var(--fg);
   font-family: var(--font-display);
   font-size: var(--text-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition:
-    background-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
-}
-
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
 }
 
 a {
@@ -40,103 +44,144 @@ a {
   text-decoration: none;
 }
 
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
 :focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 3px;
+  outline: 1px solid var(--fg);
+  outline-offset: 4px;
 }
 
-/* Sections own their polarity. The body follows the active one via JS so the
-   overscroll area never flashes the wrong ground. */
-section[data-polarity] {
-  position: relative;
-  isolation: isolate;
-  background: var(--bg);
-  color: var(--fg);
-  transition:
-    background-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
-}
-
-/* Sections need something behind them or they read as flat panels. This used
-   to be two blurred radial gradients, which is the glow-orb shape that marks a
-   layout as generated no matter how low the opacity goes.
-
-   Replaced with an ordered-dither field: two drifting lobes thresholded
-   against an 8x8 Bayer matrix, painted in the section's own type colour. It
-   does the same job and cannot read as an orb, because it has no soft edge
-   anywhere in it. Painted by useDitherFields, see src/lib/dither.js.
-
-   The field is a gyroid slice quantised to a ten-step ASCII ramp and drawn in
-   IBM Plex Mono, the face the site already loads. It runs at full resolution
-   because it is text, so no image-rendering hint belongs here. */
-section[data-polarity] > .field {
+/* Lives here, not in a component stylesheet. A visually-hidden utility parked
+   inside one component's CSS silently un-hides every sr-only element on the
+   page the day that component is deleted. */
+.sr-only {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-  opacity: var(--field-a, 0.1);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Dark grounds need much less of it before it turns into haze. */
-[data-polarity='dark'] > .field {
-  --field-a: 0.07;
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--gutter);
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+.skip-link:focus {
+  top: 1rem;
 }
 
-.shell {
-  width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-/* Small uppercase mono label. The site's only recurring UI texture. */
+/* The one shared type style. Every label, readout and index row on the page is
+   this, which is most of why the page holds together with no colour. */
 .label {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: var(--fg-45);
+  color: var(--fg-55);
 }
 
-.skip-link {
+.shell {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ── Stage ──────────────────────────────────────────────────────────────
+   Fixed behind everything and never scrolled. Scroll moves the camera and the
+   parts, not the pixels. Sections stay transparent so the object shows through
+   them; the ground is painted once, on the body. */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease);
+}
+.stage__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.stage__hotspots {
   position: absolute;
-  left: -9999px;
-  z-index: 100;
-  padding: 0.75rem 1.25rem;
+  inset: 0;
+}
+
+/* Content sits above the object. */
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+/* The label pinned to a part's own geometry. Without this the caption names a
+   part while seven anonymous slabs sit on screen, and finding the one being
+   described means hunting for it. */
+.hot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+  will-change: transform;
+}
+.hot__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* Near the right edge the label is drawn on the other side of its dot, so the
+   dot stays on the part and the text stays on screen. */
+.hot.is-flip .hot__inner {
+  flex-direction: row-reverse;
+  transform: translateX(-100%);
+}
+.hot.is-on {
+  opacity: 1;
+}
+.hot__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
   background: var(--fg);
-  color: var(--bg);
+  transition: box-shadow var(--dur-fast) var(--ease);
+}
+.hot.is-hover .hot__dot {
+  box-shadow: 0 0 0 6px rgba(238, 236, 231, 0.14);
+}
+.hot__text {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--fg);
+  /* The label has to sit over whatever part it names, and the platters are the
+     brightest surface in the scene: pale text on a mirror finish is unreadable
+     exactly where the object is most worth looking at. A hard-edged chip of the
+     page ground guarantees the contrast. No radius and no blur, so it reads as
+     a callout on a drawing rather than as a tooltip. */
+  padding: 0.2rem 0.45rem;
+  background: rgba(11, 11, 12, 0.72);
 }
 
-.skip-link:focus {
-  left: var(--gutter);
-  top: 1rem;
+body.is-part {
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }

@@ -1,11 +1,18 @@
 import { useEffect } from 'react';
-import { createSmoothScroll } from '../lib/smoothScroll';
+import Lenis from 'lenis';
+import { onFrame } from '../lib/frame.js';
 import { useReducedMotion } from './useReducedMotion';
 
 /**
- * Installs lerped scrolling, and disables it entirely for anyone who has asked
- * for reduced motion or is on a touch device (where native momentum scrolling
- * is already better than anything intercepted wheel events can do).
+ * Lerped scrolling, driven from the shared frame loop.
+ *
+ * This matters more here than it does on an ordinary page: the camera is
+ * sampled from scroll position every frame, and native wheel scrolling lands on
+ * whatever pixel the browser picked that tick. On a trackpad that reads as
+ * visible stepping in the 3D, not just as a less smooth page.
+ *
+ * Disabled for reduced motion, and on touch, where native momentum is already
+ * better than anything intercepted wheel events can do.
  */
 export function useSmoothScroll() {
   const reducedMotion = useReducedMotion();
@@ -14,26 +21,28 @@ export function useSmoothScroll() {
     if (reducedMotion) return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
-    const scroller = createSmoothScroll();
-    if (!scroller) return;
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true, wheelMultiplier: 0.9 });
+    const stop = onFrame((_, now) => lenis.raf(now));
 
-    // Anchor links need to go through the scroller, otherwise the native jump
-    // fights the damping.
+    // Dev-only handle. The scroller owns the scroll position, so without this
+    // there is no way to drive the page to an exact offset from the console or
+    // from a browser-automation session. Stripped from production builds.
+    if (import.meta.env.DEV) window.__lenis = lenis;
+
     const onClick = (event) => {
       const link = event.target.closest?.('a[href^="#"]');
       if (!link) return;
-      const id = link.getAttribute('href').slice(1);
-      const el = id ? document.getElementById(id) : null;
+      const el = document.getElementById(link.getAttribute('href').slice(1));
       if (!el) return;
       event.preventDefault();
-      scroller.scrollTo(el.getBoundingClientRect().top + window.scrollY);
+      lenis.scrollTo(el);
     };
-
     document.addEventListener('click', onClick);
 
     return () => {
       document.removeEventListener('click', onClick);
-      scroller.destroy();
+      stop();
+      lenis.destroy();
     };
   }, [reducedMotion]);
 }

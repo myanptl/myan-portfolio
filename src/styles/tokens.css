@@ -1,227 +1,46 @@
-/* Polarity is one pair of tokens, swapped per section. Sections alternate
-   between paper and ink so the page has real contrast beats rather than being
-   one long dark scroll.
-
-   No chrome accent anywhere. Colour arrives only through the work captures in
-   the hover previews. */
-
-/* A registered property so the hue can actually be animated. Plain custom
-   properties are not interpolable, and doing this with filter: hue-rotate()
-   instead would create a containing block that degrades the chrome text's
-   background-attachment: fixed back to scroll, breaking the single continuous
-   sheen across the headline. */
-@property --chrome-hue {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: true;
-}
-
-/* The drift is deliberately small. The gradient below sits at very low
-   saturation for the steel bands and only moderate saturation for the warm
-   ones, so a wide swing would either be invisible or would push the champagne
-   stops into orange. Sixteen degrees moves the reflection without the surface
-   ever arriving at a nameable colour, which is the whole point: polished metal
-   shifts, it does not change hue.
-
-   Individual stops scale this by 0.3 to 0.5 so the steel and the warm bounce
-   drift at different rates, the way a real reflection does. */
-@keyframes hue-travel {
-  0%,
-  100% {
-    --chrome-hue: -16deg;
-  }
-  50% {
-    --chrome-hue: 16deg;
-  }
-}
-
-html {
-  animation: hue-travel 30s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    animation: none;
-  }
-}
+/*
+ * The whole design system. It is this short on purpose.
+ *
+ * The previous version carried a paper/ink polarity flip, four ground tones and
+ * an animated chrome gradient with sixteen colour stops. Measured against a
+ * reference portfolio, that site used nine distinct text colours to the
+ * reference's two, and the decoration was the thing that read as generated.
+ *
+ * There is now one ground, one text colour at three strengths, and no accent.
+ * The only chromatic pixels on the site are inside the 3D object: the amber of
+ * a polyimide flex circuit and the copper of a voice coil. Colour has to be
+ * earned by being a real material.
+ */
 
 :root {
-  /* The light grounds carry a faint warm cast so they sit in the same range as
-     the champagne side of the chrome. The grounds and the headline have to
-     agree, or the page reads as two unrelated palettes. This was previously a
-     cool blue-violet for the same reason, back when the chrome was violet.
-
-     Warm here means barely warm. Push it further and it goes cream, which is a
-     different and equally recognisable template. */
+  /* Not #000. Pure black is as much of a tell as pure white, and a trace of
+     warmth in the ground lets the cool rim light on the metal read as cool. */
+  --ink: #0b0b0c;
   --paper: #eeece7;
-  --ink: #0c0c0d;
 
-  /* Default: ink ground, paper type. */
-  --bg: var(--ink);
   --fg: var(--paper);
-  --fg-rgb: 238, 236, 231;
-  --bg-rgb: 12, 12, 13;
+  --fg-55: rgba(238, 236, 231, 0.55);
+  --fg-32: rgba(238, 236, 231, 0.32);
+  --rule: rgba(238, 236, 231, 0.14);
 
-  --fg-70: rgba(var(--fg-rgb), 0.7);
-  --fg-45: rgba(var(--fg-rgb), 0.45);
-  --fg-28: rgba(var(--fg-rgb), 0.28);
-  --rule: rgba(var(--fg-rgb), 0.18);
-
-  /* Type */
   --font-display: 'Switzer', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  /* Scale contrast is the hierarchy. There is no middle size on this page: the
+     name is enormous, everything else is a label, and nothing sits between. */
+  --text-display: clamp(3.25rem, 0.5rem + 12vw, 12rem);
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.45vw, 1.375rem);
+  --text-body: 1rem;
   --text-label: 0.6875rem;
-  --track-tight: -0.035em;
-  --track-label: 0.16em;
+  --track-tight: -0.04em;
+  --track-label: 0.14em;
 
-  /* Layout */
-  --gutter: clamp(1.25rem, 0.6rem + 3vw, 4.5rem);
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 4rem);
   --container: 1440px;
-  --space-section: clamp(6rem, 4rem + 10vw, 14rem);
 
-  /* Motion */
-  --dur-fast: 240ms;
-  --dur: 620ms;
-  --dur-slow: 1100ms;
+  --dur-fast: 220ms;
+  --dur: 560ms;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Published by the smooth scroller, consumed for velocity-linked motion. */
-  --scroll-velocity: 0;
-}
-
-/* The derived tokens have to be redeclared in every polarity scope.
-   A custom property resolves the var() inside it against the scope it was
-   DECLARED in, not the scope it is used in, so `--fg-70: rgba(var(--fg-rgb),
-   0.7)` declared once on :root stays locked to the root polarity forever.
-   On a light section while the root was dark, that painted every piece of
-   secondary text and every hairline paper-coloured on paper. */
-[data-polarity='light'] {
-  --bg: var(--paper);
-  --fg: var(--ink);
-  --fg-rgb: 12, 12, 13;
-  --bg-rgb: 238, 236, 231;
-
-  --fg-70: rgba(12, 12, 13, 0.7);
-  --fg-45: rgba(12, 12, 13, 0.45);
-  --fg-28: rgba(12, 12, 13, 0.28);
-  --rule: rgba(12, 12, 13, 0.18);
-}
-
-[data-polarity='dark'] {
-  --bg: var(--ink);
-  --fg: var(--paper);
-  --fg-rgb: 238, 236, 231;
-  --bg-rgb: 12, 12, 13;
-
-  --fg-70: rgba(238, 236, 231, 0.7);
-  --fg-45: rgba(238, 236, 231, 0.45);
-  --fg-28: rgba(238, 236, 231, 0.28);
-  --rule: rgba(238, 236, 231, 0.18);
-}
-
-/* Grounds, layered on top of polarity.
-   Straight black to white and back reads as a switch being flipped. Every
-   reference site moves through several related tones instead: bone, mist,
-   slate, a near-black with a trace of warmth in it. These override only the
-   ground, so the contrast direction set by polarity still holds. */
-[data-tone='slate'] {
-  --bg: #1a1a1d;
-  --bg-rgb: 26, 26, 29;
-}
-
-/* Was 'violet' while the chrome was violet. Renamed rather than left as a
-   token whose name no longer describes what it paints. Only one consumer,
-   Statement.jsx. */
-[data-tone='graphite'] {
-  --bg: #131315;
-  --bg-rgb: 19, 19, 21;
-}
-
-[data-tone='bone'] {
-  --bg: #e7e4dd;
-  --bg-rgb: 231, 228, 221;
-}
-
-/* Declared but currently unused. Kept in step with the others so it is not a
-   trap for whoever reaches for it next. */
-[data-tone='mist'] {
-  --bg: #dcd8d0;
-  --bg-rgb: 220, 216, 208;
-}
-
-/* Chrome lettering. The gradient is banded hard light against dark the way a
-   polished surface reflects a horizon, with iridescent fringing either side.
-   Its position tracks the pointer, so the letters catch the light as the
-   cursor moves across them. */
-/* The paint goes on the innermost text spans, not the wrapper: the reveal
-   masks use overflow:hidden, which establishes its own painting context and
-   stops an ancestor's background-clip:text from ever reaching the glyphs.
-
-   background-attachment: fixed anchors the gradient to the viewport rather
-   than to each word, so one continuous sheen runs across the whole line
-   instead of restarting inside every word. */
-.chrome-text .kinetic__char,
-.chrome-text .reveal__word,
-.chrome-text > span:only-child,
-span.chrome-text {
-  /* Weighted bright. Chrome on a dark ground reads as a mostly luminous
-     surface with narrow dark bands for definition; the inverse just makes the
-     letters disappear into the background. */
-  background-image: linear-gradient(
-    166deg,
-    hsl(calc(214deg + var(--chrome-hue) * 0.35) 13% 91%) 0%,
-    #ffffff 7%,
-    hsl(calc(211deg + var(--chrome-hue) * 0.35) 10% 80%) 14%,
-    hsl(calc(218deg + var(--chrome-hue) * 0.3) 8% 57%) 19%,
-    #ffffff 26%,
-    /* Warm horizon bounce. A gold fringe is what sells the surface as metal
-       reflecting a room; the cyan that used to sit here read as a printed
-       gradient. Saturation stays low on the steel bands and only moderate on
-       the warm ones, which is what keeps this from arriving at a colour. */
-    hsl(calc(43deg + var(--chrome-hue) * 0.5) 33% 85%) 33%,
-    hsl(calc(36deg + var(--chrome-hue) * 0.45) 21% 89%) 41%,
-    hsl(calc(210deg + var(--chrome-hue) * 0.3) 9% 67%) 46%,
-    #ffffff 54%,
-    hsl(calc(40deg + var(--chrome-hue) * 0.5) 29% 91%) 62%,
-    hsl(calc(216deg + var(--chrome-hue) * 0.3) 11% 77%) 68%,
-    #ffffff 76%,
-    hsl(calc(46deg + var(--chrome-hue) * 0.5) 37% 87%) 84%,
-    hsl(calc(212deg + var(--chrome-hue) * 0.35) 10% 85%) 92%,
-    #ffffff 100%
-  );
-  background-attachment: fixed;
-  background-size: 150vw 150vh;
-  background-position: calc(50% + var(--pnx, 0) * 16%) calc(46% + var(--pny, 0) * 20%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  transition: background-position 280ms var(--ease);
-}
-
-/* Without background-clip: text the fill stays transparent and there is no
-   clipped background to reveal it, so the headline renders as nothing at all.
-   Fall back to plain ink. */
-@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
-  .chrome-text .kinetic__char,
-  .chrome-text .reveal__word,
-  .chrome-text > span:only-child,
-  span.chrome-text {
-    background-image: none;
-    color: inherit;
-    -webkit-text-fill-color: currentColor;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chrome-text .kinetic__char,
-  .chrome-text .reveal__word,
-  .chrome-text > span:only-child,
-  span.chrome-text {
-    transition: none;
-  }
 }
 
 @font-face {
@@ -234,12 +53,6 @@ span.chrome-text {
   font-family: 'Switzer';
   src: url('/fonts/switzer-500.woff2') format('woff2');
   font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-700.woff2') format('woff2');
-  font-weight: 700;
   font-display: swap;
 }
 @font-face {

@@ -2,7 +2,7 @@
 //
 // Voice, borrowed from the portfolios that do this best: name, then what the
 // thing IS in five words or fewer. No slogans, no verbs doing work the product
-// should do, no year column repeating 2026 eleven times.
+// should do, no year column repeating 2026 ten times.
 //
 // `at` is the destination as a person would say it out loud, so a row reads as
 // an index entry rather than as a button.
@@ -18,5 +18,4 @@ export const workIndex = [
   { name: 'keyhound', role: 'Secret scanner, zero dependencies', at: 'github', href: 'https://github.com/myanptl/keyhound' },
   { name: 'fable-jarvis', role: 'Terminal assistant, read only', at: 'npm', href: 'https://www.npmjs.com/package/fable-jarvis' },
   { name: 'etf-research-mcp', role: 'Live ETF tools for Claude', at: 'npm', href: 'https://www.npmjs.com/package/etf-research-mcp' },
-  { name: 'EquityLens', role: 'Equity scoring model', at: 'github', href: 'https://github.com/myanptl' },
 ];

@@ -6,10 +6,10 @@ import './work.css';
  *
  * Deliberately the same visual language as the teardown readout: mono,
  * two-digit numerals, hairline rules. The drive comes apart into seven numbered
- * parts and the work is eleven numbered entries, so the object reads as
+ * parts and the work is ten numbered entries, so the object reads as
  * belonging to the page rather than as a demo bolted onto the front of it.
  *
- * No screenshots. Eleven cropped captures meant eleven competing colour worlds
+ * No screenshots. Ten cropped captures meant ten competing colour worlds
  * on a page that otherwise has none, and a shrunk-down screenshot tells you
  * less than four words do.
  */

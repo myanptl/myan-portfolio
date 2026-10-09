@@ -1,6 +1,7 @@
 import { Hero } from './components/hero/Hero';
 import { Teardown } from './components/teardown/Teardown';
 import { Work } from './components/work/Work';
+import { Motion } from './components/motion/Motion';
 import { Contact } from './components/contact/Contact';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { useTeardown } from './hooks/useTeardown';
@@ -25,6 +26,7 @@ export default function App() {
         <main>
           <Teardown />
           <Work />
+          <Motion />
         </main>
         <Contact />
       </div>

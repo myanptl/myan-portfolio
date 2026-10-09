@@ -8,8 +8,8 @@
 // an index entry rather than as a button.
 
 export const workIndex = [
-  { name: 'FocusOS', role: 'AI study app, audited against OWASP', at: 'focusos.live', href: 'https://focusos.live' },
   { name: 'NYE Media', role: 'Nonprofit for student builders', at: 'nyemedia.org', href: 'https://nyemedia.org' },
+  { name: 'FocusOS', role: 'AI study app, audited against OWASP', at: 'focusos.live', href: 'https://focusos.live' },
   { name: 'VulnScan', role: 'OWASP Top 10 scanner', at: 'vulnscan-xi.vercel.app', href: 'https://vulnscan-xi.vercel.app/' },
   { name: 'PromptProbe', role: 'LLM red-teaming scanner', at: 'promptprobe.vercel.app', href: 'https://promptprobe.vercel.app' },
   { name: 'SlideAir', role: 'Gesture-controlled presenting', at: 'slideair.vercel.app', href: 'https://slideair.vercel.app' },

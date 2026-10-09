@@ -9,7 +9,7 @@ export const profile = {
   name: 'Myan Patel',
   where: 'Westford, Massachusetts',
   lead: 'I build AI products, then test them for security.',
-  now: 'Rising junior at Westford Academy. Co-founded NYE Media. Previously growth and ops at Dimenso.',
+  now: 'Junior at Westford Academy. Co-founded NYE Media. Previously growth and ops at Dimenso.',
   links: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/myan-patel-1857943ba/' },
     { label: 'GitHub', href: 'https://github.com/myanptl' },

@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 
-// A halftone of real footage, one clip per theme. Light mode prints a
-// chrysanthemum in a single ink, like a risograph; dark mode shows a tiger in
-// its own colour. Both were shot on black, which keys out to the page.
-// One fullscreen quad: each fragment finds its dot cell, samples the video at
-// the cell centre, and the cursor bends the grid first so the dots part.
+// Real footage drawn as a halftone, one clip per theme.
+// By day the dots are ink: the darker the pixel, the bigger the dot, so the
+// dahlia's white studio sweep prints as bare paper. By night the dots are
+// light: the brighter the pixel, the bigger the dot, so the panda's white fur
+// glows and its black fur all but disappears. Edges feather into the page.
+// Nothing reacts to the cursor; the footage is the motion.
 
 const CLIPS = {
-  light: { src: '/motion/flower.mp4', name: 'Chrysanthemum', mono: 1, key: [0.16, 0.34], gain: 1.0 },
-  dark: { src: '/motion/tiger.mp4', name: 'Tiger', mono: 0, key: [0.05, 0.2], gain: 1.7 },
+  light: { src: '/motion/dahlia.mp4', name: 'Dahlia', ink: 1, feather: 0.04, range: [0.08, 0.8] },
+  // The white fur lights up full; grass and dirt sit low in the range and stay faint.
+  dark: { src: '/motion/panda.mp4', name: 'Giant panda, lunch', ink: 0, feather: 0.18, range: [0.3, 0.95] },
 };
+
+const DEVELOP_MS = 1800; // dots grow in from nothing, like a print developing
+const CELL = 6;          // css px between dot centres
 
 const VERT = `
 attribute vec2 p;
@@ -19,59 +24,44 @@ const FRAG = `
 precision highp float;
 uniform sampler2D uVideo;
 uniform vec2 uRes;       // canvas size, device px
-uniform vec2 uMouse;     // device px, y down
-uniform vec2 uVel;       // smoothed cursor velocity
 uniform float uCell;     // dot pitch, device px
-uniform float uTime;
 uniform float uAspect;   // video w / h
-uniform float uZoom;     // fraction of canvas width the video may span
 uniform vec3 uBg;
-uniform vec3 uInk;
-uniform float uMono;     // 1: single ink, 0: the footage's own colour
-uniform vec2 uKey;       // luminance range that fades from background to subject
-uniform float uGain;
+uniform float uInk;      // 1: dot size from darkness, 0: from brightness
+uniform float uFeather;  // edge fade, fraction of the frame
+uniform float uDevelop;  // 0 to 1 on load
+uniform vec2 uRange;     // tone range that maps to no dot through a full dot
 
 void main() {
   vec2 p = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
-
-  // Cursor: push outward and drag along the direction of travel.
-  vec2 d = p - uMouse;
-  float r = uRes.y * 0.16;
-  float f = exp(-dot(d, d) / (r * r));
-  vec2 disp = normalize(d + 0.001) * f * uCell * 2.2 + uVel * f * 0.9;
-  // Wind: a slow, low sway so the field is never perfectly still.
-  disp += vec2(sin(p.y * 0.006 + uTime * 0.7), cos(p.x * 0.005 + uTime * 0.55)) * uCell * 0.35;
-
-  vec2 q = p - disp;
-  vec2 cell = floor(q / uCell);
+  vec2 cell = floor(p / uCell);
   vec2 centre = (cell + 0.5) * uCell;
 
-  float h = min(uRes.y * 0.94, uZoom * uRes.x / uAspect);
+  // Contain the video, centred.
+  float h = min(uRes.y, uRes.x / uAspect);
   vec2 size = vec2(h * uAspect, h);
-  vec2 origin = vec2((uRes.x - size.x) * 0.5, uRes.y - size.y);
+  vec2 origin = (uRes - size) * 0.5;
   vec2 uv = (centre - origin) / size;
   if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) { gl_FragColor = vec4(uBg, 1.0); return; }
 
-  vec3 c = clamp(texture2D(uVideo, uv).rgb * uGain, 0.0, 1.0);
+  vec3 c = texture2D(uVideo, uv).rgb;
   float lum = dot(c, vec3(0.299, 0.587, 0.114));
-  float a = smoothstep(uKey.x, uKey.y, lum);
-  a *= smoothstep(0.0, 0.08, uv.x) * smoothstep(1.0, 0.92, uv.x) * smoothstep(0.0, 0.06, uv.y);
+  float tone = smoothstep(uRange.x, uRange.y, uInk > 0.5 ? 1.0 - lum : lum);
 
-  // Mono: brightness becomes dot size, so the petals print dense and the
-  // shadows between them open up. Colour: dot size from the key alone.
-  float detail = smoothstep(0.3, 0.68, lum);
-  float tone = uMono > 0.5 ? a * mix(0.12, 1.0, pow(detail, 1.6)) : a;
-  // The tiger is lit low: lift the mids and the stripes' orange.
-  vec3 warm = pow(c, vec3(0.8));
-  warm = mix(vec3(dot(warm, vec3(0.299, 0.587, 0.114))), warm, 1.3);
-  vec3 col = uMono > 0.5 ? uInk : clamp(warm, 0.0, 1.0);
+  vec2 e = min(uv, 1.0 - uv);
+  tone *= smoothstep(0.0, uFeather, e.x) * smoothstep(0.0, uFeather, e.y);
 
-  float rad = uCell * 0.5 * mix(0.2, 0.98, tone);
-  float m = 1.0 - smoothstep(rad - 1.0, rad, length(q - centre));
-  gl_FragColor = vec4(mix(uBg, col, m * step(0.02, tone)), 1.0);
+  // Develop sweeps from the bottom of the frame up, so the stem prints first.
+  float sweep = clamp(uDevelop * 1.6 - (1.0 - uv.y) * 0.6, 0.0, 1.0);
+  tone *= sweep * sweep * (3.0 - 2.0 * sweep);
+
+  // Ink deepens towards the dot centre the way a real print does.
+  vec3 col = uInk > 0.5 ? c * 0.86 : min(c * 1.12, 1.0);
+
+  float rad = uCell * 0.5 * sqrt(tone) * 0.98;
+  float m = 1.0 - smoothstep(rad - 0.9, rad, length(p - centre));
+  gl_FragColor = vec4(mix(uBg, col, m * step(0.03, tone)), 1.0);
 }`;
-
-const CELL = 6; // css px between dot centres
 
 function compile(gl, type, src) {
   const s = gl.createShader(type);
@@ -81,9 +71,9 @@ function compile(gl, type, src) {
   return s;
 }
 
-// The shader reads its colours from the theme tokens; both must be 6-digit hex.
-const token = (name) => {
-  const hex = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+// The shader reads the page colour from the theme; it must be 6-digit hex.
+const pageColor = () => {
+  const hex = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
   return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
 };
 
@@ -128,22 +118,16 @@ export function Bloom() {
     for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR],
       [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, v);
 
-    const u = Object.fromEntries(['uRes', 'uMouse', 'uVel', 'uCell', 'uTime', 'uAspect', 'uZoom',
-      'uBg', 'uInk', 'uMono', 'uKey', 'uGain'].map((n) => [n, gl.getUniformLocation(prog, n)]));
+    const u = Object.fromEntries(['uRes', 'uCell', 'uAspect', 'uBg', 'uInk', 'uFeather', 'uDevelop', 'uRange']
+      .map((n) => [n, gl.getUniformLocation(prog, n)]));
 
-    const stacked = window.matchMedia('(max-width: 860px)');
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const bg = token('--bg');
-    const ink = token('--accent');
+    const bg = pageColor();
     let dpr = 1;
     let raf = 0;
     let visible = true;
     let hasFrame = false;
-    // Cursor parked off-canvas until it arrives; target vs eased position gives the drag.
-    const target = { x: -1e4, y: -1e4 };
-    const pos = { x: -1e4, y: -1e4 };
-    const vel = { x: 0, y: 0 };
-    const t0 = performance.now();
+    let t0 = 0;
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -153,47 +137,28 @@ export function Bloom() {
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
 
-    const draw = () => {
-      const nx = pos.x + (target.x - pos.x) * 0.12;
-      const ny = pos.y + (target.y - pos.y) * 0.12;
-      vel.x += ((nx - pos.x) * 4 - vel.x) * 0.1;
-      vel.y += ((ny - pos.y) * 4 - vel.y) * 0.1;
-      pos.x = nx; pos.y = ny;
-      gl.uniform2f(u.uRes, canvas.width, canvas.height);
-      gl.uniform2f(u.uMouse, pos.x * dpr, pos.y * dpr);
-      gl.uniform2f(u.uVel, vel.x * dpr, vel.y * dpr);
-      gl.uniform1f(u.uCell, CELL * dpr);
-      gl.uniform1f(u.uTime, still ? 0 : (performance.now() - t0) / 1000);
-      gl.uniform1f(u.uAspect, video.videoWidth / video.videoHeight || 1);
-      // Stacked layout lets the subject run wider than the canvas so it stays large.
-      gl.uniform1f(u.uZoom, stacked.matches ? 1.25 : 0.94);
-      gl.uniform3f(u.uBg, ...bg);
-      gl.uniform3f(u.uInk, ...ink);
-      gl.uniform1f(u.uMono, clip.mono);
-      gl.uniform2f(u.uKey, ...clip.key);
-      gl.uniform1f(u.uGain, clip.gain);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    };
-
-    const frame = () => {
+    const frame = (now) => {
       raf = 0;
       if (video.readyState >= 2) {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video);
+        if (!hasFrame) t0 = now;
         hasFrame = true;
       }
-      if (hasFrame) draw();
+      if (hasFrame) {
+        const develop = still ? 1 : Math.min(1, (now - t0) / DEVELOP_MS);
+        gl.uniform2f(u.uRes, canvas.width, canvas.height);
+        gl.uniform1f(u.uCell, CELL * dpr);
+        gl.uniform1f(u.uAspect, video.videoWidth / video.videoHeight || 1);
+        gl.uniform3f(u.uBg, ...bg);
+        gl.uniform1f(u.uInk, clip.ink);
+        gl.uniform1f(u.uFeather, clip.feather);
+        gl.uniform1f(u.uDevelop, develop);
+        gl.uniform2f(u.uRange, ...clip.range);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
       if (visible && !still) raf = requestAnimationFrame(frame);
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
-
-    const onMove = (e) => {
-      const b = canvas.getBoundingClientRect();
-      target.x = e.clientX - b.left;
-      target.y = e.clientY - b.top;
-      if (pos.x < -1e3) { pos.x = target.x; pos.y = target.y; }
-      if (still) kick();
-    };
-    const onLeave = () => { target.x = -1e4; target.y = -1e4; };
 
     const onReady = () => {
       if (still) {
@@ -210,9 +175,6 @@ export function Bloom() {
     io.observe(canvas);
     const ro = new ResizeObserver(() => { resize(); kick(); });
     ro.observe(canvas);
-
-    window.addEventListener('pointermove', onMove, { passive: true });
-    document.addEventListener('pointerleave', onLeave);
     video.addEventListener('loadeddata', onReady);
     if (video.readyState >= 2) onReady();
     resize();
@@ -220,8 +182,6 @@ export function Bloom() {
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect(); ro.disconnect();
-      window.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerleave', onLeave);
       video.removeEventListener('loadeddata', onReady);
     };
   }, [clip]);
@@ -230,8 +190,8 @@ export function Bloom() {
     <figure className="bloom">
       <video key={clip.src} ref={videoRef} src={clip.src} muted loop playsInline preload="auto" aria-hidden="true" />
       {/* Remounted per theme so the WebGL context is rebuilt with the new clip. */}
-      <canvas key={`c-${clip.src}`} ref={canvasRef} role="img" aria-label={`A ${clip.name.toLowerCase()}, drawn in dots`} />
-      <figcaption className="label">{clip.name}. Move through it.</figcaption>
+      <canvas key={`c-${clip.src}`} ref={canvasRef} role="img" aria-label={`${clip.name}, drawn in dots`} />
+      <figcaption className="label">{clip.name}</figcaption>
     </figure>
   );
 }

@@ -1,5 +1,5 @@
-import { Sheet } from './components/sheet/Sheet';
+import { Home } from './components/home/Home';
 
 export default function App() {
-  return <Sheet />;
+  return <Home />;
 }

@@ -1,0 +1,123 @@
+/*
+ * jeffreylin.dev's layout, kept to the pixel: one 561px column, name and a
+ * theme switch, a 16:9 diamond mosaic, two paragraphs, a row of links.
+ * What changes is the type and the colour: Switzer instead of Times, and a
+ * warmer off-white and true black instead of stock white and grey.
+ */
+
+@font-face { font-family: 'Switzer'; src: url('/fonts/switzer-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('/fonts/switzer-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root {
+  --bg: #fbfbf9;
+  --fg: #57534e;
+  --fg-strong: #1c1917;
+  --fg-quiet: #a8a29e;
+  --link-line: #c9c5bf;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #000000;
+  --fg: #a8a29e;
+  --fg-strong: #f5f5f4;
+  --fg-quiet: #6b6560;
+  --link-line: #44403c;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #000000;
+    --fg: #a8a29e;
+    --fg-strong: #f5f5f4;
+    --fg-quiet: #6b6560;
+    --link-line: #44403c;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Switzer', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.home {
+  max-width: calc(561px + 2rem);
+  margin: 0 auto;
+  padding: 2.125rem 1rem 4rem;
+}
+
+.home__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.home__head h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--fg-strong);
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: -0.4rem;
+  border: 0;
+  background: none;
+  color: var(--fg-strong);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 150ms ease, transform 300ms ease;
+}
+.theme-toggle:hover { opacity: 1; transform: rotate(-15deg); }
+.theme-toggle:focus-visible { outline: 1px solid var(--fg-strong); outline-offset: 2px; }
+
+/* The mosaic, 16:9 like the original. */
+.mosaic { position: relative; aspect-ratio: 16 / 9; width: 100%; margin-bottom: 1.5rem; }
+.mosaic video { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.mosaic canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 700ms ease-out; }
+.mosaic canvas.is-ready { opacity: 1; }
+
+.home p + p { margin-top: 1rem; }
+.home p a {
+  color: var(--fg-strong);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--link-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease;
+}
+.home p a:hover { text-decoration-color: var(--fg-strong); }
+
+.home__links {
+  display: flex;
+  gap: 1.1rem;
+  margin-top: 1.75rem;
+  list-style: none;
+  font-size: 0.875rem;
+}
+.home__links a {
+  color: var(--fg-quiet);
+  text-decoration: underline;
+  text-decoration-color: var(--link-line);
+  text-underline-offset: 3px;
+  transition: color 150ms ease;
+}
+.home__links a:hover { color: var(--fg-strong); }
+
+@media (prefers-reduced-motion: reduce) {
+  body, .mosaic canvas, .theme-toggle { transition: none; }
+}

@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Footage drawn as a grid of small diamonds, one per sampled pixel.
-// Both clips were shot on black. By day the black keys out to the page, so the
-// flower sits on white; by night the page is black too, so the jellyfish float.
+// Footage drawn one cell per sampled pixel. Both clips were shot on black,
+// which keys out to the page. By day the flower is set in type: each cell is a
+// character picked by brightness, in the footage's own colour. By night the
+// jellyfish are a grid of small diamonds.
 const CLIPS = {
-  light: { src: '/motion/flower.mp4', label: 'An alstroemeria opening', key: [0.07, 0.24], lift: true },
-  dark: { src: '/motion/jellyfish.mp4', label: 'Moon jellyfish drifting', key: [0.03, 0.14], lift: false },
+  light: { src: '/motion/flower.mp4', label: 'An alstroemeria opening, drawn in text', key: [0.07, 0.24], lift: true, glyphs: true },
+  dark: { src: '/motion/jellyfish.mp4', label: 'Moon jellyfish drifting', key: [0.03, 0.14], lift: false, glyphs: false },
 };
-const CELL = 7; // css px per diamond
+const CELL = 7;       // css px per diamond
+const GLYPH_W = 6;    // css px per character cell; a mono glyph is about 0.6 of its height
+const GLYPH_H = 10;
+const RAMP = ' .\'`^",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
 
 const resolvedTheme = () => document.documentElement.dataset.theme
   || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -51,8 +55,10 @@ export function Mosaic() {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.floor(width / CELL);
-      rows = Math.floor(height / CELL);
+      cols = Math.floor(width / (clip.glyphs ? GLYPH_W : CELL));
+      rows = Math.floor(height / (clip.glyphs ? GLYPH_H : CELL));
+      ctx.font = `${GLYPH_H}px "IBM Plex Mono", ui-monospace, monospace`;
+      ctx.textBaseline = 'top';
       sample.canvas.width = cols;
       sample.canvas.height = rows;
       lastTime = -1;
@@ -84,6 +90,19 @@ export function Mosaic() {
           // channel towards grey before brightening.
           const grey = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
           const c = (v) => Math.min(255, Math.round((clip.lift ? v : v * 0.65 + grey * 0.35) * lift * 0.92));
+          if (clip.glyphs) {
+            // Denser glyph for brighter, more opaque cells; ink deepened so pale
+            // petals still read on white paper.
+            const ch = RAMP[Math.min(RAMP.length - 1, Math.round(a * Math.pow(peak, 1.1) * (RAMP.length - 1)))];
+            if (ch === ' ') continue;
+            // Push saturation up and value down: cream petals turn pink and
+            // gold instead of grey, and stay legible on white.
+            const g = 0.299 * c(px[i]) + 0.587 * c(px[i + 1]) + 0.114 * c(px[i + 2]);
+            const ink = (v) => Math.max(0, Math.min(255, Math.round((g + (c(v) - g) * 1.9) * 0.68)));
+            ctx.fillStyle = `rgb(${ink(px[i])},${ink(px[i + 1])},${ink(px[i + 2])})`;
+            ctx.fillText(ch, x * GLYPH_W, y * GLYPH_H);
+            continue;
+          }
           ctx.fillStyle = `rgba(${c(px[i])},${c(px[i + 1])},${c(px[i + 2])},${a})`;
           const cx = x * CELL + r;
           const cy = y * CELL + r;

@@ -1,33 +1,109 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Footage drawn one cell per sampled pixel. Both clips were shot on black,
-// which keys out to the page. By day the flower is set in type: each cell is a
-// character picked by brightness, in the footage's own colour. By night the
-// jellyfish are a grid of small diamonds.
+// Footage redrawn as overlapping diamonds, one per grid cell, the technique on
+// jeffreylin.dev. Each diamond is a little larger than its cell, and the cell
+// further down and to the right is drawn on top, so they overlap like scales.
+// Both clips were shot on black, and the black keys out to the page.
 const CLIPS = {
-  light: { src: '/motion/flower.mp4', label: 'An alstroemeria opening, drawn in text', key: [0.07, 0.24], lift: true, glyphs: true },
-  dark: { src: '/motion/jellyfish.mp4', label: 'Moon jellyfish drifting', key: [0.03, 0.14], lift: false, glyphs: false },
+  light: {
+    src: '/motion/lily.mp4',
+    caption: 'Easter lily, opening',
+    aspect: '1 / 1',
+    grid: 6.5, radius: 5.75, sat: 1.3, contrast: 1, gain: 1, gamma: 0.6,
+    key: [0.07, 0.3], paper: 1,
+  },
+  dark: {
+    src: '/motion/jellyfish.mp4',
+    caption: 'Moon jellyfish',
+    aspect: '16 / 9',
+    grid: 4, radius: 3.5, sat: 1, contrast: 1.05, gain: 1.05, gamma: 0.9,
+    key: [0.03, 0.14], paper: 0,
+  },
 };
-const CELL = 7;       // css px per diamond
-const GLYPH_W = 6;    // css px per character cell; a mono glyph is about 0.6 of its height
-const GLYPH_H = 10;
-const RAMP = ' .\'`^",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
+const FADE_MS = 700;   // out, rewind, back in: each clip plays once, then again
+const FEATHER = 0.06;  // share of the frame that fades out at every edge
+
+const VERT = `
+attribute vec2 a_pos;
+varying vec2 v_uv;
+void main() {
+  v_uv = vec2(a_pos.x, -a_pos.y) * 0.5 + 0.5;
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}`;
+
+const FRAG = `
+precision mediump float;
+varying vec2 v_uv;
+uniform sampler2D u_video;
+uniform vec2 u_res;
+uniform float u_grid;
+uniform float u_radius;
+uniform float u_sat;
+uniform float u_contrast;
+uniform float u_gain;
+uniform vec2 u_key;      // brightness range faded to transparent
+uniform vec4 u_view;     // the cover-fitted part of the video: offset xy, size zw
+uniform float u_feather;
+uniform float u_gamma;
+uniform float u_paper;  // 1 on the light page, 0 on the dark one
+
+void main() {
+  vec2 px = v_uv * u_res;
+  vec2 own = floor(px / u_grid);
+  float best = -1.0;
+  vec2 cell = own;
+  for (int dy = -1; dy <= 1; dy++) {
+    for (int dx = -1; dx <= 1; dx++) {
+      vec2 c = own + vec2(float(dx), float(dy));
+      vec2 d = abs(px - (c + 0.5) * u_grid);
+      float order = c.y * 8192.0 + c.x;
+      if (d.x + d.y <= u_radius && order > best) { best = order; cell = c; }
+    }
+  }
+  if (best < 0.0) discard;
+
+  vec2 uv = (cell + 0.5) * u_grid / u_res;
+  vec3 src = texture2D(u_video, u_view.xy + uv * u_view.zw).rgb;
+
+  float alpha = 1.0;
+  alpha = smoothstep(u_key.x, u_key.y, max(src.r, max(src.g, src.b)));
+  vec2 edge = min(uv, 1.0 - uv);
+  alpha *= smoothstep(0.0, u_feather, min(edge.x, edge.y));
+  if (alpha < 0.01) discard;
+
+  // The lily was lit low on black, so its white petals read grey on paper.
+  // Lift the midtones, and let soft edges fade towards paper, not black.
+  src = pow(src, vec3(u_gamma));
+  src = mix(vec3(u_paper), src, smoothstep(0.0, 1.0, alpha));
+  vec3 col = mix(vec3(dot(src, vec3(0.299, 0.587, 0.114))), src, u_sat);
+  col = clamp((col - 0.5) * u_contrast + 0.5, 0.0, 1.0) * u_gain;
+  gl_FragColor = vec4(col, alpha);
+}`;
 
 const resolvedTheme = () => document.documentElement.dataset.theme
   || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-const smooth = (a, b, x) => {
-  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
-};
+function compile(gl, type, source) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, source);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
 
 export function Mosaic() {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
+  const barRef = useRef(null);
+  const clockRef = useRef(null);
   const [theme, setTheme] = useState(resolvedTheme);
-  const [ready, setReady] = useState(false);
+  const [shown, setShown] = useState(false);
+  const [noGL, setNoGL] = useState(false);
   const clip = CLIPS[theme];
+  const clipRef = useRef(clip);
+  clipRef.current = clip;
 
+  // Follow the toggle and the system setting.
   useEffect(() => {
     const sync = () => setTheme(resolvedTheme());
     const mo = new MutationObserver(sync);
@@ -37,116 +113,150 @@ export function Mosaic() {
     return () => { mo.disconnect(); mq.removeEventListener('change', sync); };
   }, []);
 
+  // Playback: once through, fade out, rewind, fade back in.
   useEffect(() => {
-    const canvas = canvasRef.current;
     const video = videoRef.current;
-    const ctx = canvas.getContext('2d');
-    const sample = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let raf = 0;
-    let cols = 0;
-    let rows = 0;
-    let lastTime = -1;
-    setReady(false);
+    let timer = 0;
+    setShown(false);
 
-    const size = () => {
-      const { width, height } = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.floor(width / (clip.glyphs ? GLYPH_W : CELL));
-      rows = Math.floor(height / (clip.glyphs ? GLYPH_H : CELL));
-      ctx.font = `${GLYPH_H}px "IBM Plex Mono", ui-monospace, monospace`;
-      ctx.textBaseline = 'top';
-      sample.canvas.width = cols;
-      sample.canvas.height = rows;
-      lastTime = -1;
-    };
-
-    const draw = () => {
-      if (video.readyState < 2 || !cols || video.currentTime === lastTime) return;
-      lastTime = video.currentTime;
-      // Cover-fit the clip into the grid.
-      const vw = video.videoWidth;
-      const vh = video.videoHeight;
-      const scale = Math.max(cols / vw, rows / vh);
-      const sw = cols / scale;
-      const sh = rows / scale;
-      sample.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, cols, rows);
-      const px = sample.getImageData(0, 0, cols, rows).data;
-      const r = CELL / 2;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const i = (y * cols + x) * 4;
-          const peak = Math.max(px[i], px[i + 1], px[i + 2]) / 255;
-          const a = smooth(clip.key[0], clip.key[1], peak);
-          if (a < 0.02) continue;
-          // On paper the dim edges of the footage need lifting to read; on black
-          // the jellyfish keep their own colour, only slightly brightened.
-          const lift = clip.lift ? 1 / Math.max(0.35, peak) : 1.5;
-          // At night the jellyfish read pale and glassy: pull a third of each
-          // channel towards grey before brightening.
-          const grey = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
-          const c = (v) => Math.min(255, Math.round((clip.lift ? v : v * 0.65 + grey * 0.35) * lift * 0.92));
-          if (clip.glyphs) {
-            // Denser glyph for brighter, more opaque cells; ink deepened so pale
-            // petals still read on white paper.
-            const ch = RAMP[Math.min(RAMP.length - 1, Math.round(a * Math.pow(peak, 1.1) * (RAMP.length - 1)))];
-            if (ch === ' ') continue;
-            // Push saturation up and value down: cream petals turn pink and
-            // gold instead of grey, and stay legible on white.
-            const g = 0.299 * c(px[i]) + 0.587 * c(px[i + 1]) + 0.114 * c(px[i + 2]);
-            const ink = (v) => Math.max(0, Math.min(255, Math.round((g + (c(v) - g) * 1.9) * 0.68)));
-            ctx.fillStyle = `rgb(${ink(px[i])},${ink(px[i + 1])},${ink(px[i + 2])})`;
-            ctx.fillText(ch, x * GLYPH_W, y * GLYPH_H);
-            continue;
-          }
-          ctx.fillStyle = `rgba(${c(px[i])},${c(px[i + 1])},${c(px[i + 2])},${a})`;
-          const cx = x * CELL + r;
-          const cy = y * CELL + r;
-          ctx.beginPath();
-          ctx.moveTo(cx, cy - r);
-          ctx.lineTo(cx + r, cy);
-          ctx.lineTo(cx, cy + r);
-          ctx.lineTo(cx - r, cy);
-          ctx.fill();
-        }
-      }
-      setReady(true);
-    };
-
-    const loop = () => { draw(); raf = requestAnimationFrame(loop); };
-
-    const onReady = () => {
+    const onLoaded = () => {
       if (still) {
-        video.pause();
-        video.currentTime = video.duration / 2;
-        video.addEventListener('seeked', draw, { once: true });
+        // No motion: hold the last frame, the flower fully open.
+        video.currentTime = Math.max(0, video.duration - 0.1);
+        video.addEventListener('seeked', () => setShown(true), { once: true });
         return;
       }
       video.play().catch(() => {});
-      if (!raf) loop();
+      requestAnimationFrame(() => setShown(true));
+    };
+    const onEnded = () => {
+      setShown(false);
+      timer = setTimeout(() => {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+        setShown(true);
+      }, FADE_MS);
     };
 
-    const ro = new ResizeObserver(() => { size(); draw(); });
-    ro.observe(canvas);
-    size();
-    video.addEventListener('loadeddata', onReady);
-    if (video.readyState >= 2) onReady();
+    video.addEventListener('loadeddata', onLoaded);
+    video.addEventListener('ended', onEnded);
+    video.load();
+    return () => {
+      clearTimeout(timer);
+      video.removeEventListener('loadeddata', onLoaded);
+      video.removeEventListener('ended', onEnded);
+    };
+  }, [clip.src]);
+
+  // Drawing.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    const gl = canvas.getContext('webgl', { premultipliedAlpha: false, alpha: true, antialias: false });
+    if (!gl) { setNoGL(true); return undefined; }
+
+    const program = gl.createProgram();
+    const vs = compile(gl, gl.VERTEX_SHADER, VERT);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(program, 'a_pos');
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    const u = Object.fromEntries(
+      ['u_video', 'u_res', 'u_grid', 'u_radius', 'u_sat', 'u_contrast', 'u_gain', 'u_key', 'u_view', 'u_feather', 'u_gamma', 'u_paper']
+        .map((n) => [n, gl.getUniformLocation(program, n)]),
+    );
+    gl.uniform1i(u.u_video, 0);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    let raf = 0;
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const c = clipRef.current;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const { width, height } = canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.round(width * dpr));
+      const h = Math.max(1, Math.round(height * dpr));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, w, h);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      if (video.readyState < 2 || !video.videoWidth) return;
+
+      // Cover-fit: crop whichever side of the video overhangs the canvas.
+      const va = video.videoWidth / video.videoHeight;
+      const ca = w / h;
+      const sx = ca > va ? 1 : ca / va;
+      const sy = ca > va ? va / ca : 1;
+      gl.uniform4f(u.u_view, (1 - sx) / 2, (1 - sy) / 2, sx, sy);
+      gl.uniform2f(u.u_res, w, h);
+      gl.uniform1f(u.u_grid, c.grid * dpr);
+      gl.uniform1f(u.u_radius, c.radius * dpr);
+      gl.uniform1f(u.u_sat, c.sat);
+      gl.uniform1f(u.u_contrast, c.contrast);
+      gl.uniform1f(u.u_gain, c.gain);
+      gl.uniform2f(u.u_key, c.key[0], c.key[1]);
+      gl.uniform1f(u.u_feather, FEATHER);
+      gl.uniform1f(u.u_gamma, c.gamma);
+      gl.uniform1f(u.u_paper, c.paper);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      // The hairline under the picture tracks the clip.
+      const p = video.duration ? video.currentTime / video.duration : 0;
+      if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
+      if (clockRef.current) clockRef.current.textContent = `${Math.floor(video.currentTime)}s / ${Math.round(video.duration)}s`;
+    };
+    raf = requestAnimationFrame(frame);
 
     return () => {
       cancelAnimationFrame(raf);
-      ro.disconnect();
-      video.removeEventListener('loadeddata', onReady);
+      gl.deleteTexture(tex);
+      gl.deleteBuffer(buf);
+      gl.deleteProgram(program);
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
     };
-  }, [clip]);
+  }, []);
 
   return (
-    <div className="mosaic">
-      <video key={clip.src} ref={videoRef} src={clip.src} muted loop playsInline preload="auto" aria-hidden="true" />
-      <canvas ref={canvasRef} className={ready ? 'is-ready' : ''} role="img" aria-label={clip.label} />
-    </div>
+    <figure className={`mosaic mosaic--${theme}`}>
+      <div className="mosaic__frame" style={{ aspectRatio: clip.aspect }}>
+        <video
+          ref={videoRef}
+          src={clip.src}
+          className={noGL ? 'is-fallback' : ''}
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+        <canvas ref={canvasRef} className={shown ? 'is-shown' : ''} role="img" aria-label={clip.caption} />
+      </div>
+      <figcaption className="mosaic__caption">
+        <span>{clip.caption}</span>
+        <span ref={clockRef} className="mosaic__clock" />
+        <span className="mosaic__track" aria-hidden="true"><span ref={barRef} /></span>
+      </figcaption>
+    </figure>
   );
 }

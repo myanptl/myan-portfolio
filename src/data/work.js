@@ -7,6 +7,14 @@ export const workGroups = [
   { id: 'packages', title: 'Open source' },
 ];
 
+// Pinned above the list. The download count on the page is fetched live.
+export const featured = {
+  name: 'etf-research-mcp',
+  pkg: 'etf-research-mcp',
+  desc: 'Live ETF data for Claude. Quotes, full holdings from SEC filings, and how much two funds overlap.',
+  href: 'https://www.npmjs.com/package/etf-research-mcp',
+};
+
 export const workIndex = [
   { group: 'products', name: 'FocusOS', role: 'AI study app', at: 'focusos.live', href: 'https://focusos.live' },
   { group: 'products', name: 'NYE Media', role: 'Nonprofit for student builders', at: 'nyemedia.org', href: 'https://nyemedia.org' },
@@ -16,7 +24,6 @@ export const workIndex = [
   { group: 'security', name: 'VulnScan', role: 'OWASP Top 10 scanner', at: 'vulnscan-xi.vercel.app', href: 'https://vulnscan-xi.vercel.app/' },
   { group: 'security', name: 'PromptProbe', role: 'LLM red-teaming scanner', at: 'promptprobe.vercel.app', href: 'https://promptprobe.vercel.app' },
   { group: 'security', name: 'keyhound', role: 'Secret scanner, zero dependencies', at: 'github', href: 'https://github.com/myanptl/keyhound' },
-  { group: 'packages', name: 'etf-research-mcp', role: 'Live ETF data for Claude', at: 'npm', href: 'https://www.npmjs.com/package/etf-research-mcp' },
   { group: 'packages', name: 'golive-mcp', role: 'Checks a site before sharing', at: 'npm', href: 'https://www.npmjs.com/package/golive-mcp' },
   { group: 'packages', name: 'housestyle-mcp', role: 'Audits CSS for AI-built tells', at: 'npm', href: 'https://www.npmjs.com/package/housestyle-mcp' },
   { group: 'packages', name: 'fable-jarvis', role: 'Read-only terminal assistant', at: 'npm', href: 'https://www.npmjs.com/package/fable-jarvis' },

@@ -19,8 +19,8 @@ export function Home() {
         <main className="page__main">
           <Mosaic />
           <p className="page__p page__p--first">
-            I'm a junior at Westford Academy in Massachusetts, building{' '}
-            <a href="https://focusos.live" {...ext}>FocusOS</a>, a study app. I also co-founded{' '}
+            I'm a junior at Westford Academy in Massachusetts. I built{' '}
+            <a href="https://focusos.live" {...ext}>FocusOS</a>, a study app, and co-founded{' '}
             <a href="https://nyemedia.org" {...ext}>NYE Media</a>, a nonprofit that connects high
             school builders with founders and mentors.
           </p>

@@ -1,30 +1,20 @@
-// Everything shipped, grouped the way the page lists it. `role` is what the
-// thing IS in six words or fewer; `at` is where it lives, as a person would say it.
+// Things shipped, one line each. `role` is what the thing IS in six words or
+// fewer; `at` is where it lives. FocusOS and NYE Media sit under Experience.
 
-export const workGroups = [
-  { id: 'products', title: 'Products' },
-  { id: 'security', title: 'Security tools' },
-  { id: 'packages', title: 'Open source' },
-];
-
-// Pinned above the list. The download count on the page is fetched live.
-export const featured = {
+export const etf = {
   name: 'etf-research-mcp',
   pkg: 'etf-research-mcp',
-  desc: 'Live ETF data for Claude. Quotes, full holdings from SEC filings, and how much two funds overlap.',
   href: 'https://www.npmjs.com/package/etf-research-mcp',
 };
 
 export const workIndex = [
-  { group: 'products', name: 'FocusOS', role: 'AI study app', at: 'focusos.live', href: 'https://focusos.live' },
-  { group: 'products', name: 'NYE Media', role: 'Nonprofit for student builders', at: 'nyemedia.org', href: 'https://nyemedia.org' },
-  { group: 'products', name: 'SlideAir', role: 'Gesture-controlled presenting', at: 'slideair.vercel.app', href: 'https://slideair.vercel.app' },
-  { group: 'products', name: 'SlideStack', role: 'AI carousel maker', at: 'slidestack-beta.vercel.app', href: 'https://slidestack-beta.vercel.app' },
-  { group: 'products', name: 'RepoRoast', role: 'AI that roasts your GitHub', at: 'reporoast-alpha.vercel.app', href: 'https://reporoast-alpha.vercel.app' },
-  { group: 'security', name: 'VulnScan', role: 'OWASP Top 10 scanner', at: 'vulnscan-xi.vercel.app', href: 'https://vulnscan-xi.vercel.app/' },
-  { group: 'security', name: 'PromptProbe', role: 'LLM red-teaming scanner', at: 'promptprobe.vercel.app', href: 'https://promptprobe.vercel.app' },
-  { group: 'security', name: 'keyhound', role: 'Secret scanner, zero dependencies', at: 'github', href: 'https://github.com/myanptl/keyhound' },
-  { group: 'packages', name: 'golive-mcp', role: 'Checks a site before sharing', at: 'npm', href: 'https://www.npmjs.com/package/golive-mcp' },
-  { group: 'packages', name: 'housestyle-mcp', role: 'Audits CSS for AI-built tells', at: 'npm', href: 'https://www.npmjs.com/package/housestyle-mcp' },
-  { group: 'packages', name: 'fable-jarvis', role: 'Read-only terminal assistant', at: 'npm', href: 'https://www.npmjs.com/package/fable-jarvis' },
+  { name: 'SlideAir', role: 'Present with hand gestures', at: 'web', href: 'https://slideair.vercel.app' },
+  { name: 'SlideStack', role: 'AI Instagram carousels', at: 'web', href: 'https://slidestack-beta.vercel.app' },
+  { name: 'RepoRoast', role: 'Roasts your GitHub', at: 'web', href: 'https://reporoast-alpha.vercel.app' },
+  { name: 'VulnScan', role: 'Finds OWASP Top 10 bugs', at: 'web', href: 'https://vulnscan-xi.vercel.app/' },
+  { name: 'PromptProbe', role: 'Red-teams your LLM app', at: 'web', href: 'https://promptprobe.vercel.app' },
+  { name: 'keyhound', role: 'Catches leaked API keys', at: 'github', href: 'https://github.com/myanptl/keyhound' },
+  { name: 'golive-mcp', role: 'Checks a site before launch', at: 'npm', href: 'https://www.npmjs.com/package/golive-mcp' },
+  { name: 'housestyle-mcp', role: 'Spots AI-made CSS', at: 'npm', href: 'https://www.npmjs.com/package/housestyle-mcp' },
+  { name: 'fable-jarvis', role: 'Assistant in your terminal', at: 'npm', href: 'https://www.npmjs.com/package/fable-jarvis' },
 ];

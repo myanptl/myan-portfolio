@@ -7,21 +7,18 @@ import { useEffect, useRef, useState } from 'react';
 const CLIPS = {
   light: {
     src: '/motion/lily.mp4',
-    caption: 'Easter lily, opening',
-    aspect: '1 / 1',
-    grid: 6.5, radius: 5.75, sat: 1.3, contrast: 1, gain: 1, gamma: 0.6,
-    key: [0.07, 0.3], paper: 1,
+    caption: 'A lily opening',
+    grid: 6.5, radius: 5.75, sat: 1.9, contrast: 1, gain: 1, gamma: 0.62,
+    key: [0.07, 0.3], paper: 1, feather: 0.06, tint: [1.02, 1, 0.93],
   },
   dark: {
     src: '/motion/jellyfish.mp4',
     caption: 'Moon jellyfish',
-    aspect: '16 / 9',
-    grid: 4, radius: 3.5, sat: 1, contrast: 1.05, gain: 1.05, gamma: 0.9,
-    key: [0.03, 0.14], paper: 0,
+    grid: 4, radius: 3.5, sat: 0.85, contrast: 1, gain: 1.1, gamma: 1,
+    key: [0.02, 0.08], paper: 0, feather: 0.14, tint: [1, 1, 1],
   },
 };
 const FADE_MS = 700;   // out, rewind, back in: each clip plays once, then again
-const FEATHER = 0.06;  // share of the frame that fades out at every edge
 
 const VERT = `
 attribute vec2 a_pos;
@@ -45,6 +42,7 @@ uniform vec2 u_key;      // brightness range faded to transparent
 uniform vec4 u_view;     // the cover-fitted part of the video: offset xy, size zw
 uniform float u_feather;
 uniform float u_gamma;
+uniform vec3 u_tint;    // warms the lily's grey petals towards cream
 uniform float u_paper;  // 1 on the light page, 0 on the dark one
 
 void main() {
@@ -76,7 +74,7 @@ void main() {
   src = pow(src, vec3(u_gamma));
   src = mix(vec3(u_paper), src, smoothstep(0.0, 1.0, alpha));
   vec3 col = mix(vec3(dot(src, vec3(0.299, 0.587, 0.114))), src, u_sat);
-  col = clamp((col - 0.5) * u_contrast + 0.5, 0.0, 1.0) * u_gain;
+  col = clamp(clamp((col - 0.5) * u_contrast + 0.5, 0.0, 1.0) * u_gain * u_tint, 0.0, 1.0);
   gl_FragColor = vec4(col, alpha);
 }`;
 
@@ -95,7 +93,6 @@ export function Mosaic() {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
   const barRef = useRef(null);
-  const clockRef = useRef(null);
   const [theme, setTheme] = useState(resolvedTheme);
   const [shown, setShown] = useState(false);
   const [noGL, setNoGL] = useState(false);
@@ -179,7 +176,7 @@ export function Mosaic() {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
     const u = Object.fromEntries(
-      ['u_video', 'u_res', 'u_grid', 'u_radius', 'u_sat', 'u_contrast', 'u_gain', 'u_key', 'u_view', 'u_feather', 'u_gamma', 'u_paper']
+      ['u_video', 'u_res', 'u_grid', 'u_radius', 'u_sat', 'u_contrast', 'u_gain', 'u_key', 'u_view', 'u_feather', 'u_gamma', 'u_paper', 'u_tint']
         .map((n) => [n, gl.getUniformLocation(program, n)]),
     );
     gl.uniform1i(u.u_video, 0);
@@ -213,9 +210,10 @@ export function Mosaic() {
       gl.uniform1f(u.u_contrast, c.contrast);
       gl.uniform1f(u.u_gain, c.gain);
       gl.uniform2f(u.u_key, c.key[0], c.key[1]);
-      gl.uniform1f(u.u_feather, FEATHER);
+      gl.uniform1f(u.u_feather, c.feather);  // share of the frame that fades at each edge
       gl.uniform1f(u.u_gamma, c.gamma);
       gl.uniform1f(u.u_paper, c.paper);
+      gl.uniform3f(u.u_tint, ...c.tint);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
@@ -224,7 +222,6 @@ export function Mosaic() {
       // The hairline under the picture tracks the clip.
       const p = video.duration ? video.currentTime / video.duration : 0;
       if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
-      if (clockRef.current) clockRef.current.textContent = `${Math.floor(video.currentTime)}s / ${Math.round(video.duration)}s`;
     };
     raf = requestAnimationFrame(frame);
 
@@ -239,8 +236,8 @@ export function Mosaic() {
   }, []);
 
   return (
-    <figure className={`mosaic mosaic--${theme}`}>
-      <div className="mosaic__frame" style={{ aspectRatio: clip.aspect }}>
+    <figure className="mosaic">
+      <div className="mosaic__frame">
         <video
           ref={videoRef}
           src={clip.src}
@@ -254,7 +251,6 @@ export function Mosaic() {
       </div>
       <figcaption className="mosaic__caption">
         <span>{clip.caption}</span>
-        <span ref={clockRef} className="mosaic__clock" />
         <span className="mosaic__track" aria-hidden="true"><span ref={barRef} /></span>
       </figcaption>
     </figure>

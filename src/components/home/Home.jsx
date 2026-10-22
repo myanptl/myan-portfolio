@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { profile } from '../../data/profile';
-import { featured, workGroups, workIndex } from '../../data/work';
+import { etf, workIndex } from '../../data/work';
 import { experience, recognition } from '../../data/resume';
+import { motionReel, motionSites } from '../../data/motion';
 import { Mosaic } from './Mosaic';
 import { ThemeToggle } from './ThemeToggle';
 import './home.css';
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' };
-const href = (name) => workIndex.find((w) => w.name === name).href;
 
 function Section({ id, title, children }) {
   return (
@@ -19,7 +19,7 @@ function Section({ id, title, children }) {
 }
 
 // Real downloads for the last 30 days, straight from the npm registry. If the
-// request fails the line is simply left out.
+// request fails the sentence is simply left out.
 function useMonthlyDownloads(pkg) {
   const [count, setCount] = useState(null);
   useEffect(() => {
@@ -33,29 +33,58 @@ function useMonthlyDownloads(pkg) {
   return count;
 }
 
-function Featured() {
-  const downloads = useMonthlyDownloads(featured.pkg);
+// Plays while on screen, pauses when scrolled away, so nothing downloads until
+// someone gets this far down.
+function Clip({ slug, name }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const video = ref.current;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) video.play().catch(() => {});
+      else video.pause();
+    }, { threshold: 0.4 });
+    io.observe(video);
+    return () => io.disconnect();
+  }, []);
   return (
-    <a className="featured" href={featured.href} {...ext}>
-      <span className="featured__label">Most used</span>
-      <span className="featured__name">{featured.name}<span className="featured__arrow" aria-hidden="true">↗</span></span>
-      <span className="featured__desc">{featured.desc}</span>
-      <span className="featured__meta">
-        {downloads !== null && <span>{downloads.toLocaleString('en-US')} downloads in the last 30 days</span>}
-        <span>npm, MIT</span>
-      </span>
-    </a>
+    <figure className="clip">
+      <video
+        ref={ref}
+        src={`/motion/${slug}.mp4`}
+        poster={`/motion/${slug}.jpg`}
+        width="1280"
+        height="720"
+        muted
+        loop
+        playsInline
+        preload="none"
+        aria-label={name}
+      />
+      <figcaption>{name}</figcaption>
+    </figure>
   );
 }
 
+function Row({ name, desc, meta, href }) {
+  const body = (
+    <>
+      <span className="row__name">{name}</span>
+      {desc && <span className="row__desc">{desc}</span>}
+      <span className="row__meta">{meta}</span>
+    </>
+  );
+  const cls = desc ? 'row' : 'row row--plain';
+  return <li>{href ? <a className={cls} href={href} {...ext}>{body}</a> : <div className={cls}>{body}</div>}</li>;
+}
+
 export function Home() {
+  const downloads = useMonthlyDownloads(etf.pkg);
+
   return (
     <div className="page">
       <header className="page__head">
-        <div>
-          <h1>Myan <em>Patel</em></h1>
-          <p className="page__tagline">AI products and the security around them</p>
-        </div>
+        <h1>Myan <em>Patel</em></h1>
         <ThemeToggle />
       </header>
 
@@ -66,65 +95,40 @@ export function Home() {
       <main className="page__body">
         <div className="intro">
           <p>
-            I'm a junior at Westford Academy in Massachusetts. I build AI products end to end, then
-            test them the way an attacker would. Right now that's{' '}
-            <a href={href('FocusOS')} {...ext}>FocusOS</a>, a study app built around a real attention
-            span, and the technical side of <a href={href('NYE Media')} {...ext}>NYE Media</a>, the
-            nonprofit I co-founded for high school builders.
+            I'm a junior at Westford Academy in Massachusetts. Most of my free time goes into
+            building stuff on the internet, usually with AI, sometimes just because it looks cool.
+          </p>
+          <p>
+            I also invest a little, so I made <a href={etf.href} {...ext}>{etf.name}</a> to let
+            Claude look up ETFs for me.
+            {downloads !== null && <> It got {downloads.toLocaleString('en-US')} downloads last month.</>}
           </p>
         </div>
 
-        <Featured />
-
-        <Section id="work" title="Work">
-          {workGroups.map((g) => (
-            <div className="group" key={g.id}>
-              <h3>{g.title}</h3>
-              <ul className="rows">
-                {workIndex.filter((w) => w.group === g.id).map((w) => (
-                  <li key={w.name}>
-                    <a className="row row--work" href={w.href} {...ext}>
-                      <span className="row__name">{w.name}</span>
-                      <span className="row__desc">{w.role}</span>
-                      <span className="row__meta">{w.at}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </Section>
-
         <Section id="experience" title="Experience">
           <ul className="rows">
-            {experience.map((e) => {
-              const body = (
-                <>
-                  <span className="row__meta">{e.when}</span>
-                  <span className="row__name">{e.role}</span>
-                  <span className="row__desc">{e.org}</span>
-                </>
-              );
-              return (
-                <li key={`${e.org}-${e.role}`}>
-                  {e.href ? <a className="row row--dated" href={e.href} {...ext}>{body}</a> : <div className="row row--dated">{body}</div>}
-                </li>
-              );
-            })}
+            {experience.map((e) => <Row key={e.org} name={e.org} desc={e.role} meta={e.when} href={e.href} />)}
           </ul>
         </Section>
 
-        <Section id="recognition" title="Programs and recognition">
+        <Section id="projects" title="Projects">
           <ul className="rows">
-            {recognition.map((r) => (
-              <li key={r.what}>
-                <div className="row row--dated">
-                  <span className="row__meta">{r.when}</span>
-                  <span className="row__name">{r.what}</span>
-                  <span className="row__desc">{r.detail}</span>
-                </div>
-              </li>
-            ))}
+            {workIndex.map((w) => <Row key={w.name} name={w.name} desc={w.role} meta={w.at} href={w.href} />)}
+          </ul>
+        </Section>
+
+        <Section id="motion" title="Motion">
+          <div className="clips">
+            {motionReel.map((m) => <Clip key={m.slug} slug={m.slug} name={m.name} />)}
+          </div>
+          <ul className="rows">
+            {motionSites.map((m) => <Row key={m.name} name={m.name} desc={m.role} meta="web" href={m.href} />)}
+          </ul>
+        </Section>
+
+        <Section id="programs" title="Programs">
+          <ul className="rows">
+            {recognition.map((r) => <Row key={r.what} name={r.what} meta={r.when} />)}
           </ul>
         </Section>
 

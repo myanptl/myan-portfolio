@@ -1,7 +1,7 @@
 # myan-portfolio / Claude Code Config
 
 Personal portfolio. One object, one colour, almost no text.
-Live: myan-portfolio.vercel.app
+Live: myanptl.vercel.app
 
 ## Stack
 - React 18 + Vite (JS, ESM).

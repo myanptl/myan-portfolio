@@ -1,41 +1,61 @@
 /*
- * jeffreylin.dev, measured off his live page (Oct 22 2026): a 36rem column
- * on a 17px root, Times, the picture first, then two short paragraphs and
- * the links. Olive links by day, pale blue by night, exactly his.
+ * jeffreylin.dev's layout, measured off his live page: a 36rem column on a
+ * 17px root, the picture first, two short paragraphs, then links. Type is
+ * ours: Switzer for text, Plex Mono for anything that is a label or a date.
+ * Rose is the one accent, taken from the pink on the peony's outer petals.
+ * The light background is the exact colour the peony clip was baked onto.
  */
 
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/switzer-500.woff2') format('woff2');
+  font-weight: 500 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('/fonts/plexmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
-  --bg: #ffffff;
-  --fg: rgb(55, 65, 81);
-  --fg-strong: rgb(17, 24, 39);
-  --muted: rgb(54, 62, 72);
-  --link: rgb(107, 101, 54);
-  --link-hover: rgb(77, 72, 36);
-  --foot-line: #d1d5db;
-  --foot-line-hover: #6b7280;
+  --bg: #f9faf7;
+  --fg: #3d4147;
+  --fg-strong: #14171a;
+  --muted: #7a7f86;
+  --line: #e3e4df;
+  --link: #a3324f;
+  --link-hover: #7c2139;
+  --sans: 'Switzer', system-ui, sans-serif;
+  --mono: 'Plex Mono', ui-monospace, monospace;
   color-scheme: light;
 }
 :root[data-theme='dark'] {
   --bg: #000000;
-  --fg: rgb(199, 210, 220);
-  --fg-strong: rgb(243, 244, 246);
-  --muted: rgb(154, 164, 178);
-  --link: rgb(147, 197, 253);
-  --link-hover: rgb(191, 219, 254);
-  --foot-line: #4b5563;
-  --foot-line-hover: #9ca3af;
+  --fg: #bcc6cc;
+  --fg-strong: #f1f3f4;
+  --muted: #747d84;
+  --line: #1c2024;
+  --link: #e7a6b6;
+  --link-hover: #f6cfd8;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --bg: #000000;
-    --fg: rgb(199, 210, 220);
-    --fg-strong: rgb(243, 244, 246);
-    --muted: rgb(154, 164, 178);
-    --link: rgb(147, 197, 253);
-    --link-hover: rgb(191, 219, 254);
-    --foot-line: #4b5563;
-    --foot-line-hover: #9ca3af;
+    --fg: #bcc6cc;
+    --fg-strong: #f1f3f4;
+    --muted: #747d84;
+    --line: #1c2024;
+    --link: #e7a6b6;
+    --link-hover: #f6cfd8;
     color-scheme: dark;
   }
 }
@@ -46,7 +66,7 @@ html { font-size: 17px; }
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: 'Times New Roman', Times, serif;
+  font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -60,14 +80,20 @@ a { color: inherit; }
   flex-direction: column;
   width: 100%;
   max-width: 36rem;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 4rem;
 }
 
-.page__head { display: flex; align-items: center; justify-content: space-between; }
+.page__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
 .page__head h1 {
-  font-size: 1.875rem;
+  font-size: 1.75rem;
   line-height: 2.25rem;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   color: var(--fg-strong);
 }
 
@@ -81,8 +107,6 @@ a { color: inherit; }
   transition: color 150ms ease;
 }
 .theme-toggle:hover { color: var(--fg-strong); }
-
-.page__main { margin-top: 1rem; }
 
 .mosaic { position: relative; aspect-ratio: 16 / 9; width: 100%; margin-top: 0.25rem; }
 .mosaic video { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
@@ -100,10 +124,11 @@ a { color: inherit; }
 .page__p { margin-top: 0.75rem; line-height: 1.625; }
 .page__p--first { margin-top: 1.25rem; }
 .page__p a {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--link);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+  text-underline-offset: 0.15em;
   transition: color 150ms ease, text-decoration-color 150ms ease;
 }
 .page__p a:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
@@ -112,17 +137,65 @@ a { color: inherit; }
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
 }
 .page__foot a {
   color: var(--muted);
   text-decoration: underline;
-  text-decoration-color: var(--foot-line);
-  transition: text-decoration-color 150ms ease;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
 }
-.page__foot a:hover { text-decoration-color: var(--foot-line-hover); }
+.page__foot a:hover { color: var(--fg-strong); text-decoration-color: var(--muted); }
+
+/* The rows underneath: name, what it is, a date or where it lives. */
+.list { margin-top: 3rem; }
+.list + .list { margin-top: 2.25rem; }
+.list h2 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.list ul { list-style: none; }
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 12.5rem) minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.94rem;
+}
+.row__name { color: var(--fg-strong); text-decoration: none; }
+.row--wide .row__name { grid-column: 1 / 3; }
+a.row__name {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+a.row__name:hover { color: var(--link); text-decoration-color: currentColor; }
+.row__role { color: var(--fg); }
+.row__meta {
+  grid-column: 3;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.1rem; }
+  .row__role { grid-column: 1; grid-row: 2; font-size: 0.88rem; color: var(--muted); }
+  .row__meta { grid-column: 2; grid-row: 1; }
+  .row--wide .row__name { grid-column: 1; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .mosaic canvas, .theme-toggle { transition: none; }
+  .mosaic canvas, .theme-toggle, .page__p a, .page__foot a, a.row__name { transition: none; }
 }

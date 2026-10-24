@@ -1,12 +1,12 @@
 # myan-portfolio
 
-[![Myan Patel portfolio](docs/screenshot.jpeg)](https://myan-portfolio.vercel.app)
+[![Myan Patel portfolio](docs/screenshot.jpeg)](https://myanptl.vercel.app)
 
 Personal portfolio built as *syntax on paper*: a light editor theme used as a
 design system rather than a decoration. Section headers are real declarations,
 the hero types itself out, and the GitHub stats are live.
 
-**Live:** https://myan-portfolio.vercel.app
+**Live:** https://myanptl.vercel.app
 
 ## The idea
 

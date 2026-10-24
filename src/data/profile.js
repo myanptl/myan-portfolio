@@ -13,5 +13,6 @@ export const profile = {
   links: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/myan-patel-1857943ba/' },
     { label: 'GitHub', href: 'https://github.com/myanptl' },
+    { label: 'Email', href: 'mailto:myan.ptl@gmail.com' },
   ],
 };

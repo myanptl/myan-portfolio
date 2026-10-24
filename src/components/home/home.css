@@ -1,0 +1,195 @@
+/*
+ * jeffreylin.dev's layout, measured off his live page: a 36rem column on a
+ * 17px root, the picture first, two short paragraphs, then links. Type is
+ * ours: Geist for text, Geist Mono for anything that is a label or a date.
+ * Links take their colour from the clip on screen, as his do: olive from the
+ * lily's centre by day, pale blue from the jellyfish by night.
+ */
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geistmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #374151;
+  --fg-strong: #111827;
+  --muted: #6b7280;
+  --line: #e3e4df;
+  --link: #6b6536;
+  --link-hover: #4d4825;
+  --sans: 'Geist', system-ui, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, monospace;
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --bg: #000000;
+  --fg: #bcc6cc;
+  --fg-strong: #f1f3f4;
+  --muted: #747d84;
+  --line: #1c2024;
+  --link: #93c5fd;
+  --link-hover: #dbeafe;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #000000;
+    --fg: #bcc6cc;
+    --fg-strong: #f1f3f4;
+    --muted: #747d84;
+    --line: #1c2024;
+    --link: #93c5fd;
+    --link-hover: #dbeafe;
+    color-scheme: dark;
+  }
+}
+
+html { font-size: 17px; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--fg-strong); outline-offset: 2px; }
+
+.page { display: flex; justify-content: center; min-height: 100vh; }
+.page__col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 36rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.page__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.page__head h1 {
+  font-size: 2rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  color: var(--fg-strong);
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.theme-toggle:hover { color: var(--fg-strong); }
+
+.mosaic { position: relative; aspect-ratio: 16 / 9; width: 100%; margin-top: 0.25rem; }
+.mosaic video { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.mosaic video.is-fallback { opacity: 1; object-fit: cover; }
+.mosaic canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+.mosaic canvas.is-shown { opacity: 1; }
+
+.page__p { margin-top: 0.75rem; line-height: 1.625; }
+.page__p--first { margin-top: 1.25rem; }
+.page__p a {
+  font-weight: 600;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+  text-underline-offset: 0.15em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+.page__p a:hover { color: var(--link-hover); text-decoration-color: var(--link-hover); }
+
+.page__foot {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+.page__foot a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+.page__foot a:hover { color: var(--fg-strong); text-decoration-color: var(--muted); }
+
+/* The rows underneath: name, what it is, a date or where it lives. */
+.list { margin-top: 3rem; }
+.list + .list { margin-top: 2.25rem; }
+.list h2 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--muted);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.list ul { list-style: none; }
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 12.5rem) minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.94rem;
+}
+.row__name { color: var(--fg-strong); text-decoration: none; }
+.row--wide .row__name { grid-column: 1 / 3; }
+a.row__name {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+a.row__name:hover { color: var(--link); text-decoration-color: currentColor; }
+.row__role { color: var(--fg); }
+.row__meta {
+  grid-column: 3;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.1rem; }
+  .row__role { grid-column: 1; grid-row: 2; font-size: 0.88rem; color: var(--muted); }
+  .row__meta { grid-column: 2; grid-row: 1; }
+  .row--wide .row__name { grid-column: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaic canvas, .theme-toggle, .page__p a, .page__foot a, a.row__name { transition: none; }
+}

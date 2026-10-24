@@ -32,10 +32,10 @@ describe('profile', () => {
     expect(words).toBeLessThanOrEqual(40);
   });
 
-  test('every link is https and labelled', () => {
+  test('every link is https or mailto, and labelled', () => {
     expect(profile.links.length).toBeGreaterThan(0);
     for (const link of profile.links) {
-      expect(link.href).toMatch(/^https:\/\//);
+      expect(link.href).toMatch(/^(https:\/\/|mailto:)/);
       expect(link.label.trim()).toBeTruthy();
     }
   });

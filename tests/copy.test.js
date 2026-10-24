@@ -32,14 +32,12 @@ describe('copy hygiene', () => {
     expect(offenders.map((o) => o.file)).toEqual([]);
   });
 
-  // The visual tells. Radii, shadows and blurred glass were the previous
-  // site's default garnish; the only radius left is on the 6px hotspot dot,
-  // which is a dot and has to be round.
+  // The visual tells. Shadows and blurred glass were an earlier version's
+  // default garnish.
   test('no drop shadows or backdrop blur in the stylesheets', () => {
     const css = sources.filter((f) => f.endsWith('.css')).map(read);
     const offenders = css.filter(({ text }) => /box-shadow:|backdrop-filter:/.test(text));
-    // The hotspot's focus ring is a box-shadow used as a ring, not a shadow.
-    expect(offenders.map((o) => o.file)).toEqual(['src/styles/global.css']);
+    expect(offenders.map((o) => o.file)).toEqual([]);
   });
 
   test('no gradients used as decoration', () => {

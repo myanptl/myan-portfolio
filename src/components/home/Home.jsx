@@ -57,7 +57,7 @@ export function Home() {
 
           <nav className="page__foot" aria-label="Elsewhere">
             {profile.links.map((l) => (
-              <a key={l.label} href={l.href} {...ext}>{l.label.toLowerCase()}</a>
+              <a key={l.label} href={l.href} {...(l.href.startsWith('http') ? ext : {})}>{l.label.toLowerCase()}</a>
             ))}
           </nav>
 

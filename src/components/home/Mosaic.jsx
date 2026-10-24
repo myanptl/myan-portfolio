@@ -6,11 +6,11 @@ import { useEffect, useRef, useState } from 'react';
 // frame is drawn, background included. Each clip plays once, fades out,
 // rewinds and comes back.
 const CLIPS = {
-  light: { src: '/motion/peony.mp4', label: 'A white peony opening', grid: 6.5, radius: 5.75 },
+  light: { src: '/motion/lily.mp4', label: 'A white lily opening', grid: 6.5, radius: 5.75 },
   dark: { src: '/motion/jellyfish.mp4', label: 'Moon jellyfish drifting', grid: 4, radius: 3.5 },
 };
 const SATURATION = 1.3;
-const CROP = [0, 0, 0, 0]; // top, right, bottom, left
+const CROP = [0, 0.02, 0.02, 0.02]; // top, right, bottom, left
 const FADE_MS = 700;
 
 const VERT = `

@@ -1,40 +1,34 @@
 /*
  * jeffreylin.dev's layout, measured off his live page: a 36rem column on a
  * 17px root, the picture first, two short paragraphs, then links. Type is
- * ours: Switzer for text, Plex Mono for anything that is a label or a date.
- * Rose is the one accent, taken from the pink on the peony's outer petals.
- * The light background is the exact colour the peony clip was baked onto.
+ * ours: Geist for text, Geist Mono for anything that is a label or a date.
+ * Links take their colour from the clip on screen, as his do: olive from the
+ * lily's centre by day, pale blue from the jellyfish by night.
  */
 
 @font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-400.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Geist';
+  src: url('/fonts/geist-variable.woff2') format('woff2');
+  font-weight: 100 900;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/switzer-500.woff2') format('woff2');
-  font-weight: 500 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Plex Mono';
-  src: url('/fonts/plexmono-400.woff2') format('woff2');
+  font-family: 'Geist Mono';
+  src: url('/fonts/geistmono-400.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 :root {
-  --bg: #f9faf7;
-  --fg: #3d4147;
-  --fg-strong: #14171a;
-  --muted: #7a7f86;
+  --bg: #ffffff;
+  --fg: #374151;
+  --fg-strong: #111827;
+  --muted: #6b7280;
   --line: #e3e4df;
-  --link: #a3324f;
-  --link-hover: #7c2139;
-  --sans: 'Switzer', system-ui, sans-serif;
-  --mono: 'Plex Mono', ui-monospace, monospace;
+  --link: #6b6536;
+  --link-hover: #4d4825;
+  --sans: 'Geist', system-ui, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, monospace;
   color-scheme: light;
 }
 :root[data-theme='dark'] {
@@ -43,8 +37,8 @@
   --fg-strong: #f1f3f4;
   --muted: #747d84;
   --line: #1c2024;
-  --link: #e7a6b6;
-  --link-hover: #f6cfd8;
+  --link: #93c5fd;
+  --link-hover: #dbeafe;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
@@ -54,8 +48,8 @@
     --fg-strong: #f1f3f4;
     --muted: #747d84;
     --line: #1c2024;
-    --link: #e7a6b6;
-    --link-hover: #f6cfd8;
+    --link: #93c5fd;
+    --link-hover: #dbeafe;
     color-scheme: dark;
   }
 }
@@ -90,10 +84,10 @@ a { color: inherit; }
   margin-bottom: 1rem;
 }
 .page__head h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   line-height: 2.25rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.045em;
   color: var(--fg-strong);
 }
 
@@ -124,7 +118,7 @@ a { color: inherit; }
 .page__p { margin-top: 0.75rem; line-height: 1.625; }
 .page__p--first { margin-top: 1.25rem; }
 .page__p a {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--link);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);

@@ -4,7 +4,7 @@ import './contact.css';
 /** The whole "about" section, which is one sentence and two links. */
 export function Contact() {
   return (
-    <footer className="contact" id="contact">
+    <footer className="contact" id="work">
       <div className="shell contact__inner">
         <p className="contact__now">{profile.now}</p>
 

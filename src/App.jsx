@@ -1,7 +1,5 @@
 import { Hero } from './components/hero/Hero';
 import { Teardown } from './components/teardown/Teardown';
-import { Work } from './components/work/Work';
-import { Motion } from './components/motion/Motion';
 import { Contact } from './components/contact/Contact';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { useTeardown } from './hooks/useTeardown';
@@ -12,8 +10,6 @@ export default function App() {
 
   return (
     <>
-      <a className="skip-link" href="#work">Skip to the work</a>
-
       {/* The object. Fixed behind the page; the stage appends its own canvas
           here on mount. Purely visual, and fully described in the teardown's
           own screen-reader list, so it is hidden from the tree. */}
@@ -25,8 +21,6 @@ export default function App() {
         <Hero />
         <main>
           <Teardown />
-          <Work />
-          <Motion />
         </main>
         <Contact />
       </div>

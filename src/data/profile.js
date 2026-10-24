@@ -6,12 +6,12 @@
 // on LinkedIn, which is what LinkedIn is for.
 
 export const profile = {
-  name: 'Myan Patel',
-  where: 'Westford, Massachusetts',
-  lead: 'I build AI products, then test them for security.',
-  now: 'Junior at Westford Academy. Co-founded NYE Media. Previously growth and ops at Dimenso.',
+  name: 'Turbofan',
+  where: 'A motion study by Myan Patel',
+  lead: 'A high bypass jet engine that comes apart as you scroll.',
+  now: 'Eleven parts, built from primitives in three.js. Both spools keep turning while it is open.',
   links: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/myan-patel-1857943ba/' },
+    { label: 'Portfolio', href: 'https://myanptl.vercel.app' },
     { label: 'GitHub', href: 'https://github.com/myanptl' },
   ],
 };

@@ -20,3 +20,4 @@ graphify-out/
 .claude/proven-config.json
 .claude/.proven-config-version
 .certs/
+.env*

@@ -14,4 +14,5 @@ export const recognition = [
   { what: 'Summit STEM Fellow', when: '2026' },
   { what: 'Suffolk Entrepreneurship Program', when: '2026' },
   { what: '18 Anthropic Academy certificates', when: '2026' },
+  { what: 'Google Ads AI-Powered Shopping certification', when: '2026' },
 ];

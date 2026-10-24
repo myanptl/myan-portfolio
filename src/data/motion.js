@@ -7,6 +7,7 @@ export const motionReel = [
 ];
 
 export const motionSites = [
+  { name: 'Turbofan', role: 'A jet engine that comes apart', href: 'https://turbofan-sigma.vercel.app' },
   { name: 'Kilonova', role: 'A GPU that comes apart', href: 'https://kilonova-eta.vercel.app' },
   { name: 'Perihelion', role: 'A turbocharger, with flame', href: 'https://perihelion-blue.vercel.app' },
   { name: 'Sidereal', role: 'A hard drive, taken apart', href: 'https://sidereal-flame.vercel.app' },

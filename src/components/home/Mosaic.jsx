@@ -68,6 +68,7 @@ function compile(gl, type, source) {
 export function Mosaic() {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
+  const timeRef = useRef(null);
   const [theme, setTheme] = useState(resolvedTheme);
   const [shown, setShown] = useState(false);
   const [noGL, setNoGL] = useState(false);
@@ -111,13 +112,24 @@ export function Mosaic() {
       }, FADE_MS);
     };
 
+    // The readout under the picture. timeupdate fires a few times a second,
+    // which is plenty for tenths, and it writes to the DOM, not to state.
+    const stamp = (t) => `${String(Math.floor(t / 60)).padStart(2, '0')}:${(t % 60).toFixed(1).padStart(4, '0')}`;
+    const onTime = () => {
+      if (timeRef.current && video.duration) {
+        timeRef.current.textContent = `${stamp(video.currentTime)} / ${stamp(video.duration)}`;
+      }
+    };
+
     video.addEventListener('loadeddata', onLoaded);
     video.addEventListener('ended', onEnded);
+    video.addEventListener('timeupdate', onTime);
     video.load();
     return () => {
       clearTimeout(timer);
       video.removeEventListener('loadeddata', onLoaded);
       video.removeEventListener('ended', onEnded);
+      video.removeEventListener('timeupdate', onTime);
     };
   }, [clip.src]);
 
@@ -191,17 +203,23 @@ export function Mosaic() {
   }, []);
 
   return (
-    <div className="mosaic">
-      <video
-        ref={videoRef}
-        src={clip.src}
-        className={noGL ? 'is-fallback' : ''}
-        muted
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      />
-      <canvas ref={canvasRef} className={shown ? 'is-shown' : ''} role="img" aria-label={clip.label} />
-    </div>
+    <>
+      <div className="mosaic">
+        <video
+          ref={videoRef}
+          src={clip.src}
+          className={noGL ? 'is-fallback' : ''}
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+        <canvas ref={canvasRef} className={shown ? 'is-shown' : ''} role="img" aria-label={clip.label} />
+      </div>
+      <p className="mosaic__cap" aria-hidden="true">
+        <span>{clip.src.split('/').pop()} <span className="mosaic__dim">/ {clip.grid}px diamonds</span></span>
+        <span ref={timeRef}>00:00.0</span>
+      </p>
+    </>
   );
 }

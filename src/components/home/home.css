@@ -91,6 +91,24 @@ a { color: inherit; }
   color: var(--fg-strong);
 }
 
+.page__head h1::after {
+  content: '_';
+  margin-left: 0.04em;
+  font-weight: 400;
+  color: var(--link);
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.page__meta {
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.page__meta span { color: var(--line); }
+
 .theme-toggle {
   display: grid;
   place-items: center;
@@ -114,6 +132,20 @@ a { color: inherit; }
   transition: opacity 700ms ease-out;
 }
 .mosaic canvas.is-shown { opacity: 1; }
+
+.mosaic__cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.mosaic__cap > span { white-space: nowrap; }
+.mosaic__dim { opacity: 0.6; }
+@media (max-width: 480px) { .mosaic__dim { display: none; } }
 
 .page__p { margin-top: 0.75rem; line-height: 1.625; }
 .page__p--first { margin-top: 1.25rem; }
@@ -147,6 +179,8 @@ a { color: inherit; }
 .list { margin-top: 3rem; }
 .list + .list { margin-top: 2.25rem; }
 .list h2 {
+  display: flex;
+  justify-content: space-between;
   font-family: var(--mono);
   font-size: 0.75rem;
   font-weight: 400;
@@ -154,6 +188,8 @@ a { color: inherit; }
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--line);
 }
+.list__idx { color: var(--link); margin-right: 0.35rem; }
+.list__count { font-variant-numeric: tabular-nums; }
 .list ul { list-style: none; }
 
 .row {
@@ -173,7 +209,18 @@ a.row__name {
   text-underline-offset: 0.2em;
   transition: text-decoration-color 150ms ease, color 150ms ease;
 }
+a.row__name::after {
+  content: '\2197';
+  content: '\2197' / '';
+  display: inline-block;
+  margin-left: 0.3em;
+  font-size: 0.8em;
+  opacity: 0;
+  transform: translate(-0.2em, 0.2em);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
 a.row__name:hover { color: var(--link); text-decoration-color: currentColor; }
+a.row__name:hover::after, a.row__name:focus-visible::after { opacity: 1; transform: none; }
 .row__role { color: var(--fg); }
 .row__meta {
   grid-column: 3;
@@ -191,5 +238,6 @@ a.row__name:hover { color: var(--link); text-decoration-color: currentColor; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mosaic canvas, .theme-toggle, .page__p a, .page__foot a, a.row__name { transition: none; }
+  .mosaic canvas, .theme-toggle, .page__p a, .page__foot a, a.row__name, a.row__name::after { transition: none; }
+  .page__head h1::after { animation: none; }
 }

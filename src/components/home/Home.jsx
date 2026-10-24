@@ -2,7 +2,9 @@ import { profile } from '../../data/profile';
 import { experience, recognition } from '../../data/resume';
 import { etf, workIndex } from '../../data/work';
 import { motionSites } from '../../data/motion';
+import { useEffect, useRef } from 'react';
 import { Mosaic } from './Mosaic';
+import { Scramble } from './Scramble';
 import { ThemeToggle } from './ThemeToggle';
 import './home.css';
 
@@ -19,6 +21,25 @@ const sections = [
   { title: 'Motion', rows: motionSites.map((m) => ({ name: m.name, role: m.role, meta: 'web', href: m.href })) },
   { title: 'Programs', rows: recognition.map((r) => ({ name: r.what, meta: r.when })) },
 ];
+
+const clockFmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false, timeZoneName: 'short',
+});
+
+// Local time in Westford, ticking. Written straight to the DOM once a second.
+function Clock() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const tick = () => { ref.current.textContent = clockFmt.format(new Date()); };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return <time ref={ref} />;
+}
+
+const pad = (n) => String(n).padStart(2, '0');
 
 function Row({ name, role, meta, href }) {
   return (
@@ -37,7 +58,10 @@ export function Home() {
     <div className="page">
       <div className="page__col">
         <header className="page__head">
-          <h1>{profile.name}</h1>
+          <div>
+            <Scramble as="h1" text={profile.name} />
+            <p className="page__meta">Westford, MA <span aria-hidden="true">/</span> <Clock /></p>
+          </div>
           <ThemeToggle />
         </header>
 
@@ -61,9 +85,12 @@ export function Home() {
             ))}
           </nav>
 
-          {sections.map((s) => (
+          {sections.map((s, i) => (
             <section key={s.title} className="list" aria-labelledby={`h-${s.title}`}>
-              <h2 id={`h-${s.title}`}>{s.title}</h2>
+              <h2 id={`h-${s.title}`}>
+                <span><span className="list__idx" aria-hidden="true">{pad(i + 1)}</span> {s.title}</span>
+                <span className="list__count" aria-hidden="true">{pad(s.rows.length)}</span>
+              </h2>
               <ul>{s.rows.map((r) => <Row key={r.name} {...r} />)}</ul>
             </section>
           ))}

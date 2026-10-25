@@ -93,6 +93,20 @@ export function Mosaic() {
     let timer = 0;
     setShown(false);
 
+    // Browsers that block autoplay (Safari and iOS in Low Power Mode, strict
+    // Chrome settings) reject play() until the visitor interacts. Retry on the
+    // first tap, key or return to the tab instead of sitting on a frozen frame.
+    const gestures = ['pointerdown', 'keydown', 'touchend'];
+    const unblock = () => {
+      gestures.forEach((g) => window.removeEventListener(g, retry));
+      document.removeEventListener('visibilitychange', retry);
+    };
+    const play = () => video.play().then(unblock, () => {
+      gestures.forEach((g) => window.addEventListener(g, retry, { once: true }));
+      document.addEventListener('visibilitychange', retry);
+    });
+    function retry() { if (!document.hidden && video.paused) { unblock(); play(); } }
+
     const onLoaded = () => {
       if (still) {
         // No motion: hold the last frame, the flower fully open.
@@ -100,14 +114,13 @@ export function Mosaic() {
         video.addEventListener('seeked', () => setShown(true), { once: true });
         return;
       }
-      video.play().catch(() => {});
       requestAnimationFrame(() => setShown(true));
     };
     const onEnded = () => {
       setShown(false);
       timer = setTimeout(() => {
         video.currentTime = 0;
-        video.play().catch(() => {});
+        play();
         setShown(true);
       }, FADE_MS);
     };
@@ -124,9 +137,15 @@ export function Mosaic() {
     video.addEventListener('loadeddata', onLoaded);
     video.addEventListener('ended', onEnded);
     video.addEventListener('timeupdate', onTime);
+    // React sets muted as a property only; Safari wants the attribute too.
+    video.defaultMuted = true;
+    video.muted = true;
     video.load();
+    // iOS ignores preload, so loadeddata may never come without a play() call.
+    if (!still) play();
     return () => {
       clearTimeout(timer);
+      unblock();
       video.removeEventListener('loadeddata', onLoaded);
       video.removeEventListener('ended', onEnded);
       video.removeEventListener('timeupdate', onTime);

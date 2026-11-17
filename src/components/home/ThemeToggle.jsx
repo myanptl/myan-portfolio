@@ -5,7 +5,6 @@ const KEY = 'theme';
 const stored = () => {
   try { return localStorage.getItem(KEY); } catch { return null; }
 };
-const systemDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 const Moon = () => (
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -19,17 +18,18 @@ const Sun = () => (
   </svg>
 );
 
-// null means "follow the system". The CSS handles that case on its own.
+// The site opens in light mode, on the lily. null means the visitor never chose.
 export function ThemeToggle() {
   const [theme, setTheme] = useState(stored);
-  const dark = theme ? theme === 'dark' : systemDark();
+  const dark = theme === 'dark';
 
   useEffect(() => {
     const root = document.documentElement;
     if (theme) root.dataset.theme = theme;
     else delete root.dataset.theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#000000' : '#ffffff');
     try { theme ? localStorage.setItem(KEY, theme) : localStorage.removeItem(KEY); } catch { /* private mode */ }
-  }, [theme]);
+  }, [theme, dark]);
 
   return (
     <button

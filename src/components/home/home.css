@@ -41,19 +41,6 @@
   --link-hover: #dbeafe;
   color-scheme: dark;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #000000;
-    --fg: #bcc6cc;
-    --fg-strong: #f1f3f4;
-    --muted: #747d84;
-    --line: #1c2024;
-    --link: #93c5fd;
-    --link-hover: #dbeafe;
-    color-scheme: dark;
-  }
-}
-
 html { font-size: 17px; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

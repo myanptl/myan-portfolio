@@ -54,8 +54,8 @@ void main() {
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }`;
 
-const resolvedTheme = () => document.documentElement.dataset.theme
-  || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+// Light (the lily) unless the visitor picked dark with the toggle.
+const resolvedTheme = () => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 
 function compile(gl, type, source) {
   const s = gl.createShader(type);
@@ -76,14 +76,11 @@ export function Mosaic() {
   const clipRef = useRef(clip);
   clipRef.current = clip;
 
-  // Follow the toggle and the system setting.
+  // Follow the toggle.
   useEffect(() => {
-    const sync = () => setTheme(resolvedTheme());
-    const mo = new MutationObserver(sync);
+    const mo = new MutationObserver(() => setTheme(resolvedTheme()));
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    mq.addEventListener('change', sync);
-    return () => { mo.disconnect(); mq.removeEventListener('change', sync); };
+    return () => mo.disconnect();
   }, []);
 
   // Playback: once through, fade out, rewind, fade back in.

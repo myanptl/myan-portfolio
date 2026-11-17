@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-const pad = (n) => String(n).padStart(2, '0');
-
 // Burger in the header. Opens a small panel listing the pages; picking one
 // changes the hash, which closes the panel. Escape or a click outside closes it too.
 export function Menu({ sections, current }) {
@@ -38,21 +36,20 @@ export function Menu({ sections, current }) {
         aria-label={open ? 'Close menu' : 'Open menu'}
         onClick={() => setOpen((o) => !o)}
       >
-        <span /><span /><span />
+        <span /><span />
       </button>
       {open && (
         <nav id="menu-panel" className="menu__panel" aria-label="Pages">
           <ul>
             <li>
               <a href="#/" aria-current={current ? undefined : 'page'} onClick={() => setOpen(false)}>
-                <span className="menu__idx" aria-hidden="true">00</span>Home
+                Home
               </a>
             </li>
-            {sections.map((s, i) => (
+            {sections.map((s) => (
               <li key={s.slug}>
                 <a href={`#/${s.slug}`} aria-current={current === s.slug ? 'page' : undefined} onClick={() => setOpen(false)}>
-                  <span className="menu__idx" aria-hidden="true">{pad(i + 1)}</span>{s.title}
-                  <span className="menu__count" aria-hidden="true">{pad(s.rows.length)}</span>
+                  {s.title}
                 </a>
               </li>
             ))}

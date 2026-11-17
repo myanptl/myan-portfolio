@@ -74,7 +74,7 @@ a { color: inherit; }
   flex-direction: column;
   width: 100%;
   max-width: 36rem;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2rem 1.5rem 2rem;
 }
 
 .page__head {
@@ -175,22 +175,108 @@ a { color: inherit; }
 }
 .page__foot a:hover { color: var(--fg-strong); text-decoration-color: var(--muted); }
 
-/* The rows underneath: name, what it is, a date or where it lives. */
-.list { margin-top: 3rem; }
-.list + .list { margin-top: 2.25rem; }
-.list h2 {
+/* Header tools: theme toggle, then the burger. */
+.page__tools { display: flex; align-items: center; gap: 0.75rem; align-self: flex-start; height: 2.25rem; }
+.page__home { color: inherit; text-decoration: none; }
+
+.menu { position: relative; }
+.menu__btn {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  width: 28px;
+  height: 28px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.menu__btn:hover, .menu__btn.is-open { color: var(--fg-strong); }
+.menu__btn span {
+  display: block;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 200ms ease, opacity 150ms ease;
+}
+.menu__btn.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.menu__btn.is-open span:nth-child(2) { opacity: 0; }
+.menu__btn.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.menu__panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 10;
+  width: 13rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  animation: menu-in 160ms ease-out;
+}
+@keyframes menu-in { from { opacity: 0; transform: translateY(-4px); } }
+.menu__panel ul { list-style: none; }
+.menu__panel li + li { border-top: 1px solid var(--line); }
+.menu__panel a {
   display: flex;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.94rem;
+  color: var(--fg-strong);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.menu__panel a:hover { color: var(--link); }
+.menu__panel a[aria-current='page'] { color: var(--link); }
+.menu__idx, .menu__count {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.menu__idx { color: var(--link); }
+.menu__count { margin-left: auto; }
+
+/* A page behind the menu: a title, then rows. */
+.sub { margin-top: 1.5rem; }
+.sub__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--fg-strong);
+  outline: none;
+}
+.sub__idx, .sub__count {
   font-family: var(--mono);
   font-size: 0.75rem;
   font-weight: 400;
-  color: var(--muted);
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--line);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
 }
-.list__idx { color: var(--link); margin-right: 0.35rem; }
-.list__count { font-variant-numeric: tabular-nums; }
-.list ul { list-style: none; }
+.sub__idx { color: var(--link); }
+.sub__count { margin-left: auto; color: var(--muted); }
+.sub__rows { list-style: none; animation: sub-in 260ms ease-out; }
+@keyframes sub-in { from { opacity: 0; transform: translateY(6px); } }
+.sub__next {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+.sub__next::after { content: ' \2192'; content: ' \2192' / ''; }
+.sub__next:hover { color: var(--fg-strong); text-decoration-color: var(--muted); }
 
 .row {
   display: grid;
@@ -238,6 +324,6 @@ a.row__name:hover::after, a.row__name:focus-visible::after { opacity: 1; transfo
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mosaic canvas, .theme-toggle, .page__p a, .page__foot a, a.row__name, a.row__name::after { transition: none; }
-  .page__head h1::after { animation: none; }
+  .mosaic canvas, .theme-toggle, .menu__btn, .menu__btn span, .menu__panel a, .sub__next, .page__p a, .page__foot a, a.row__name, a.row__name::after { transition: none; }
+  .page__head h1::after, .menu__panel, .sub__rows { animation: none; }
 }

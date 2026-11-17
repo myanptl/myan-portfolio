@@ -11,8 +11,10 @@ that link went out to YC companies).
 ## The design
 - One column. A video drawn as WebGL pixel diamonds on top (`Mosaic.jsx`):
   licensed lily by day, jellyfish by night. Each clip plays once, fades, rewinds.
-- Two short paragraphs, `linkedin github email`, then plain rows: Experience,
-  Projects, Motion, Programs. Row data lives in `src/data/`.
+- Home is one screen: picture, two short paragraphs, `linkedin github email`.
+- A burger menu (`Menu.jsx`) opens the other pages: Experience, Projects,
+  Motion, Programs, each a list of rows. Hash routes (`#/projects`), defined in
+  `src/data/sections.js`; the name links home. Row data lives in `src/data/`.
 - Techy details: the name decodes in (`Scramble.jsx`), a live Westford clock,
   a video timecode readout, numbered section headers, a hover arrow. All write
   to the DOM directly, never through state.

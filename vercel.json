@@ -1,14 +1,14 @@
 {
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "myan-portfolio.vercel.app"
         }
       ],
-      "destination": "https://myanptl.vercel.app/:path*",
+      "destination": "https://myanptl.vercel.app/$1",
       "permanent": false
     }
   ],
